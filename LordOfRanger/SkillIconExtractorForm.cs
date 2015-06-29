@@ -7,6 +7,9 @@ using System.IO;
 using System.IO.Compression;
 
 namespace LordOfRanger {
+	/// <summary>
+	/// npkファイルからスキルアイコンを取得するフォーム
+	/// </summary>
 	internal partial class SkillIconExtractorForm : Form {
 		internal SkillIconExtractorForm() {
 			InitializeComponent();

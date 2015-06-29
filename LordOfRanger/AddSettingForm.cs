@@ -2,6 +2,11 @@
 using System.Windows.Forms;
 
 namespace LordOfRanger {
+
+	/// <summary>
+	/// 設定ファイルの追加フォーム
+	/// 設定名を入力できる
+	/// </summary>
 	internal partial class AddSettingForm : Form {
 		internal AddSettingForm() {
 			InitializeComponent();

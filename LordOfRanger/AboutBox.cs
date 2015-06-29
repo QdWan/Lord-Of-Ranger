@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LordOfRanger {
+	/// <summary>
+	/// このアプリケーションの情報を表示するフォーム
+	/// </summary>
 	public partial class AboutBox : Form {
 		public AboutBox() {
 			InitializeComponent();

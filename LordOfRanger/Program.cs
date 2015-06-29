@@ -9,6 +9,7 @@ namespace LordOfRanger {
 		[STAThread]
 		static void Main() {
 			Options.OptionsForm.load();
+			// 多重起動対策 
 			using( System.Threading.Mutex mutex = new System.Threading.Mutex( false, Application.ProductName ) ) {
 				if( mutex.WaitOne( 0, false ) ) {
 					Application.EnableVisualStyles();

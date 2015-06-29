@@ -4,6 +4,11 @@ using System.Windows.Forms;
 using RamGecTools;
 
 namespace LordOfRanger {
+	/// <summary>
+	/// キーを設定するフォーム
+	/// keyTypeがSINGLEの場合は1つだけ
+	/// keyTypeがMULTIの場合は複数のキーを設定でき、入力されたキーはkeyDataから取得できる
+	/// </summary>
 	internal partial class KeySetForm : Form {
 
 		private List<byte> keyList = new List<byte>();

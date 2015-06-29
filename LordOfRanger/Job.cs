@@ -5,6 +5,10 @@ using System.Drawing;
 using System.Threading;
 
 namespace LordOfRanger {
+
+	/// <summary>
+	/// Setting.Massを読み込み、それを実行するクラス
+	/// </summary>
 	class Job {
 		private static Dictionary<byte, bool> EnablekeyF;
 		private static Dictionary<byte, bool> EnablekeyE;
@@ -17,6 +21,10 @@ namespace LordOfRanger {
 
 		private bool _barrageEnable = true;
 
+		/// <summary>
+		/// Massファイルを読み込み、各変数に初期値を代入
+		/// </summary>
+		/// <param name="mass"></param>
 		internal Job(Setting.Mass mass) {
 			this.mass = mass;
 			EnablekeyF = new Dictionary<byte, bool>();
@@ -35,6 +43,9 @@ namespace LordOfRanger {
 			iconUpdate();
 		}
 
+		/// <summary>
+		/// 機能の有効無効を取得、設定する
+		/// </summary>
 		internal bool barrageEnable {
 			get {
 				return _barrageEnable;
@@ -47,11 +58,26 @@ namespace LordOfRanger {
 
 		#region event
 
+		/// <summary>
+		/// キーアップ時に呼ばれる
+		/// 該当するキーの押下フラグをfalseにする
+		/// </summary>
+		/// <param name="key"> 離されたキー </param>
 		internal void keyupEvent(byte key) {
 			EnablekeyF[key] = false;
 			EnablekeyE[key] = false;
 		}
 
+		/// <summary>
+		/// キーダウン時に呼ばれる
+		/// EnablekeyFは関数のはじめに、
+		/// EnablekeyEは関数の終わりにそれぞれtrueに書き換えられる
+		/// ここでは
+		/// コマンドの呼び出し、
+		/// トグルの有効無効の切り替え、
+		/// 方向キーの記憶を行う
+		/// </summary>
+		/// <param name="key"> 押されたキー </param>
 		internal void keydownEvent(byte key) {
 			EnablekeyF[key] = true;
 			if( !MainForm.activeWindow || !_barrageEnable ) {
@@ -97,6 +123,12 @@ namespace LordOfRanger {
 			EnablekeyE[key] = true;
 		}
 
+		/// <summary>
+		/// コマンドを実行するスレッドから呼び出される関数
+		/// sendList配列の中身のキーを順に押下していく
+		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
+		/// </summary>
+		/// <param name="o"></param>
 		private void threadCommand(object o) {
 			object[] obj = (object[])o;
 			byte[] sendList = (byte[])obj[0];
@@ -114,6 +146,10 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 一定時間ごとに呼ばれる
+		/// ここで連打、トグルの処理を行う
+		/// </summary>
 		internal void timerEvent() {
 			if( !MainForm.activeWindow || !_barrageEnable ) {
 				return;
@@ -144,7 +180,18 @@ namespace LordOfRanger {
 
 		#endregion
 
+		/// <summary>
+		/// コマンドを実行するべきかどうかのチェックを行う
+		/// </summary>
+		/// <param name="key"> 押下されたキー </param>
+		/// <param name="key2"> 判定するキー </param>
+		/// <returns> 実行すべきかどうか </returns>
 		private bool commandCheck(byte key, byte key2) {
+			/*
+				押されたキーが判定するキーと一致しているかどうか
+				押しっぱなしの2回目以降ではないか
+				2回目以降の場合、EnablekeyEがtrueになっているため、実行するべきではないと判定される。
+			*/
 			if( key == key2 && !EnablekeyE[key2] && EnablekeyF[key2] ) {
 				return true;
 			} else {
@@ -152,6 +199,9 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// レイヤーウィンドウの更新
+		/// </summary>
 		internal void iconUpdate() {
 			if( !Options.Options.options.iconViewFlag ) {
 				MainForm.skillLayer.Visible = false;
@@ -214,12 +264,21 @@ namespace LordOfRanger {
 			Thread.Sleep( sleeptime );
 		}
 
+		/// <summary>
+		/// キー送信
+		/// </summary>
+		/// <param name="key"> 送信するキー </param>
 		private void keypush(byte key) {
 			Key.down( key );
 			sleep( Options.Options.options.upDownInterval );
 			Key.up( key );
 		}
 
+		/// <summary>
+		/// キー送信
+		/// </summary>
+		/// <param name="key"> 送信するキー </param>
+		/// <param name="sl"> キーダウンとキーアップの間の待ち時間(ms) </param>
 		private void keypush(byte key, int sl) {
 			try {
 				Key.down( key );

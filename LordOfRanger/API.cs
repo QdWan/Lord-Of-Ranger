@@ -3,6 +3,10 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 
 namespace LordOfRanger {
+
+	/// <summary>
+	/// API用
+	/// </summary>
 	internal class API {
 
 		#region ウィンドウ操作関連

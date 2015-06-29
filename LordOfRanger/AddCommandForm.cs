@@ -2,6 +2,9 @@
 using System.Windows.Forms;
 
 namespace LordOfRanger {
+	/// <summary>
+	/// 行追加時に、コマンド、トグル、連打を選択するフォーム
+	/// </summary>
 	internal partial class AddCommandForm : Form {
 		internal Result result;
 		internal Type type;

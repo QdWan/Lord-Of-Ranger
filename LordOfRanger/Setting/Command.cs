@@ -1,6 +1,13 @@
 ﻿using System.Drawing;
 
 namespace LordOfRanger.Setting {
+	/// <summary>
+	/// このクラスのインスタンス1つがユーザーがメインウィンドウのDataGridViewで設定したファイルの1行分にあたる。
+	/// ロードオブレンジャーやバルムンクでの使用を想定
+	/// キーボードでpushキーを押下すると、sendListのキーが順に送信されていく。
+	/// パラメータの詳細はDataAb参照
+	/// 細かい実装についてはJobクラスを参照
+	/// </summary>
 	internal class Command : DataAb {
 		private int _id;
 		private int _priority;

@@ -25,6 +25,10 @@ namespace LordOfRanger {
 			internal static string TOGGLE = "Toggle";
 		};
 
+		/// <summary>
+		/// コンストラクタ
+		/// コンポーネント初期化のほかに、変数の初期化、設定の読み込み、タイマーのスタート、キーフックのスタートを行う
+		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
 			hotKeys = new Dictionary<byte, string>();
@@ -140,6 +144,9 @@ namespace LordOfRanger {
 			settingUpdate();
 		}
 
+		/// <summary>
+		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
+		/// </summary>
 		private void settingView() {
 			dgv.Rows.Clear();
 			foreach( Setting.DataAb da in mass.DataList ) {
@@ -171,6 +178,10 @@ namespace LordOfRanger {
 				dgv.Rows[row].Cells["disableSkillIcon"].Value = da.disableSkillIcon;
 			}
 		}
+
+		/// <summary>
+		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
+		/// </summary>
 		private void loadSettingList() {
 			if( !Directory.Exists( Setting.Mass.setting_path ) ) {
 				Directory.CreateDirectory( Setting.Mass.setting_path );
@@ -201,6 +212,11 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 全設定ファイルのホットキーの読み込みを行う。
+		/// コンストラクタから呼ばれた場合のみ、同一ホットキーが存在する旨の警告を出す。
+		/// </summary>
+		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
 		private void loadHotKeys(bool firstFlag = false) {
 			hotKeys.Clear();
 			string[] files = Directory.GetFiles( Setting.Mass.setting_path );
@@ -222,6 +238,10 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 設定リストの再読み込みを行う。
+		/// </summary>
+		/// <param name="firstFlag"></param>
 		internal void settingUpdate(bool firstFlag = false) {
 			loadSettingList();
 			if( lbSettingList.FindStringExact( currentSettingFile ) == -1 ) {
@@ -237,6 +257,10 @@ namespace LordOfRanger {
 			txtHotKey.Text = keysToText( mass.HotKey );
 		}
 
+		/// <summary>
+		/// 設定ファイルの切り替え
+		/// </summary>
+		/// <param name="name">設定ファイルの名前</param>
 		private void currentSettingChange(string name) {
 			currentSettingFile = name;
 			Options.Options.options.currentSettingName = name;
@@ -246,6 +270,10 @@ namespace LordOfRanger {
 		#endregion
 
 		#region job
+
+		/// <summary>
+		/// タイマーから呼び出され、アラド戦記がアクティブになっているかどうか定期的にチェックする。
+		/// </summary>
 		private void ActiveWindowCheck() {
 			try {
 				IntPtr hWnd = API.GetForegroundWindow();
@@ -268,6 +296,11 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// キーアップ時に呼ばれる。
+		/// Jobのキーアップイベントの他、ホットキーによる設定切り替えや機能の有効化無効化もここで行う。
+		/// </summary>
+		/// <param name="key"></param>
 		private void keyboardHook_KeyUp(KeyboardHook.VKeys key) {
 			job.keyupEvent( (byte)key );
 
@@ -285,18 +318,36 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// キーダウン時に呼ばれる。
+		/// </summary>
+		/// <param name="key"></param>
 		private void keyboardHook_KeyDown(KeyboardHook.VKeys key) {
 			job.keydownEvent( (byte)key );
 		}
 
+		/// <summary>
+		/// 定期的に呼ばれる。
+		/// Jobのキータイマーイベントを呼び出す
+		/// </summary>
 		private void keyPushTimer() {
 			job.timerEvent();
 		}
 
+		/// <summary>
+		/// アクティブウィンドウのチェックを行うため定期的に呼び出される
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void timerActiveWindowCheck_Tick(object sender, EventArgs e) {
 			ActiveWindowCheck();
 		}
 
+		/// <summary>
+		/// キータイマーイベントのために定期的に呼び出される。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void timerBarrage_Tick(object sender, EventArgs e) {
 			keyPushTimer();
 		}
@@ -304,6 +355,13 @@ namespace LordOfRanger {
 		#endregion
 
 		#region job form
+
+		/// <summary>
+		/// データグリッドビューをダブルクリックした際に呼び出される。
+		/// 主にキーの設定や、スキルアイコンの設定に使用する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
 			if( dgv.SelectedCells.Count != 1 ) {
 				return;
@@ -395,6 +453,12 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// データグリッドビューをクリックした際に呼び出される。
+		/// ボタンのクリックイベントがないため、このイベントで代用している。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e) {
 			if( dgv.SelectedCells.Count != 1 ) {
 				return;
@@ -434,6 +498,12 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 設定の1行追加
+		/// インスタンスを生成し、Massに追加する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnAddRow_Click(object sender, EventArgs e) {
 			AddCommandForm acf = new AddCommandForm();
 			acf.ShowDialog();
@@ -463,21 +533,40 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 設定の保存を行う
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnSave_Click(object sender, EventArgs e) {
 			mass.save();
 			settingUpdate();
 		}
 
+		/// <summary>
+		/// 設定の変更を破棄する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnCancel_Click(object sender, EventArgs e) {
 			mass.load( mass.Name );
 			settingUpdate();
 		}
 
-
+		/// <summary>
+		/// byteで表されるキーをテキストに変換
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		private string keysToText(byte key) {
 			return Key.keyText[key];
 		}
 
+		/// <summary>
+		/// byte[]で表されるキーの配列をテキストに変換
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		private string keysToText(byte[] keys) {
 			string s = "";
 			for( int i = 0; i < keys.Length; i++ ) {
