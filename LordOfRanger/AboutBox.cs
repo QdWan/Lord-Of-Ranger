@@ -22,5 +22,9 @@ namespace LordOfRanger {
 			lblInfo.Text = "\n\n" + appProductName + "\n";
 			lblInfo.Text += "Application Version : " + appVersion;
 		}
+
+		private void btnOK_Click(object sender, EventArgs e) {
+			Close();
+		}
 	}
 }
