@@ -14,13 +14,11 @@ namespace LordOfRanger.Setting {
 		internal byte HotKey = 0x00;
 		internal const string EXTENSION = ".ard";
 
-		/*u-nu-n*/
-		internal List<DataAb> _dataList;
-		internal List<Command> _commandList;
-		internal List<Barrage> _barrageList;
-		internal List<Toggle> _toggleList;
+		private List<DataAb> _dataList;
+		private List<Command> _commandList;
+		private List<Barrage> _barrageList;
+		private List<Toggle> _toggleList;
 		internal int sequence;
-		/***komatta***/
 
 		
 		/// <summary>
@@ -64,7 +62,6 @@ namespace LordOfRanger.Setting {
 		/// コンストラクタ
 		/// 各変数に初期値を代入する
 		/// </summary>
-		/// <param name="sequence"></param>
 		internal Mass() {
 			Name = "new";
 			sequence = 0;
@@ -86,6 +83,17 @@ namespace LordOfRanger.Setting {
 				instance.id = ++sequence;
 			}
 			_dataList.Add( instance );
+			switch( instance.type ) {
+				case DataAb.Type.BARRAGE:
+					_barrageList.Add( (Barrage)instance );
+					break;
+				case DataAb.Type.COMMAND:
+					_commandList.Add( (Command)instance );
+					break;
+				case DataAb.Type.TOGGLE:
+					_toggleList.Add( (Toggle)instance );
+					break;
+			}
 			return instance.id;
 		}
 
@@ -97,7 +105,35 @@ namespace LordOfRanger.Setting {
 		internal bool RemoveAt(int sequence) {
 			for( int i = 0; i < _dataList.Count; i++ ) {
 				if( _dataList[i].id == sequence ) {
+					DataAb.Type type = _dataList[i].type;
 					_dataList.RemoveAt( i );
+					
+					switch( type ) {
+						case DataAb.Type.BARRAGE:
+							for( int j = 0; j < _barrageList.Count; j++ ) {
+								if( _barrageList[j].id == sequence ) {
+									_barrageList.RemoveAt( j );
+									return true;
+								}
+							}
+							break;
+						case DataAb.Type.COMMAND:
+							for( int j = 0; j < _commandList.Count; j++ ) {
+								if( _commandList[j].id == sequence ) {
+									_commandList.RemoveAt( j );
+									return true;
+								}
+							}
+							break;
+						case DataAb.Type.TOGGLE:
+							for( int j = 0; j < _toggleList.Count; j++ ) {
+								if( _toggleList[j].id == sequence ) {
+									_toggleList.RemoveAt( j );
+									return true;
+								}
+							}
+							break;
+					}
 					return true;
 				}
 			}
@@ -155,6 +191,16 @@ namespace LordOfRanger.Setting {
 		}
 
 		#endregion
+
+		/// <summary>
+		/// データ配列の初期化
+		/// </summary>
+		internal void init() {
+			_dataList = new List<DataAb>();
+			_commandList = new List<Command>();
+			_barrageList = new List<Barrage>();
+			_toggleList = new List<Toggle>();
+		}
 
 		/// <summary>
 		/// この設定ファイルの保存
