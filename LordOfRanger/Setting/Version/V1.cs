@@ -26,10 +26,7 @@ namespace LordOfRanger.Setting.Version {
 		}
 
 		public void Load(string filename) {
-			mass._dataList = new List<DataAb>();
-			mass._commandList = new List<Command>();
-			mass._barrageList = new List<Barrage>();
-			mass._toggleList = new List<Toggle>();
+			mass.init();
 			mass.Name = filename;
 
 			FileStream fs = new FileStream( Mass.setting_path + mass.Name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
@@ -93,8 +90,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
-						mass._dataList.Add( c );
-						mass._commandList.Add( c );
+						mass.Add( c );
 						break;
 					case DataAb.Type.BARRAGE:
 						Barrage b = new Barrage();
@@ -108,8 +104,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						mass._dataList.Add( b );
-						mass._barrageList.Add( b );
+						mass.Add( b );
 						break;
 					case DataAb.Type.TOGGLE:
 						Toggle t = new Toggle();
@@ -123,8 +118,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						mass._dataList.Add( t );
-						mass._toggleList.Add( t );
+						mass.Add( t );
 						break;
 				}
 			}
@@ -188,7 +182,7 @@ namespace LordOfRanger.Setting.Version {
 				(sendList variable || send 8bit)
 			*/
 			List<byte> data = new List<byte>();
-			foreach( DataAb da in mass._dataList ) {
+			foreach( DataAb da in mass.DataList ) {
 				byte[] skillIcon = (byte[])new ImageConverter().ConvertTo( da.skillIcon, typeof( byte[] ) );
 				byte[] disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.disableSkillIcon, typeof( byte[] ) );
 				//id
