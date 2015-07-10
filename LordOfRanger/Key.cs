@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace LordOfRanger {
 	class Key {
@@ -10,7 +11,7 @@ namespace LordOfRanger {
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
 		internal static void down(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
-			if( key == (byte)RamGecTools.KeyboardHook.VKeys.LEFT || key == (byte)RamGecTools.KeyboardHook.VKeys.RIGHT || key == (byte)RamGecTools.KeyboardHook.VKeys.UP || key == (byte)RamGecTools.KeyboardHook.VKeys.DOWN ) {
+			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
 				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 1, UIntPtr.Zero );
 			} else {
 				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 0, UIntPtr.Zero );
@@ -24,7 +25,7 @@ namespace LordOfRanger {
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
 		internal static void up(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
-			if( key == (byte)RamGecTools.KeyboardHook.VKeys.LEFT || key == (byte)RamGecTools.KeyboardHook.VKeys.RIGHT || key == (byte)RamGecTools.KeyboardHook.VKeys.UP || key == (byte)RamGecTools.KeyboardHook.VKeys.DOWN ) {
+			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
 				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 3, UIntPtr.Zero );
 			} else {
 				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 2, UIntPtr.Zero );

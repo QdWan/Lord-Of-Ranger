@@ -34,7 +34,7 @@ namespace LordOfRanger.Options {
 		}
 
 		private void txtOtherHotKeyLORSwitching_KeyUp(object sender, KeyEventArgs e) {
-			if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE ) {
+			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				tmpHotKey = 0x00;
 				txtOtherHotKeyLORSwitching.Text = Key.keyText[tmpHotKey];
 				return;

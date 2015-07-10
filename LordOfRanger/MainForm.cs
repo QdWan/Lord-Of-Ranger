@@ -6,12 +6,11 @@ using System.Diagnostics;
 using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
-using RamGecTools;
+using HongliangSoft.Utilities.Gui;
 
 namespace LordOfRanger {
 	internal partial class MainForm : Form {
 
-		private static KeyboardHook keyboardHook;
 		private static Setting.Mass mass;
 		private Job job;
 		internal static bool activeWindow = true;
@@ -49,13 +48,12 @@ namespace LordOfRanger {
 			timerBarrage.Interval = Options.Options.options.timerInterval;
 			timerBarrage.Start();
 
+			KeyboardHook keyboardHook = new KeyboardHook();
+			keyboardHook.KeyboardHooked += KeyHookEvent;
 
-			keyboardHook = new KeyboardHook();
-			keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback( keyboardHook_KeyDown );
-			keyboardHook.KeyUp += new KeyboardHook.KeyboardHookCallback( keyboardHook_KeyUp );
-			keyboardHook.Install();
 			Application.ApplicationExit += new EventHandler( Application_ApplicationExit );
 		}
+
 
 		#region form event
 
@@ -272,6 +270,34 @@ namespace LordOfRanger {
 		#region job
 
 		/// <summary>
+		/// キーフックイベント
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void KeyHookEvent(object sender, KeyboardHookedEventArgs e) {
+			if( e.UpDown == KeyboardUpDown.Down ) {
+				//キーダウンイベント
+				job.keydownEvent( (byte)e.KeyCode );
+			} else if(e.UpDown == KeyboardUpDown.Up){
+				//キーアップイベント
+				/// Jobのキーアップイベントの他、ホットキーによる設定切り替えや機能の有効化無効化もここで行う。
+				job.keyupEvent( (byte)e.KeyCode );
+
+				//setting change hot key
+				if( hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+					currentSettingChange( hotKeys[(byte)e.KeyCode] );
+					settingUpdate();
+					return;
+				}
+
+
+				if( (byte)e.KeyCode == Options.Options.options.hotKeyLORSwitching ) {
+					job.barrageEnable = !job.barrageEnable;
+					return;
+				}
+			}
+		}
+		/// <summary>
 		/// タイマーから呼び出され、アラド戦記がアクティブになっているかどうか定期的にチェックする。
 		/// </summary>
 		private void ActiveWindowCheck() {
@@ -296,35 +322,6 @@ namespace LordOfRanger {
 			}
 		}
 
-		/// <summary>
-		/// キーアップ時に呼ばれる。
-		/// Jobのキーアップイベントの他、ホットキーによる設定切り替えや機能の有効化無効化もここで行う。
-		/// </summary>
-		/// <param name="key"></param>
-		private void keyboardHook_KeyUp(KeyboardHook.VKeys key) {
-			job.keyupEvent( (byte)key );
-
-			//setting change hot key
-			if( hotKeys.ContainsKey( (byte)key ) ) {
-				currentSettingChange( hotKeys[(byte)key] );
-				settingUpdate();
-				return;
-			}
-
-
-			if( (byte)key == Options.Options.options.hotKeyLORSwitching ) {
-				job.barrageEnable = !job.barrageEnable;
-				return;
-			}
-		}
-
-		/// <summary>
-		/// キーダウン時に呼ばれる。
-		/// </summary>
-		/// <param name="key"></param>
-		private void keyboardHook_KeyDown(KeyboardHook.VKeys key) {
-			job.keydownEvent( (byte)key );
-		}
 
 		/// <summary>
 		/// 定期的に呼ばれる。

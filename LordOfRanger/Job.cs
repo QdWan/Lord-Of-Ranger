@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace LordOfRanger {
 
@@ -13,8 +14,8 @@ namespace LordOfRanger {
 		private static Dictionary<byte, bool> EnablekeyF;
 		private static Dictionary<byte, bool> EnablekeyE;
 		private Dictionary<int, bool> EnableToggle;
-		private static byte directionKey = (byte)RamGecTools.KeyboardHook.VKeys.LEFT;
-		private static byte reverseDirectionKey = (byte)RamGecTools.KeyboardHook.VKeys.RIGHT;
+		private static byte directionKey = (byte)Keys.Left;
+		private static byte reverseDirectionKey = (byte)Keys.Right;
 		private Thread CommandThread;
 		private const int iconSize = 30;
 		Setting.Mass mass;
@@ -104,12 +105,12 @@ namespace LordOfRanger {
 				}
 			}
 
-			if( key == (byte)RamGecTools.KeyboardHook.VKeys.LEFT ) {
-				directionKey = (byte)RamGecTools.KeyboardHook.VKeys.LEFT;
-				reverseDirectionKey = (byte)RamGecTools.KeyboardHook.VKeys.RIGHT;
-			} else if( key == (byte)RamGecTools.KeyboardHook.VKeys.RIGHT ) {
-				directionKey = (byte)RamGecTools.KeyboardHook.VKeys.RIGHT;
-				reverseDirectionKey = (byte)RamGecTools.KeyboardHook.VKeys.LEFT;
+			if( key == (byte)Keys.Left ) {
+				directionKey = (byte)Keys.Left;
+				reverseDirectionKey = (byte)Keys.Right;
+			} else if( key == (byte)Keys.Right ) {
+				directionKey = (byte)Keys.Right;
+				reverseDirectionKey = (byte)Keys.Left;
 			}
 
 			//toggle
@@ -136,9 +137,9 @@ namespace LordOfRanger {
 			byte right = (byte)obj[2];
 			foreach( byte sendKey in sendList ) {
 				byte _sendKey = sendKey;
-				if( _sendKey == (byte)RamGecTools.KeyboardHook.VKeys.RIGHT ) {
+				if( _sendKey == (byte)Keys.Right ) {
 					_sendKey = right;
-				} else if( _sendKey == (byte)RamGecTools.KeyboardHook.VKeys.LEFT ) {
+				} else if( _sendKey == (byte)Keys.Left ) {
 					_sendKey = left;
 				}
 				keypush( _sendKey, Options.Options.options.commandUpDownInterval );

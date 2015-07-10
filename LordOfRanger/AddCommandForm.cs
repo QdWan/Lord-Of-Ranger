@@ -46,9 +46,9 @@ namespace LordOfRanger {
 		}
 
 		private void AddCommandForm_KeyUp(object sender, KeyEventArgs e) {
-			if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE ) {
+			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				Close();
-			} else if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.RETURN ) {
+			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {
 				if( rbCommand.Checked ) {
 					type = Type.COMMAND;
 				} else if( rbBarrage.Checked ) {

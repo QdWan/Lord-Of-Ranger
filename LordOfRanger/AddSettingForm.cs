@@ -29,9 +29,9 @@ namespace LordOfRanger {
 		internal string settingName;
 
 		private void AddSettingForm_KeyUp(object sender, KeyEventArgs e) {
-			if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE ) {
+			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				Close();
-			} else if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.RETURN ) {
+			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {
 				settingName = txtSettingName.Text;
 				if( System.IO.File.Exists( Setting.Mass.setting_path + settingName + Setting.Mass.EXTENSION ) ) {
 					MessageBox.Show( "Please give a unique name." );
