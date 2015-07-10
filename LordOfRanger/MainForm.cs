@@ -277,23 +277,24 @@ namespace LordOfRanger {
 		private void KeyHookEvent(object sender, KeyboardHookedEventArgs e) {
 			if( e.UpDown == KeyboardUpDown.Down ) {
 				//キーダウンイベント
-				job.keydownEvent( (byte)e.KeyCode );
-			} else if(e.UpDown == KeyboardUpDown.Up){
+				job.keydownEvent( e );
+			} else if( e.UpDown == KeyboardUpDown.Up ) {
 				//キーアップイベント
-				/// Jobのキーアップイベントの他、ホットキーによる設定切り替えや機能の有効化無効化もここで行う。
-				job.keyupEvent( (byte)e.KeyCode );
+				job.keyupEvent( e );
 
-				//setting change hot key
-				if( hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
-					currentSettingChange( hotKeys[(byte)e.KeyCode] );
-					settingUpdate();
-					return;
-				}
+				if( e.ExtraInfo != (int)Key.ExtraInfo ) {
+					//setting change hot key
+					if( hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+						currentSettingChange( hotKeys[(byte)e.KeyCode] );
+						settingUpdate();
+						return;
+					}
 
 
-				if( (byte)e.KeyCode == Options.Options.options.hotKeyLORSwitching ) {
-					job.barrageEnable = !job.barrageEnable;
-					return;
+					if( (byte)e.KeyCode == Options.Options.options.hotKeyLORSwitching ) {
+						job.barrageEnable = !job.barrageEnable;
+						return;
+					}
 				}
 			}
 		}

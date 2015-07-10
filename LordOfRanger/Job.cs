@@ -4,6 +4,7 @@ using System.Linq;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using HongliangSoft.Utilities.Gui;
 
 namespace LordOfRanger {
 
@@ -11,6 +12,7 @@ namespace LordOfRanger {
 	/// Setting.Massを読み込み、それを実行するクラス
 	/// </summary>
 	class Job {
+		private static readonly byte[] arrowKeyList = new byte[] { (byte)Keys.Left, (byte)Keys.Right, (byte)Keys.Up, (byte)Keys.Down };
 		private static Dictionary<byte, bool> EnablekeyF;
 		private static Dictionary<byte, bool> EnablekeyE;
 		private Dictionary<int, bool> EnableToggle;
@@ -63,10 +65,14 @@ namespace LordOfRanger {
 		/// キーアップ時に呼ばれる
 		/// 該当するキーの押下フラグをfalseにする
 		/// </summary>
-		/// <param name="key"> 離されたキー </param>
-		internal void keyupEvent(byte key) {
-			EnablekeyF[key] = false;
-			EnablekeyE[key] = false;
+		/// <param name="e"> 離されたキー情報 </param>
+		internal void keyupEvent(KeyboardHookedEventArgs e) {
+			if( e.ExtraInfo != (int)Key.ExtraInfo ) {
+				EnablekeyF[(byte)e.KeyCode] = false;
+				EnablekeyE[(byte)e.KeyCode] = false;
+			} else {
+
+			}
 		}
 
 		/// <summary>
@@ -78,30 +84,55 @@ namespace LordOfRanger {
 		/// トグルの有効無効の切り替え、
 		/// 方向キーの記憶を行う
 		/// </summary>
-		/// <param name="key"> 押されたキー </param>
-		internal void keydownEvent(byte key) {
-			EnablekeyF[key] = true;
+		/// <param name="e"> 押されたキー情報 </param>
+		internal void keydownEvent(KeyboardHookedEventArgs e) {
+			byte key = (byte)e.KeyCode;
 			if( !MainForm.activeWindow || !_barrageEnable ) {
 				return;
 			}
+
+			//このキー入力がどこから発行されたものか判定
+			if( e.ExtraInfo == (int)Key.ExtraInfo ) {
+				//LORから
+				if( key == (byte)Keys.Left ) {
+					directionKey = (byte)Keys.Left;
+					reverseDirectionKey = (byte)Keys.Right;
+				} else if( key == (byte)Keys.Right ) {
+					directionKey = (byte)Keys.Right;
+					reverseDirectionKey = (byte)Keys.Left;
+				}
+				return;
+			} else {
+				// キーボードから
+				if( CommandThread != null ) {
+					if( ( new[] { ThreadState.Running, ThreadState.WaitSleepJoin } ).Contains( CommandThread.ThreadState ) ) {
+						bool flag = true;
+						foreach( Setting.Barrage b in mass.barrageList ) {
+							if( b.push == (byte)e.KeyCode ) {
+								flag = false;
+							}
+						}
+						if( flag ) {
+							//コマンド中のキー入力で、且つ入力されたキーが連打設定されていない場合はキャンセル
+							e.Cancel = true;
+							return;
+						}
+					}
+				}
+			}
+
+			EnablekeyF[key] = true;
+
 			byte left = reverseDirectionKey;
 			byte right = directionKey;
+
 			//command
 			foreach( Setting.Command c in mass.commandList ) {
 				if( commandCheck( key, c.push ) ) {
-					if( Options.Options.options.commandAnotherThread ) {
-						if( CommandThread != null ) {
-							if( ( new[] { ThreadState.Running, ThreadState.WaitSleepJoin } ).Contains( CommandThread.ThreadState ) ) {
-								return;
-							}
-						}
-						CommandThread = new Thread( new ParameterizedThreadStart( threadCommand ) );
-						CommandThread.Start( new object[] { c.sendList, left, right } );
-						break;
-					} else {
-						threadCommand( new object[] { c.sendList, left, right } );
-						break;
-					}
+					e.Cancel = true;
+					CommandThread = new Thread( new ParameterizedThreadStart( threadCommand ) );
+					CommandThread.Start( new object[] { c.sendList, left, right } );
+					break;
 				}
 			}
 
@@ -126,7 +157,15 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// コマンドを実行するスレッドから呼び出される関数
+		/// 
+		/// --オプション設定が有効の場合は
+		/// 始めに押下中の方向キーを放し、
 		/// sendList配列の中身のキーを順に押下していく
+		/// 終わり次第押下中だった方向キーを押下し直す
+		/// 
+		/// --オプション設定が無効の場合は
+		/// sendListの配列の中身のキーを順に押していく
+		/// 
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
 		/// <param name="o"></param>
@@ -135,6 +174,13 @@ namespace LordOfRanger {
 			byte[] sendList = (byte[])obj[0];
 			byte left = (byte)obj[1];
 			byte right = (byte)obj[2];
+			if( Options.Options.options.commandUpArrowKeys ) {
+				foreach( byte sendKey in arrowKeyList ) {
+					if( EnablekeyE[sendKey] ) {
+						Key.up( sendKey );
+					}
+				}
+			}
 			foreach( byte sendKey in sendList ) {
 				byte _sendKey = sendKey;
 				if( _sendKey == (byte)Keys.Right ) {
@@ -144,6 +190,13 @@ namespace LordOfRanger {
 				}
 				keypush( _sendKey, Options.Options.options.commandUpDownInterval );
 				sleep( Options.Options.options.commandInterval );
+			}
+			if( Options.Options.options.commandUpArrowKeys ) {
+				foreach( byte sendKey in arrowKeyList ) {
+					if( EnablekeyE[sendKey] ) {
+						Key.down( sendKey );
+					}
+				}
 			}
 		}
 

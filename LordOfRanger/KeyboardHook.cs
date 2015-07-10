@@ -29,6 +29,7 @@ namespace HongliangSoft.Utilities.Gui {
 		public bool IsExtendedKey { get { return state.Flag.IsExtended; } }
 		///<summary>ALTキーが押されているかどうかを表す値を取得する。</summary>
 		public bool AltDown { get { return state.Flag.AltDown; } }
+		public int ExtraInfo { get { return (int)state.ExtraInfo; } }
 	}
 	///<summary>キーボードが押されているか放されているかを表す。</summary>
 	public enum KeyboardUpDown {

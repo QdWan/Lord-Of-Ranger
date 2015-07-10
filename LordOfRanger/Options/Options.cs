@@ -36,7 +36,7 @@
 		public byte hotKeyLORSwitching = 0x00;
 
 		/* Advanced */
-		public bool commandAnotherThread = true;
+		public bool commandUpArrowKeys = true;
 
 		/*restore*/
 		public string currentSettingName = "";

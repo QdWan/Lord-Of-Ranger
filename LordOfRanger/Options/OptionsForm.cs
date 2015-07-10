@@ -93,7 +93,7 @@ namespace LordOfRanger.Options {
 			txtOtherHotKeyLORSwitching.Text = Key.keyText[tmpHotKey];
 
 			/* Advanced */
-			chkAdvancedCommandAnotherThread.Checked = Options.options.commandAnotherThread;
+			chkAdvancedCommandUpArrowKeys.Checked = Options.options.commandUpArrowKeys;
 
 
 			panelSkillIcon.Enabled = chkSkillIconEnable.Checked;
@@ -124,7 +124,7 @@ namespace LordOfRanger.Options {
 			Options.options.hotKeyLORSwitching = tmpHotKey;
 
 			/* Advanced */
-			Options.options.commandAnotherThread = chkAdvancedCommandAnotherThread.Checked;
+			Options.options.commandUpArrowKeys = chkAdvancedCommandUpArrowKeys.Checked;
 
 			save();
 			load();
