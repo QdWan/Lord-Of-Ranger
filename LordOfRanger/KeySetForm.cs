@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using RamGecTools;
 
 namespace LordOfRanger {
 	/// <summary>
@@ -44,27 +43,24 @@ namespace LordOfRanger {
 
 		private void KeySetForm_KeyUp(object sender, KeyEventArgs e) {
 			byte keycode = (byte)e.KeyCode;
-			if( keycode == (byte)RamGecTools.KeyboardHook.VKeys.SHIFT ) {
-				return;
-			}
-			if( keycode == (byte)RamGecTools.KeyboardHook.VKeys.RETURN ) {
+			if( keycode == (byte)Keys.Return ) {
 				result = Result.OK;
 				Close();
 				return;
-			} else if( keycode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE && keyList.Count == 0 ) {
+			} else if( keycode == (byte)Keys.Escape && keyList.Count == 0 ) {
 				result = Result.CANCEL;
 				Close();
 				return;
 			}
 			if( e.Shift ) {
-				if( (byte)RamGecTools.KeyboardHook.VKeys.F1 <= keycode && keycode <= (byte)RamGecTools.KeyboardHook.VKeys.F12 ) {
+				if( (byte)Keys.F1 <= keycode && keycode <= (byte)Keys.F12 ) {
 					keycode += 12;
 				}
 			}
 			switch( keyType ) {
 				case KeyType.SINGLE:
 					keyList.Clear();
-					if( keycode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE ) {
+					if( keycode == (byte)Keys.Escape ) {
 						lblInputKey.Text = "Press Any Key";
 						return;
 					}
@@ -72,7 +68,7 @@ namespace LordOfRanger {
 					keyList.Add( keycode );
 					break;
 				case KeyType.MULTI:
-					if( (byte)e.KeyCode == (byte)RamGecTools.KeyboardHook.VKeys.ESCAPE ) {
+					if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 						lblInputKey.Text = "Press Any Key";
 						keyList.Clear();
 						return;

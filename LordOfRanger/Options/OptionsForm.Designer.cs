@@ -61,7 +61,7 @@
 			this.nudOtherActiveWindowMonitoringTimerInterval = new System.Windows.Forms.NumericUpDown();
 			this.chkOtherActiveWindowMonitoringEnable = new System.Windows.Forms.CheckBox();
 			this.tabAdvanced = new System.Windows.Forms.TabPage();
-			this.chkAdvancedCommandAnotherThread = new System.Windows.Forms.CheckBox();
+			this.chkAdvancedCommandUpArrowKeys = new System.Windows.Forms.CheckBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.btnApply = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
@@ -583,7 +583,7 @@
 			// 
 			// tabAdvanced
 			// 
-			this.tabAdvanced.Controls.Add(this.chkAdvancedCommandAnotherThread);
+			this.tabAdvanced.Controls.Add(this.chkAdvancedCommandUpArrowKeys);
 			this.tabAdvanced.Location = new System.Drawing.Point(4, 27);
 			this.tabAdvanced.Name = "tabAdvanced";
 			this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
@@ -592,15 +592,15 @@
 			this.tabAdvanced.Text = "Advanced";
 			this.tabAdvanced.UseVisualStyleBackColor = true;
 			// 
-			// chkAdvancedCommandAnotherThread
+			// chkAdvancedCommandUpArrowKeys
 			// 
-			this.chkAdvancedCommandAnotherThread.AutoSize = true;
-			this.chkAdvancedCommandAnotherThread.Location = new System.Drawing.Point(21, 20);
-			this.chkAdvancedCommandAnotherThread.Name = "chkAdvancedCommandAnotherThread";
-			this.chkAdvancedCommandAnotherThread.Size = new System.Drawing.Size(374, 22);
-			this.chkAdvancedCommandAnotherThread.TabIndex = 0;
-			this.chkAdvancedCommandAnotherThread.Text = "When It Enter The Command, It Uses The Another Thread.";
-			this.chkAdvancedCommandAnotherThread.UseVisualStyleBackColor = true;
+			this.chkAdvancedCommandUpArrowKeys.AutoSize = true;
+			this.chkAdvancedCommandUpArrowKeys.Location = new System.Drawing.Point(21, 20);
+			this.chkAdvancedCommandUpArrowKeys.Name = "chkAdvancedCommandUpArrowKeys";
+			this.chkAdvancedCommandUpArrowKeys.Size = new System.Drawing.Size(271, 40);
+			this.chkAdvancedCommandUpArrowKeys.TabIndex = 0;
+			this.chkAdvancedCommandUpArrowKeys.Text = "When enter the command,\r\nif arrow key had been pressed,it releases.";
+			this.chkAdvancedCommandUpArrowKeys.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer1
 			// 
@@ -747,6 +747,6 @@
 		private System.Windows.Forms.TextBox txtGeneralProcessName;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TabPage tabAdvanced;
-		private System.Windows.Forms.CheckBox chkAdvancedCommandAnotherThread;
+		private System.Windows.Forms.CheckBox chkAdvancedCommandUpArrowKeys;
 	}
 }
