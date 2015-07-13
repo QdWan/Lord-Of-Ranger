@@ -23,8 +23,8 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.btnOk = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
+			this.btnOk = new NotForcusButton();
+			this.btnCancel = new NotForcusButton();
 			this.lblInputKey = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 

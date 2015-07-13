@@ -94,5 +94,11 @@ namespace LordOfRanger {
 			result = Result.OK;
 			Close();
 		}
+
+		class NotForcusButton : Button {
+			public NotForcusButton() : base() {
+				this.SetStyle( ControlStyles.Selectable, false );
+			}
+		}
 	}
 }
