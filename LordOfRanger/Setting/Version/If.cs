@@ -1,5 +1,5 @@
 ﻿namespace LordOfRanger.Setting.Version {
-	interface If {
+	interface IF {
 
 		void Save();
 

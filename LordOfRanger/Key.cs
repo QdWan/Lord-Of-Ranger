@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LordOfRanger {
-	class Key {
-		private static Random rnd = new Random();
-		public static readonly UIntPtr ExtraInfo = (UIntPtr)rnd.Next();
+	static class Key {
+		private static Random _rnd = new Random();
+		public static readonly UIntPtr EXTRA_INFO = (UIntPtr)_rnd.Next();
 		/// <summary>
 		/// キー押下
 		/// </summary>
 		/// <param name="key">キー((byte)RamGecTools.KeyboardHook.VKeys.***)</param>
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
-		internal static void down(byte key, int sl = 0) {
+		internal static void Down(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
-				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 1, ExtraInfo );
+				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 1, EXTRA_INFO );
 			} else {
-				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 0, ExtraInfo );
+				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 0, EXTRA_INFO );
 			}
 		}
 
@@ -25,16 +25,16 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="key">キー((byte)RamGecTools.KeyboardHook.VKeys.***)</param>
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
-		internal static void up(byte key, int sl = 0) {
+		internal static void Up(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
-				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 3, ExtraInfo );
+				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 3, EXTRA_INFO );
 			} else {
-				API.keybd_event( key, (byte)API.MapVirtualKey( key, 0 ), 2, ExtraInfo );
+				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 2, EXTRA_INFO );
 			}
 		}
 
-		internal static Dictionary<byte, string> keyText = new Dictionary<byte, string>(){
+		internal static readonly Dictionary<byte, string> KEY_TEXT = new Dictionary<byte, string>(){
 			{0x00,"" },
 			{0x01,"LBUTTON"},
 			{0x02,"RBUTTON"},

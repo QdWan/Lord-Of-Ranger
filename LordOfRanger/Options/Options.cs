@@ -1,10 +1,10 @@
 ﻿namespace LordOfRanger.Options {
 	public class Options {
-		public enum STARTUP_STATE {
+		public enum StartupState {
 			NORMAL,
 			MINIMIZED
 		}
-		public enum ICON_DISPLAY_POSITION {
+		public enum IconDisplayPosition {
 			TOP_LEFT,
 			TOP_RIGHT,
 			BOTTOM_LEFT,
@@ -14,7 +14,7 @@
 		public static Options options;
 
 		/* general */
-		public int startupState = (int)STARTUP_STATE.NORMAL;
+		public int startupState = (int)StartupState.NORMAL;
 
 		/* job */
 		public int commandInterval = 50;
@@ -25,15 +25,15 @@
 		/* icon */
 		public bool iconViewFlag = true;
 		public int oneRowIcons = 6; //the number of one row of icons.
-		public int iconDisplayPosition = (int)ICON_DISPLAY_POSITION.BOTTOM_RIGHT;
+		public int iconDisplayPosition = (int)IconDisplayPosition.BOTTOM_RIGHT;
 
 		/* active window */
 		public bool activeWindowMonitoring = true;
 		public int activeWindowMonitoringinterval = 500;
-		public string ProcessName = "ARAD";
+		public string processName = "ARAD";
 
 		/* Hot Key */
-		public byte hotKeyLORSwitching = 0x00;
+		public byte hotKeyLorSwitching = 0x00;
 
 		/* Advanced */
 		public bool commandUpArrowKeys = true;

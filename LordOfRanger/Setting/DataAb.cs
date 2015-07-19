@@ -1,19 +1,21 @@
 ﻿using System.Drawing;
 
+
+
 namespace LordOfRanger.Setting {
 	internal abstract class DataAb {
 
-		internal enum Type {
+		internal enum InstanceType {
 			COMMAND,
 			BARRAGE,
-			TOGGLE,
+			TOGGLE
 		}
 
 		/// <summary>
 		/// 自動で振られる連番
 		/// これによって操作するインスタンスを識別する
 		/// </summary>
-		internal abstract int id {
+		internal abstract int Id {
 			get;
 			set;
 		}
@@ -22,7 +24,7 @@ namespace LordOfRanger.Setting {
 		/// インスタンスのタイプ
 		/// COMMAND,BARRAGE,TOGGLEの3パターンある
 		/// </summary>
-		internal abstract Type type {
+		internal abstract InstanceType Type {
 			get;
 		}
 
@@ -30,7 +32,7 @@ namespace LordOfRanger.Setting {
 		/// 優先度
 		/// (未実装)
 		/// </summary>
-		internal abstract int priority {
+		internal abstract int Priority {
 			get;
 			set;
 		}
@@ -38,7 +40,7 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// レイヤウィンドウに表示するためのスキルアイコン
 		/// </summary>
-		internal abstract Bitmap skillIcon {
+		internal abstract Bitmap SkillIcon {
 			get;
 			set;
 		}
@@ -46,7 +48,7 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// レイヤウィンドウに表示するためのスキルアイコン(無効用)
 		/// </summary>
-		internal abstract Bitmap disableSkillIcon {
+		internal abstract Bitmap DisableSkillIcon {
 			get;
 			set;
 		}
@@ -54,7 +56,7 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// このインスタンスの設定が現在有効か無効かのフラグ
 		/// </summary>
-		internal abstract bool enable {
+		internal abstract bool Enable {
 			get;
 			set;
 		}

@@ -11,7 +11,7 @@ namespace LordOfRanger {
 		internal AddCommandForm() {
 			InitializeComponent();
 
-			result = Result.CANCEL;
+			this.result = Result.CANCEL;
 			KeyPreview = true;
 		}
 
@@ -27,17 +27,17 @@ namespace LordOfRanger {
 		}
 
 		private void btnOk_Click(object sender, EventArgs e) {
-			if( rbCommand.Checked ) {
-				type = Type.COMMAND;
-			} else if( rbBarrage.Checked ) {
-				type = Type.BARRAGE;
-			} else if( rbToggle.Checked ) {
-				type = Type.TOGGLE;
+			if( this.rbCommand.Checked ) {
+				this.type = Type.COMMAND;
+			} else if( this.rbBarrage.Checked ) {
+				this.type = Type.BARRAGE;
+			} else if( this.rbToggle.Checked ) {
+				this.type = Type.TOGGLE;
 			} else {
 				MessageBox.Show( "Please select the type." );
 				return;
 			}
-			result = Result.OK;
+			this.result = Result.OK;
 			Close();
 		}
 
@@ -49,17 +49,17 @@ namespace LordOfRanger {
 			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				Close();
 			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {
-				if( rbCommand.Checked ) {
-					type = Type.COMMAND;
-				} else if( rbBarrage.Checked ) {
-					type = Type.BARRAGE;
-				} else if( rbToggle.Checked ) {
-					type = Type.TOGGLE;
+				if( this.rbCommand.Checked ) {
+					this.type = Type.COMMAND;
+				} else if( this.rbBarrage.Checked ) {
+					this.type = Type.BARRAGE;
+				} else if( this.rbToggle.Checked ) {
+					this.type = Type.TOGGLE;
 				} else {
 					MessageBox.Show( "Please select the type." );
 					return;
 				}
-				result = Result.OK;
+				this.result = Result.OK;
 				Close();
 			}
 		}

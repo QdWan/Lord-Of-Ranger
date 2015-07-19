@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace LordOfRanger.Options {
 	internal partial class OptionsForm : Form {
-		private static string fileName = "./op.cnf";
+		private static string _fileName = "./op.cnf";
 
-		private byte tmpHotKey = 0x00;
+		private byte _tmpHotKey;
 
 		internal OptionsForm() {
 			InitializeComponent();
@@ -13,7 +13,7 @@ namespace LordOfRanger.Options {
 		#region Event
 
 		private void btnOk_Click(object sender, EventArgs e) {
-			saveOptions();
+			SaveOptions();
 			Close();
 		}
 
@@ -22,112 +22,112 @@ namespace LordOfRanger.Options {
 		}
 
 		private void btnApply_Click(object sender, EventArgs e) {
-			saveOptions();
+			SaveOptions();
 		}
 
 		private void chkSkillIconEnable_CheckedChanged(object sender, EventArgs e) {
-			panelSkillIcon.Enabled = chkSkillIconEnable.Checked;
+			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
 		}
 
 		private void chkOtherActiveWindowMonitoringEnable_CheckedChanged(object sender, EventArgs e) {
-			panelOtherActiveWindowMonitoring.Enabled = chkOtherActiveWindowMonitoringEnable.Checked;
+			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 		}
 
 		private void txtOtherHotKeyLORSwitching_KeyUp(object sender, KeyEventArgs e) {
 			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
-				tmpHotKey = 0x00;
-				txtOtherHotKeyLORSwitching.Text = Key.keyText[tmpHotKey];
+				this._tmpHotKey = 0x00;
+				this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
 				return;
 			}
-			tmpHotKey = (byte)e.KeyCode;
-			txtOtherHotKeyLORSwitching.Text = Key.keyText[tmpHotKey];
+			this._tmpHotKey = (byte)e.KeyCode;
+			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
 		}
 
 		private void OptionsForm_Load(object sender, EventArgs e) {
-			loadOptions();
+			LoadOptions();
 		}
 		#endregion
 
-		internal static void load() {
+		internal static void LoadCnf() {
 			if( Options.options == null ) {
 				Options.options = new Options();
 			}
-			if( System.IO.File.Exists( fileName ) ) {
+			if( System.IO.File.Exists( _fileName ) ) {
 				System.Xml.Serialization.XmlSerializer serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-				System.IO.StreamReader sr = new System.IO.StreamReader( fileName, new System.Text.UTF8Encoding( false ) );
+				System.IO.StreamReader sr = new System.IO.StreamReader( _fileName, new System.Text.UTF8Encoding( false ) );
 				Options.options = (Options)serializer2.Deserialize( sr );
 				sr.Close();
 			}
 		}
 
-		internal static void save() {
+		internal static void SaveCnf() {
 			System.Xml.Serialization.XmlSerializer serializer1 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-			System.IO.StreamWriter sw = new System.IO.StreamWriter( fileName, false, new System.Text.UTF8Encoding( false ) );
+			System.IO.StreamWriter sw = new System.IO.StreamWriter( _fileName, false, new System.Text.UTF8Encoding( false ) );
 			serializer1.Serialize( sw, Options.options );
 			sw.Close();
 		}
 
-		private void loadOptions() {
-			load();
+		private void LoadOptions() {
+			LoadCnf();
 
-			cmbGeneralStartupState.SelectedIndex = Options.options.startupState;
-			txtGeneralProcessName.Text = Options.options.ProcessName;
+			this.cmbGeneralStartupState.SelectedIndex = Options.options.startupState;
+			this.txtGeneralProcessName.Text = Options.options.processName;
 
 			/* job */
-			nudIntervalCommandKeys.Value = Options.options.commandInterval;
-			nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
-			nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
-			nudIntervalToggleTimer.Value = Options.options.timerInterval;
+			this.nudIntervalCommandKeys.Value = Options.options.commandInterval;
+			this.nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
+			this.nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
+			this.nudIntervalToggleTimer.Value = Options.options.timerInterval;
 
 			/* icon */
-			chkSkillIconEnable.Checked = Options.options.iconViewFlag;
-			nudOneRowIcons.Value = Options.options.oneRowIcons;
-			cmbSkillIconDisplayPosition.SelectedIndex = Options.options.iconDisplayPosition;
+			this.chkSkillIconEnable.Checked = Options.options.iconViewFlag;
+			this.nudOneRowIcons.Value = Options.options.oneRowIcons;
+			this.cmbSkillIconDisplayPosition.SelectedIndex = Options.options.iconDisplayPosition;
 
 			/* active window */
-			chkOtherActiveWindowMonitoringEnable.Checked = Options.options.activeWindowMonitoring;
-			nudOtherActiveWindowMonitoringTimerInterval.Value = Options.options.activeWindowMonitoringinterval;
+			this.chkOtherActiveWindowMonitoringEnable.Checked = Options.options.activeWindowMonitoring;
+			this.nudOtherActiveWindowMonitoringTimerInterval.Value = Options.options.activeWindowMonitoringinterval;
 
 			/* Hot Key */
-			tmpHotKey = Options.options.hotKeyLORSwitching;
-			txtOtherHotKeyLORSwitching.Text = Key.keyText[tmpHotKey];
+			this._tmpHotKey = Options.options.hotKeyLorSwitching;
+			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
 
 			/* Advanced */
-			chkAdvancedCommandUpArrowKeys.Checked = Options.options.commandUpArrowKeys;
+			this.chkAdvancedCommandUpArrowKeys.Checked = Options.options.commandUpArrowKeys;
 
 
-			panelSkillIcon.Enabled = chkSkillIconEnable.Checked;
-			panelOtherActiveWindowMonitoring.Enabled = chkOtherActiveWindowMonitoringEnable.Checked;
+			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
+			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 		}
 
-		private void saveOptions() {
+		private void SaveOptions() {
 
-			Options.options.startupState = cmbGeneralStartupState.SelectedIndex;
-			Options.options.ProcessName = txtGeneralProcessName.Text;
+			Options.options.startupState = this.cmbGeneralStartupState.SelectedIndex;
+			Options.options.processName = this.txtGeneralProcessName.Text;
 
 			/* job */
-			Options.options.commandInterval = (int)nudIntervalCommandKeys.Value;
-			Options.options.commandUpDownInterval = (int)nudIntervalCommandUpDown.Value;
-			Options.options.upDownInterval = (int)nudIntervalToggleUpDown.Value;
-			Options.options.timerInterval = (int)nudIntervalToggleTimer.Value;
+			Options.options.commandInterval = (int)this.nudIntervalCommandKeys.Value;
+			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
+			Options.options.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
+			Options.options.timerInterval = (int)this.nudIntervalToggleTimer.Value;
 
 			/* icon */
-			Options.options.iconViewFlag = chkSkillIconEnable.Checked;
-			Options.options.oneRowIcons = (int)nudOneRowIcons.Value;
-			Options.options.iconDisplayPosition = cmbSkillIconDisplayPosition.SelectedIndex;
+			Options.options.iconViewFlag = this.chkSkillIconEnable.Checked;
+			Options.options.oneRowIcons = (int)this.nudOneRowIcons.Value;
+			Options.options.iconDisplayPosition = this.cmbSkillIconDisplayPosition.SelectedIndex;
 
 			/* active window */
-			Options.options.activeWindowMonitoring = chkOtherActiveWindowMonitoringEnable.Checked;
-			Options.options.activeWindowMonitoringinterval = (int)nudOtherActiveWindowMonitoringTimerInterval.Value;
+			Options.options.activeWindowMonitoring = this.chkOtherActiveWindowMonitoringEnable.Checked;
+			Options.options.activeWindowMonitoringinterval = (int)this.nudOtherActiveWindowMonitoringTimerInterval.Value;
 
 			/* Hot Key */
-			Options.options.hotKeyLORSwitching = tmpHotKey;
+			Options.options.hotKeyLorSwitching = this._tmpHotKey;
 
 			/* Advanced */
-			Options.options.commandUpArrowKeys = chkAdvancedCommandUpArrowKeys.Checked;
+			Options.options.commandUpArrowKeys = this.chkAdvancedCommandUpArrowKeys.Checked;
 
-			save();
-			load();
+			SaveCnf();
+			LoadCnf();
 		}
 	}
 }

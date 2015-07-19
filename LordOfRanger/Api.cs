@@ -7,7 +7,7 @@ namespace LordOfRanger {
 	/// <summary>
 	/// API用
 	/// </summary>
-	internal class API {
+	internal static class Api {
 
 		#region ウィンドウ操作関連
 
@@ -19,16 +19,16 @@ namespace LordOfRanger {
 
 		//構造体
 		[StructLayout( LayoutKind.Sequential, Pack = 4 )]
-		internal struct RECT {
-			internal int left;
-			internal int top;
-			internal int right;
-			internal int bottom;
+		internal struct Rect {
+			internal readonly int left;
+			internal readonly int top;
+			internal readonly int right;
+			internal readonly int bottom;
 		}
 
 		//座標情報取得
 		[DllImport( "user32.dll" )]
-		internal static extern int GetWindowRect(IntPtr hWnd, out RECT rect);
+		internal static extern int GetWindowRect(IntPtr hWnd, out Rect rect);
 
 		[DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr GetDC(IntPtr hwnd);
@@ -36,8 +36,6 @@ namespace LordOfRanger {
 		[DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
-		[DllImport( "gdi32.dll", CharSet = CharSet.Auto, SetLastError = true )]
-		internal static extern IntPtr CreateDC(string lpszDriver, string lpszDevice, string lpszOutput, IntPtr lpInitData);
 		[DllImport( "gdi32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr CreateCompatibleDC(IntPtr hdc);
 
@@ -49,45 +47,45 @@ namespace LordOfRanger {
 
 		[DllImport( "gdi32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern int DeleteDC(IntPtr hdc);
-		internal const byte AC_SRC_OVER = 0;
-		internal const byte AC_SRC_ALPHA = 1;
-		internal const int ULW_ALPHA = 2;
 
 
 		//Layer Window
-		internal struct BLENDFUNCTION {
+		internal struct Blendfunction {
 			/// <summary>
 			/// Specifies the source blend operation. Currently, the only source and destination blend operation that has been defined is AC_SRC_OVER. For details, see the following Remarks section.
 			/// </summary>
-			internal byte BlendOp;
+			internal byte blendOp;
 
 			/// <summary>
 			/// Must be zero.
 			/// </summary>
-			internal byte BlendFlags;
+			internal byte blendFlags;
 
 			/// <summary>
 			/// Specifies an alpha transparency value to be used on the entire source bitmap.
 			/// </summary>
-			internal byte SourceConstantAlpha;
+			internal byte sourceConstantAlpha;
 
 			/// <summary>
 			/// This member controls the way the source and destination bitmaps are interpreted. 
 			/// </summary>
-			internal byte AlphaFormat;
+			internal byte alphaFormat;
 
 			/// <summary>
-			/// <see cref="MMFrame.Windows.Win32Api.User32.BLENDFUNCTION"/> のコンストラクタ
+			/// <see>
+			///     <cref>MMFrame.Windows.Win32Api.User32.BLENDFUNCTION</cref>
+			/// </see>
+			///     のコンストラクタ
 			/// </summary>
 			/// <param name="blendOp">Specifies the source blend operation.</param>
 			/// <param name="blendFlags">Must be zero.</param>
 			/// <param name="sourceConstantAlpha">Specifies an alpha transparency value to be used on the entire source bitmap.</param>
 			/// <param name="alphaFormat">This member controls the way the source and destination bitmaps are interpreted.</param>
-			internal BLENDFUNCTION(byte blendOp, byte blendFlags, byte sourceConstantAlpha, byte alphaFormat) {
-				this.BlendOp = blendOp;
-				this.BlendFlags = blendFlags;
-				this.SourceConstantAlpha = sourceConstantAlpha;
-				this.AlphaFormat = alphaFormat;
+			internal Blendfunction(byte blendOp, byte blendFlags, byte sourceConstantAlpha, byte alphaFormat) {
+				this.blendOp = blendOp;
+				this.blendFlags = blendFlags;
+				this.sourceConstantAlpha = sourceConstantAlpha;
+				this.alphaFormat = alphaFormat;
 			}
 		}
 		/// <summary>
@@ -103,20 +101,20 @@ namespace LordOfRanger {
 		/// <param name="pblend">ブレンド機能</param>
 		/// <param name="dwFlags">フラグ</param>
 		/// <returns>関数が成功すると、0 以外の値が返ります。</returns>
-		[System.Runtime.InteropServices.DllImport( "user32.dll" )]
+		[DllImport( "user32.dll" )]
 		internal static extern int UpdateLayeredWindow(
 			IntPtr hwnd,
 			IntPtr hdcDst,
-			[System.Runtime.InteropServices.In()]
+			[In()]
 			ref Point pptDst,
-			[System.Runtime.InteropServices.In()]
+			[In()]
 			ref Size psize,
 			IntPtr hdcSrc,
-			[System.Runtime.InteropServices.In()]
+			[In()]
 			ref Point pptSrc,
 			int crKey,
-			[System.Runtime.InteropServices.In()]
-			ref BLENDFUNCTION pblend,
+			[In()]
+			ref Blendfunction pblend,
 			int dwFlags);
 
 		#endregion

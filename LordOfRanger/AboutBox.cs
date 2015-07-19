@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+
 
 namespace LordOfRanger {
 	/// <summary>
@@ -19,8 +14,8 @@ namespace LordOfRanger {
 			string appVersion = Application.ProductVersion;
 			string appProductName = Application.ProductName;
 
-			lblInfo.Text = "\n\n" + appProductName + "\n";
-			lblInfo.Text += "Application Version : " + appVersion;
+			this.lblInfo.Text = "\n\n" + appProductName + "\n";
+			this.lblInfo.Text += "Application Version : " + appVersion;
 		}
 
 		private void btnOK_Click(object sender, EventArgs e) {

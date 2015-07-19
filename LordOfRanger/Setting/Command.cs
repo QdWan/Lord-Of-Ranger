@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 
+
+
 namespace LordOfRanger.Setting {
 	/// <summary>
 	/// このクラスのインスタンス1つがユーザーがメインウィンドウのDataGridViewで設定したファイルの1行分にあたる。
@@ -9,63 +11,40 @@ namespace LordOfRanger.Setting {
 	/// 細かい実装についてはJobクラスを参照
 	/// </summary>
 	internal class Command : DataAb {
-		private int _id;
-		private int _priority;
-		private Bitmap _skillIcon;
-		private Bitmap _disableSkillIcon;
+
 		internal byte push;
 		internal byte[] sendList = new byte[0];
 
-		internal override int id {
+		internal override int Id {
+			get;
+			set;
+		}
+
+		internal override InstanceType Type {
 			get {
-				return _id;
-			}
-			set {
-				_id = value;
+				return InstanceType.COMMAND;
 			}
 		}
 
-		internal override Type type {
-			get {
-				return Type.COMMAND;
-			}
+		internal override int Priority {
+			get;
+			set;
 		}
 
-		internal override int priority {
-			get {
-				return _priority;
-			}
-			set {
-				_priority = value;
-			}
+		internal override Bitmap SkillIcon {
+			get;
+			set;
 		}
 
-		internal override Bitmap skillIcon {
-			get {
-				return _skillIcon;
-			}
-			set {
-				_skillIcon = value;
-			}
+		internal override Bitmap DisableSkillIcon {
+			get;
+			set;
 		}
 
-		internal override Bitmap disableSkillIcon {
-			get {
-				return _disableSkillIcon;
-			}
-			set {
-				_disableSkillIcon = value;
-			}
-		}
+		internal override bool Enable {
+			get;
+			set;
+		} = true;
 
-		private bool _enable = true;
-		internal override bool enable {
-			get {
-				return _enable;
-			}
-			set {
-				_enable = value;
-			}
-		}
 	}
 }
