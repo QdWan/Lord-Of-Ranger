@@ -8,17 +8,17 @@
 		/// <summary>
 		/// マウス位置を取得、設定します。
 		/// </summary>
-		protected System.Drawing.Point MousePoint;
+		protected System.Drawing.Point mousePoint;
 
 		/// <summary>
 		/// オフスクリーンを取得、設定します。
 		/// </summary>
-		protected System.Drawing.Bitmap OffScreenCache;
+		protected System.Drawing.Bitmap offScreenCache;
 
 		/// <summary>
 		/// BLENDFUNCTION を取得、設定します。
 		/// </summary>
-		protected API.BLENDFUNCTION BlendFunction;
+		protected Api.Blendfunction blendFunction;
 
 
 
@@ -27,12 +27,12 @@
 		/// </summary>
 		internal bool AllowDragMove {
 			set {
-				MouseDown -= new System.Windows.Forms.MouseEventHandler( MouseDownEvent );
-				MouseMove -= new System.Windows.Forms.MouseEventHandler( MouseMoveEvent );
+				MouseDown -= MouseDownEvent;
+				MouseMove -= MouseMoveEvent;
 
 				if( value ) {
-					MouseDown += new System.Windows.Forms.MouseEventHandler( MouseDownEvent );
-					MouseMove += new System.Windows.Forms.MouseEventHandler( MouseMoveEvent );
+					MouseDown += MouseDownEvent;
+					MouseMove += MouseMoveEvent;
 				}
 			}
 		}
@@ -42,10 +42,10 @@
 		/// </summary>
 		internal int Alpha {
 			get {
-				return BlendFunction.SourceConstantAlpha;
+				return this.blendFunction.sourceConstantAlpha;
 			}
 			set {
-				BlendFunction.SourceConstantAlpha = ( 0 <= value && value <= 255 ) ? (byte)value : (byte)255;
+				this.blendFunction.sourceConstantAlpha = ( 0 <= value && value <= 255 ) ? (byte)value : (byte)255;
 			}
 		}
 
@@ -70,28 +70,31 @@
 		/// </summary>
 		protected System.Drawing.Bitmap OffScreen {
 			get {
-				if( this.OffScreenCache == null ) {
-					this.OffScreenCache = new System.Drawing.Bitmap( this.Size.Width, this.Size.Height );
+				if( this.offScreenCache == null ) {
+					this.offScreenCache = new System.Drawing.Bitmap( Size.Width, Size.Height );
 				}
 
-				return this.OffScreenCache;
+				return this.offScreenCache;
 			}
 			set {
-				this.OffScreenCache = value;
+				this.offScreenCache = value;
 			}
 		}
 
 		/// <summary>
-		/// <see cref="MMFrame.Forms.LayeredWindows.LayeredWindowSurface"/> のコンストラクタ
+		/// <see>
+		///     <cref>MMFrame.Forms.LayeredWindows.LayeredWindowSurface</cref>
+		/// </see>
+		///     のコンストラクタ
 		/// </summary>
 		protected LayeredWindowSurface() {
-			this.SuspendLayout();
-			this.ShowInTaskbar = false;
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.ResumeLayout( false );
-			this.AllowDragMove = true;
-			this.BlendFunction = new API.BLENDFUNCTION( 0, 0, 255, 1 );
-			System.IntPtr dummy = this.Handle;
+			SuspendLayout();
+			ShowInTaskbar = false;
+			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			ResumeLayout( false );
+			AllowDragMove = true;
+			this.blendFunction = new Api.Blendfunction( 0, 0, 255, 1 );
+			System.IntPtr dummy = Handle;
 		}
 
 		/// <summary>
@@ -99,9 +102,9 @@
 		/// </summary>
 		/// <param name="srcBitmap">オフスクリーンに書き込む <see cref="System.Drawing.Bitmap"/></param>
 		internal void DrawImage(System.Drawing.Bitmap srcBitmap) {
-			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( this.OffScreen ) ) {
+			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( OffScreen ) ) {
 				g.DrawImage( srcBitmap, 0, 0, srcBitmap.Width, srcBitmap.Height );
-			};
+			}
 		}
 
 		/// <summary>
@@ -114,10 +117,10 @@
 			cm.Matrix00 = 1;
 			cm.Matrix11 = 1;
 			cm.Matrix22 = 1;
-			cm.Matrix33 = (float)alpha / 255F;
+			cm.Matrix33 = alpha / 255F;
 			cm.Matrix44 = 1;
 
-			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( this.OffScreen ) )
+			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( OffScreen ) )
 			using( System.Drawing.Imaging.ImageAttributes ia = new System.Drawing.Imaging.ImageAttributes() ) {
 				ia.SetColorMatrix( cm );
 				g.DrawImage( srcBitmap, new System.Drawing.Rectangle( 0, 0, srcBitmap.Width, srcBitmap.Height ), 0, 0, srcBitmap.Width, srcBitmap.Height, System.Drawing.GraphicsUnit.Pixel, ia );
@@ -133,7 +136,7 @@
 		/// <param name="outlineColor"><paramref name="text"/> の縁取り色</param>
 		/// <param name="rectangle"><paramref name="text"/> の書き込み位置及び範囲</param>
 		internal void DrawText(string text, System.Drawing.Font font, System.Drawing.Brush color, System.Drawing.Pen outlineColor, System.Drawing.RectangleF rectangle) {
-			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( this.OffScreen ) ) {
+			using( System.Drawing.Graphics g = System.Drawing.Graphics.FromImage( OffScreen ) ) {
 				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 				g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
@@ -161,25 +164,25 @@
 			System.IntPtr oldBitmap = System.IntPtr.Zero;
 
 			try {
-				screen = API.GetDC( System.IntPtr.Zero );
-				memScreen = API.CreateCompatibleDC( screen );
-				gdiBitmap = this.OffScreen.GetHbitmap( System.Drawing.Color.FromArgb( 0 ) );
-				oldBitmap = API.SelectObject( memScreen, gdiBitmap );
+				screen = Api.GetDC( System.IntPtr.Zero );
+				memScreen = Api.CreateCompatibleDC( screen );
+				gdiBitmap = OffScreen.GetHbitmap( System.Drawing.Color.FromArgb( 0 ) );
+				oldBitmap = Api.SelectObject( memScreen, gdiBitmap );
 
-				System.Drawing.Size size = this.Size;
+				System.Drawing.Size size = Size;
 				System.Drawing.Point pointSource = new System.Drawing.Point( 0, 0 );
-				System.Drawing.Point topPos = this.Location;
+				System.Drawing.Point topPos = Location;
 
 				InvokeWithThreadSafe( () => {
-					API.UpdateLayeredWindow( this.Handle, screen, ref topPos, ref size, memScreen, ref pointSource, 0, ref BlendFunction, 2 );
+					Api.UpdateLayeredWindow( Handle, screen, ref topPos, ref size, memScreen, ref pointSource, 0, ref this.blendFunction, 2 );
 				} );
 			} finally {
-				API.ReleaseDC( System.IntPtr.Zero, screen );
-				API.SelectObject( memScreen, oldBitmap );
-				API.DeleteObject( gdiBitmap );
-				API.DeleteDC( memScreen );
-				this.OffScreen.Dispose();
-				this.OffScreen = null;
+				Api.ReleaseDC( System.IntPtr.Zero, screen );
+				Api.SelectObject( memScreen, oldBitmap );
+				Api.DeleteObject( gdiBitmap );
+				Api.DeleteDC( memScreen );
+				OffScreen.Dispose();
+				OffScreen = null;
 			}
 		}
 
@@ -188,8 +191,8 @@
 		/// </summary>
 		/// <param name="action">スレッドセーフで実行する <see cref="System.Action"/></param>
 		protected void InvokeWithThreadSafe(System.Action action) {
-			if( this.InvokeRequired ) {
-				this.Invoke( (System.Windows.Forms.MethodInvoker)delegate () {
+			if( InvokeRequired ) {
+				Invoke( (System.Windows.Forms.MethodInvoker)delegate {
 					action();
 				} );
 			} else {
@@ -203,21 +206,21 @@
 		/// <param name="disposing">マネージドリソースの解放をする場合は true</param>
 		protected override void Dispose(bool disposing) {
 			if( disposing ) {
-				this.AllowDragMove = false;
+				AllowDragMove = false;
 
-				if( this.OffScreen != null ) {
-					this.OffScreen.Dispose();
-					this.OffScreen = null;
+				if( OffScreen != null ) {
+					OffScreen.Dispose();
+					OffScreen = null;
 				}
 
 				if( this.Components != null ) {
-					Components.Dispose();
-					Components = null;
+					this.Components.Dispose();
+					this.Components = null;
 				}
 
-				if( this.ContextMenuStrip != null ) {
-					this.ContextMenuStrip.Dispose();
-					this.ContextMenuStrip = null;
+				if( ContextMenuStrip != null ) {
+					ContextMenuStrip.Dispose();
+					ContextMenuStrip = null;
 				}
 			}
 
@@ -233,7 +236,7 @@
 		/// <param name="e"><see cref="System.Windows.Forms.MouseEventArgs"/></param>
 		private void MouseDownEvent(object sender, System.Windows.Forms.MouseEventArgs e) {
 			if( ( e.Button & System.Windows.Forms.MouseButtons.Left ) == System.Windows.Forms.MouseButtons.Left ) {
-				this.MousePoint = new System.Drawing.Point( e.X, e.Y );
+				this.mousePoint = new System.Drawing.Point( e.X, e.Y );
 			}
 		}
 
@@ -244,7 +247,7 @@
 		/// <param name="e"><see cref="System.Windows.Forms.MouseEventArgs"/></param>
 		private void MouseMoveEvent(object sender, System.Windows.Forms.MouseEventArgs e) {
 			if( ( e.Button & System.Windows.Forms.MouseButtons.Left ) == System.Windows.Forms.MouseButtons.Left ) {
-				this.Location = new System.Drawing.Point( this.Location.X + e.X - this.MousePoint.X, this.Location.Y + e.Y - this.MousePoint.Y );
+				Location = new System.Drawing.Point( Location.X + e.X - this.mousePoint.X, Location.Y + e.Y - this.mousePoint.Y );
 			}
 		}
 	}

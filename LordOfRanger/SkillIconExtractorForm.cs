@@ -15,37 +15,37 @@ namespace LordOfRanger {
 			InitializeComponent();
 		}
 
-		private struct NPK_Header {
+		private struct NpkHeader {
 			internal string flag;
 			internal uint count;
 		};
 
-		private struct NPK_Index {
+		private struct NpkIndex {
 			internal uint offset;
 			internal uint size;
 			internal string name;
 		};
 
-		private char[] decord_flag = ( "puchikon@neople dungeon and fighter DNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNF\0" ).ToCharArray();
+		private char[] _decordFlag = ( "puchikon@neople dungeon and fighter DNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNF\0" ).ToCharArray();
 
-		private struct NImgF_Header {
+		private struct NImgFHeader {
 			internal string flag;
-			internal uint index_size;
+			internal uint indexSize;
 			internal uint unknown1;
 			internal uint unknown2;
-			internal uint index_count;
+			internal uint indexCount;
 		};
 
-		private struct NImgF_Index {
+		private struct NImgFIndex {
 			internal uint dwType;
 			internal uint dwCompress;
 			internal uint width;
 			internal uint height;
 			internal uint size;
-			internal uint key_x;
-			internal uint key_y;
-			internal uint max_width;
-			internal uint max_height;
+			internal uint keyX;
+			internal uint keyY;
+			internal uint maxWidth;
+			internal uint maxHeight;
 		};
 
 		private const uint ARGB_1555 = 0x0e;
@@ -58,13 +58,13 @@ namespace LordOfRanger {
 
 
 		private void btnExtract_Click(object sender, EventArgs e) {
-			string dir = txtDirectory.Text;
+			string dir = this.txtDirectory.Text;
 			foreach( string filename in Directory.GetFiles( dir ) ) {
 				if( System.Text.RegularExpressions.Regex.IsMatch( filename, @"\.npk", System.Text.RegularExpressions.RegexOptions.IgnoreCase ) ) {
 					try {
 						extract_npk( filename );
 					} catch( Exception ) {
-
+						// ignored
 					}
 				}
 			}
@@ -82,60 +82,60 @@ namespace LordOfRanger {
 
 			fs.Read( array, 0, (int)fs.Length );
 
-			NPK_Header header = new NPK_Header();
+			NpkHeader header = new NpkHeader();
 			header.flag = Encoding.UTF8.GetString( array, offset, 16 );
 			offset += 16;
 			header.count = BitConverter.ToUInt32( array, offset );
 			offset += 4;
 
-			List<NPK_Index> all_file_index = new List<NPK_Index>();
+			List<NpkIndex> allFileIndex = new List<NpkIndex>();
 			for( int i = 0; i < header.count; ++i ) {
-				NPK_Index index = new NPK_Index();
+				NpkIndex index = new NpkIndex();
 				index.offset = BitConverter.ToUInt32( array, offset );
 				offset += 4;
 				index.size = BitConverter.ToUInt32( array, offset );
 				offset += 4;
 
-				char[] index_name = new char[256];
+				char[] indexName = new char[256];
 				for( int j = 0; j < 256; j++ ) {
-					index_name[j] = (char)( array[offset++] ^ decord_flag[j] );
+					indexName[j] = (char)( array[offset++] ^ this._decordFlag[j] );
 				}
-				index.name = new string( index_name );
+				index.name = new string( indexName );
 				index.name = index.name.Replace( "\0", "" );
-				all_file_index.Add( index );
+				allFileIndex.Add( index );
 			}
 
-			foreach( NPK_Index index in all_file_index ) {
+			foreach( NpkIndex index in allFileIndex ) {
 				if( System.Text.RegularExpressions.Regex.IsMatch( index.name, "skillicon" ) ) {
 					extract_img_npk( array, (int)index.offset, index.name );
 				}
 			}
 		}
-		private void extract_img_npk(byte[] array, int index_offset, string index_name) {
+		private void extract_img_npk(byte[] array, int indexOffset, string indexName) {
 
-			int offset = index_offset;
-			string file_path_noextern = index_name.Substring( 0, index_name.LastIndexOf( '.' ) );
-			NImgF_Header header = new NImgF_Header();
+			int offset = indexOffset;
+			string filePathNoextern = indexName.Substring( 0, indexName.LastIndexOf( '.' ) );
+			NImgFHeader header = new NImgFHeader();
 			header.flag = Encoding.UTF8.GetString( array, offset, 16 );
 			offset += 16;
-			header.index_size = BitConverter.ToUInt32( array, offset );
+			header.indexSize = BitConverter.ToUInt32( array, offset );
 			offset += 4;
 
 			header.unknown1 = BitConverter.ToUInt32( array, offset );
 			offset += 4;
 			header.unknown2 = BitConverter.ToUInt32( array, offset );
 			offset += 4;
-			header.index_count = BitConverter.ToUInt32( array, offset );
+			header.indexCount = BitConverter.ToUInt32( array, offset );
 			offset += 4;
 
-			if( header.flag.IndexOf( "Neople Img File" ) != 0 ) {
-				Console.WriteLine( "error flag " + header.flag + " in file " + index_name );
+			if( header.flag.IndexOf( "Neople Img File", StringComparison.Ordinal ) != 0 ) {
+				Console.WriteLine( "error flag " + header.flag + " in file " + indexName );
 				return;
 			}
 
-			List<NImgF_Index> all_file_index = new List<NImgF_Index>();
-			for( int i = 0; i < header.index_count; ++i ) {
-				NImgF_Index index = new NImgF_Index();
+			List<NImgFIndex> allFileIndex = new List<NImgFIndex>();
+			for( int i = 0; i < header.indexCount; ++i ) {
+				NImgFIndex index = new NImgFIndex();
 
 				index.dwType = BitConverter.ToUInt32( array, offset );
 				offset += 4;
@@ -143,7 +143,7 @@ namespace LordOfRanger {
 				offset += 4;
 
 				if( index.dwType == ARGB_NONE ) {
-					all_file_index.Add( index );
+					allFileIndex.Add( index );
 					continue;
 				}
 
@@ -154,26 +154,26 @@ namespace LordOfRanger {
 				offset += 4;
 				index.size = BitConverter.ToUInt32( array, offset );
 				offset += 4;
-				index.key_x = BitConverter.ToUInt32( array, offset );
+				index.keyX = BitConverter.ToUInt32( array, offset );
 				offset += 4;
-				index.key_y = BitConverter.ToUInt32( array, offset );
+				index.keyY = BitConverter.ToUInt32( array, offset );
 				offset += 4;
-				index.max_width = BitConverter.ToUInt32( array, offset );
+				index.maxWidth = BitConverter.ToUInt32( array, offset );
 				offset += 4;
-				index.max_height = BitConverter.ToUInt32( array, offset );
+				index.maxHeight = BitConverter.ToUInt32( array, offset );
 				offset += 4;
 
-				all_file_index.Add( index );
+				allFileIndex.Add( index );
 			}
 
 
-			const int buffer_size = 1024 * 1024 * 3;
-			byte[] temp_file_data = new byte[buffer_size];
-			byte[] temp_zlib_data = new byte[buffer_size];
-			offset = index_offset + (int)header.index_size + 32;
+			const int bufferSize = 1024 * 1024 * 3;
+			byte[] tempFileData = new byte[bufferSize];
+			byte[] tempZlibData = new byte[bufferSize];
+			offset = indexOffset + (int)header.indexSize + 32;
 
 			int count = 0;
-			foreach( NImgF_Index index in all_file_index ) {
+			foreach( NImgFIndex index in allFileIndex ) {
 				if( index.dwType == ARGB_NONE ) {
 					continue;
 				}
@@ -194,9 +194,9 @@ namespace LordOfRanger {
 					DeflateStream ds = new DeflateStream( ms, CompressionMode.Decompress );
 					try {
 
-						int readBytes = ds.Read( temp_file_data, 0, temp_file_data.Length );
-					} catch( Exception e ) {
-						Console.WriteLine( "compress " + index_name + "error!" );
+						ds.Read( tempFileData, 0, tempFileData.Length );
+					} catch( Exception ) {
+						Console.WriteLine( "compress " + indexName + "error!" );
 						offset += (int)size;
 						continue;
 					}
@@ -204,22 +204,22 @@ namespace LordOfRanger {
 					ds.Close();
 				} else if( index.dwCompress == COMPRESS_NONE ) {
 					MemoryStream ms = new MemoryStream( array, offset + 2, (int)size );
-					ms.Read( temp_file_data, 0, temp_file_data.Length );
+					ms.Read( tempFileData, 0, tempFileData.Length );
 					ms.Close();
 				} else {
-					Console.WriteLine( "error unknown compress type: " + index.dwCompress + " in file " + index_name );
+					Console.WriteLine( "error unknown compress type: " + index.dwCompress + " in file " + indexName );
 				}
 
-				Directory.CreateDirectory( file_path_noextern );
+				Directory.CreateDirectory( filePathNoextern );
 
 
-				string filename = Path.GetFileName( file_path_noextern );
-				convert_to_png( file_path_noextern + "/" + filename + "_" + count++ + ".png", (int)index.width, (int)index.height, index.dwType, temp_file_data );
+				string filename = Path.GetFileName( filePathNoextern );
+				convert_to_png( filePathNoextern + "/" + filename + "_" + count++ + ".png", (int)index.width, (int)index.height, index.dwType, tempFileData );
 				offset += (int)size;
 			}
 		}
 
-		private void convert_to_png(string file_name, int width, int height, uint type, byte[] data) {
+		private void convert_to_png(string fileName, int width, int height, uint type, byte[] data) {
 			Bitmap bmp = new Bitmap( width, height );
 			for( int i = 0; i < height; i++ ) {
 				for( int j = 0; j < width; ++j ) {
@@ -259,22 +259,22 @@ namespace LordOfRanger {
 						case ARGB_NONE:
 							break;
 						default:
-							Console.WriteLine( "error known type:%d\n", type );
+							Console.WriteLine( "error known type:" + type );
 							break;
 					}
 				}
 			}
 
-			bmp.Save( file_name, System.Drawing.Imaging.ImageFormat.Png );
+			bmp.Save( fileName, System.Drawing.Imaging.ImageFormat.Png );
 
 		}
 
 		private void btnBrowse_Click(object sender, EventArgs e) {
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
 			fbd.ShowNewFolderButton = false;
-			fbd.SelectedPath = txtDirectory.Text;
+			fbd.SelectedPath = this.txtDirectory.Text;
 			if( fbd.ShowDialog( this ) == DialogResult.OK ) {
-				txtDirectory.Text = fbd.SelectedPath;
+				this.txtDirectory.Text = fbd.SelectedPath;
 			}
 		}
 	}

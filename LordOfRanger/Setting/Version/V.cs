@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+
+
 namespace LordOfRanger.Setting.Version {
 	/// <summary>
 	/// 設定ファイルのバージョンを管理するクラス
@@ -14,10 +16,10 @@ namespace LordOfRanger.Setting.Version {
 		/// <summary>
 		/// 最新のバージョン
 		/// </summary>
-		private readonly int VERSION = 2;
+		private const int VERSION = 2;
 
-		private If vif;
-		private Mass instance;
+		private IF _vif;
+		private Mass _instance;
 
 		/// <summary>
 		/// コンストラクタ
@@ -26,13 +28,13 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="instance"> 操作する対象のインスタンス </param>
 		internal V(Mass instance) {
-			this.instance = instance;
+			this._instance = instance;
 			switch( VERSION ) {
 				case 1:
-					vif = new V1( instance );
+					this._vif = new V1( instance );
 					break;
 				case 2:
-					vif = new V2( instance );
+					this._vif = new V2( instance );
 					break;
 			}
 		}
@@ -42,8 +44,8 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="filename"> バージョンを取得するファイルのファイル名 </param>
 		/// <returns> バージョン </returns>
-		private static int getVersion(string filename) {
-			FileStream fs = new FileStream( Mass.setting_path + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+		private static int GetVersion(string filename) {
+			FileStream fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 			byte[] array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
@@ -60,24 +62,24 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="filename"> 読み込むファイルのファイル名 </param>
 		internal void Load(string filename) {
-			switch( getVersion( filename ) ) {
+			switch( GetVersion( filename ) ) {
 				case 1:
-					vif = new V1( instance );
+					this._vif = new V1( this._instance );
 					break;
 				case 2:
-					vif = new V2( instance );
+					this._vif = new V2( this._instance );
 					break;
 				default:
 					return;
 			}
-			vif.Load( filename );
+			this._vif.Load( filename );
 		}
 
 		/// <summary>
 		/// 最新バージョンで保存する
 		/// </summary>
 		internal void Save() {
-			vif.Save();
+			this._vif.Save();
 		}
 
 		/// <summary>
@@ -85,12 +87,12 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="filename"> ファイルのホットキーを取得する </param>
 		/// <returns></returns>
-		internal static byte getHotKey(string filename) {
-			switch( getVersion( filename ) ) {
+		internal static byte GetHotKey(string filename) {
+			switch( GetVersion( filename ) ) {
 				case 1:
-					return V1.getHotKey( filename );
+					return V1.GetHotKey( filename );
 				case 2:
-					return V2.getHotKey( filename );
+					return V2.GetHotKey( filename );
 				default:
 					return 0x00;
 			}

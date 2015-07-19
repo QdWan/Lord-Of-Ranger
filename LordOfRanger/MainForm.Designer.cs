@@ -55,16 +55,16 @@
 			this.skillIconExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.skillIcon = new System.Windows.Forms.DataGridViewImageColumn();
-			this.disableSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
-			this.mode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.sequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.priority = new System.Windows.Forms.DataGridViewComboBoxColumn();
-			this.push = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.send = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.up = new System.Windows.Forms.DataGridViewButtonColumn();
-			this.down = new System.Windows.Forms.DataGridViewButtonColumn();
-			this.delete = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.dgvColSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
+			this.dgvColDisableSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
+			this.dgvColMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColSequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColPriority = new System.Windows.Forms.DataGridViewComboBoxColumn();
+			this.dgvColPush = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColUp = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.dgvColDown = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -180,16 +180,16 @@
 			this.dgv.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
 			this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.skillIcon,
-            this.disableSkillIcon,
-            this.mode,
-            this.sequence,
-            this.priority,
-            this.push,
-            this.send,
-            this.up,
-            this.down,
-            this.delete});
+            this.dgvColSkillIcon,
+            this.dgvColDisableSkillIcon,
+            this.dgvColMode,
+            this.dgvColSequence,
+            this.dgvColPriority,
+            this.dgvColPush,
+            this.dgvColSend,
+            this.dgvColUp,
+            this.dgvColDown,
+            this.dgvColDelete});
 			this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dgv.Location = new System.Drawing.Point(0, 0);
 			this.dgv.Name = "dgv";
@@ -407,50 +407,50 @@
 			this.aboutToolStripMenuItem.Text = "About";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// skillIcon
+			// dgvColSkillIcon
 			// 
-			this.skillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-			this.skillIcon.Frozen = true;
-			this.skillIcon.HeaderText = "Skill Icon";
-			this.skillIcon.MinimumWidth = 50;
-			this.skillIcon.Name = "skillIcon";
-			this.skillIcon.Width = 50;
+			this.dgvColSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+			this.dgvColSkillIcon.Frozen = true;
+			this.dgvColSkillIcon.HeaderText = "Skill Icon";
+			this.dgvColSkillIcon.MinimumWidth = 50;
+			this.dgvColSkillIcon.Name = "dgvColSkillIcon";
+			this.dgvColSkillIcon.Width = 50;
 			// 
-			// disableSkillIcon
+			// dgvColDisableSkillIcon
 			// 
-			this.disableSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-			this.disableSkillIcon.Frozen = true;
-			this.disableSkillIcon.HeaderText = "Disable Skill Icon";
-			this.disableSkillIcon.MinimumWidth = 50;
-			this.disableSkillIcon.Name = "disableSkillIcon";
-			this.disableSkillIcon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.disableSkillIcon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.disableSkillIcon.Width = 50;
+			this.dgvColDisableSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+			this.dgvColDisableSkillIcon.Frozen = true;
+			this.dgvColDisableSkillIcon.HeaderText = "Disable Skill Icon";
+			this.dgvColDisableSkillIcon.MinimumWidth = 50;
+			this.dgvColDisableSkillIcon.Name = "dgvColDisableSkillIcon";
+			this.dgvColDisableSkillIcon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.dgvColDisableSkillIcon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.dgvColDisableSkillIcon.Width = 50;
 			// 
-			// mode
+			// dgvColMode
 			// 
-			this.mode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-			this.mode.Frozen = true;
-			this.mode.HeaderText = "Mode";
-			this.mode.Name = "mode";
-			this.mode.ReadOnly = true;
-			this.mode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-			this.mode.Width = 57;
+			this.dgvColMode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+			this.dgvColMode.Frozen = true;
+			this.dgvColMode.HeaderText = "Mode";
+			this.dgvColMode.Name = "dgvColMode";
+			this.dgvColMode.ReadOnly = true;
+			this.dgvColMode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			this.dgvColMode.Width = 57;
 			// 
-			// sequence
+			// dgvColSequence
 			// 
-			this.sequence.Frozen = true;
-			this.sequence.HeaderText = "sequence";
-			this.sequence.Name = "sequence";
-			this.sequence.Visible = false;
-			this.sequence.Width = 5;
+			this.dgvColSequence.Frozen = true;
+			this.dgvColSequence.HeaderText = "sequence";
+			this.dgvColSequence.Name = "dgvColSequence";
+			this.dgvColSequence.Visible = false;
+			this.dgvColSequence.Width = 5;
 			// 
-			// priority
+			// dgvColPriority
 			// 
-			this.priority.FillWeight = 47.41861F;
-			this.priority.Frozen = true;
-			this.priority.HeaderText = "Priority";
-			this.priority.Items.AddRange(new object[] {
+			this.dgvColPriority.FillWeight = 47.41861F;
+			this.dgvColPriority.Frozen = true;
+			this.dgvColPriority.HeaderText = "Priority";
+			this.dgvColPriority.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -472,66 +472,66 @@
             "18",
             "19",
             "20"});
-			this.priority.Name = "priority";
-			this.priority.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.priority.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.priority.Visible = false;
-			this.priority.Width = 5;
+			this.dgvColPriority.Name = "dgvColPriority";
+			this.dgvColPriority.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.dgvColPriority.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.dgvColPriority.Visible = false;
+			this.dgvColPriority.Width = 5;
 			// 
-			// push
+			// dgvColPush
 			// 
-			this.push.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.push.FillWeight = 92.4663F;
-			this.push.HeaderText = "Push Key";
-			this.push.Name = "push";
-			this.push.ReadOnly = true;
-			this.push.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			this.dgvColPush.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.dgvColPush.FillWeight = 92.4663F;
+			this.dgvColPush.HeaderText = "Push Key";
+			this.dgvColPush.Name = "dgvColPush";
+			this.dgvColPush.ReadOnly = true;
+			this.dgvColPush.Resizable = System.Windows.Forms.DataGridViewTriState.False;
 			// 
-			// send
+			// dgvColSend
 			// 
-			this.send.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.send.FillWeight = 92.4663F;
-			this.send.HeaderText = "Send Key";
-			this.send.Name = "send";
-			this.send.ReadOnly = true;
-			this.send.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			this.dgvColSend.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.dgvColSend.FillWeight = 92.4663F;
+			this.dgvColSend.HeaderText = "Send Key";
+			this.dgvColSend.Name = "dgvColSend";
+			this.dgvColSend.ReadOnly = true;
+			this.dgvColSend.Resizable = System.Windows.Forms.DataGridViewTriState.False;
 			// 
-			// up
+			// dgvColUp
 			// 
-			this.up.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColUp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			dataGridViewCellStyle1.NullValue = "Up";
-			this.up.DefaultCellStyle = dataGridViewCellStyle1;
-			this.up.HeaderText = "Up";
-			this.up.MinimumWidth = 25;
-			this.up.Name = "up";
-			this.up.Text = "Up";
-			this.up.Width = 25;
+			this.dgvColUp.DefaultCellStyle = dataGridViewCellStyle1;
+			this.dgvColUp.HeaderText = "Up";
+			this.dgvColUp.MinimumWidth = 25;
+			this.dgvColUp.Name = "dgvColUp";
+			this.dgvColUp.Text = "Up";
+			this.dgvColUp.Width = 25;
 			// 
-			// down
+			// dgvColDown
 			// 
-			this.down.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColDown.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			dataGridViewCellStyle2.NullValue = "Down";
-			this.down.DefaultCellStyle = dataGridViewCellStyle2;
-			this.down.HeaderText = "Down";
-			this.down.Name = "down";
-			this.down.Text = "Down";
-			this.down.Width = 39;
+			this.dgvColDown.DefaultCellStyle = dataGridViewCellStyle2;
+			this.dgvColDown.HeaderText = "Down";
+			this.dgvColDown.Name = "dgvColDown";
+			this.dgvColDown.Text = "Down";
+			this.dgvColDown.Width = 39;
 			// 
-			// delete
+			// dgvColDelete
 			// 
-			this.delete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			dataGridViewCellStyle3.NullValue = "DELETE";
-			this.delete.DefaultCellStyle = dataGridViewCellStyle3;
-			this.delete.FillWeight = 92.4663F;
-			this.delete.HeaderText = "Delete";
-			this.delete.Name = "delete";
-			this.delete.Text = "Delete";
-			this.delete.Width = 44;
+			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle3;
+			this.dgvColDelete.FillWeight = 92.4663F;
+			this.dgvColDelete.HeaderText = "Delete";
+			this.dgvColDelete.Name = "dgvColDelete";
+			this.dgvColDelete.Text = "Delete";
+			this.dgvColDelete.Width = 44;
 			// 
-			// Main
+			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -541,7 +541,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.MinimumSize = new System.Drawing.Size(500, 300);
-			this.Name = "Main";
+			this.Name = "MainForm";
 			this.Text = "Lord Of Ranger";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
 			this.ClientSizeChanged += new System.EventHandler(this.Arad_ClientSizeChanged);
@@ -604,16 +604,16 @@
 		private System.Windows.Forms.TextBox txtHotKey;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-		private System.Windows.Forms.DataGridViewImageColumn skillIcon;
-		private System.Windows.Forms.DataGridViewImageColumn disableSkillIcon;
-		private System.Windows.Forms.DataGridViewTextBoxColumn mode;
-		private System.Windows.Forms.DataGridViewTextBoxColumn sequence;
-		private System.Windows.Forms.DataGridViewComboBoxColumn priority;
-		private System.Windows.Forms.DataGridViewTextBoxColumn push;
-		private System.Windows.Forms.DataGridViewTextBoxColumn send;
-		private System.Windows.Forms.DataGridViewButtonColumn up;
-		private System.Windows.Forms.DataGridViewButtonColumn down;
-		private System.Windows.Forms.DataGridViewButtonColumn delete;
+		private System.Windows.Forms.DataGridViewImageColumn dgvColSkillIcon;
+		private System.Windows.Forms.DataGridViewImageColumn dgvColDisableSkillIcon;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColMode;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColSequence;
+		private System.Windows.Forms.DataGridViewComboBoxColumn dgvColPriority;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColPush;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColSend;
+		private System.Windows.Forms.DataGridViewButtonColumn dgvColUp;
+		private System.Windows.Forms.DataGridViewButtonColumn dgvColDown;
+		private System.Windows.Forms.DataGridViewButtonColumn dgvColDelete;
 	}
 }
 

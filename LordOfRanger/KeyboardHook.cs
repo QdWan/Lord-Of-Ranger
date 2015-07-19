@@ -2,75 +2,76 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-namespace HongliangSoft.Utilities.Gui {
+
+namespace LordOfRanger {
 	///<summary>キーボードが操作されたときに実行されるメソッドを表すイベントハンドラ。</summary>
 	public delegate void KeyboardHookedEventHandler(object sender, KeyboardHookedEventArgs e);
 	///<summary>KeyboardHookedイベントのデータを提供する。</summary>
 	public class KeyboardHookedEventArgs : CancelEventArgs {
 		///<summary>新しいインスタンスを作成する。</summary>
 		internal KeyboardHookedEventArgs(KeyboardMessage message, ref KeyboardState state) {
-			this.message = message;
-			this.state = state;
+			this._message = message;
+			this._state = state;
 		}
-		private KeyboardMessage message;
-		private KeyboardState state;
+		private KeyboardMessage _message;
+		private KeyboardState _state;
 		///<summary>キーボードが押されたか放されたかを表す値を取得する。</summary>
 		public KeyboardUpDown UpDown {
 			get {
-				return ( message == KeyboardMessage.KeyDown || message == KeyboardMessage.SysKeyDown ) ?
-					KeyboardUpDown.Down : KeyboardUpDown.Up;
+				return ( this._message == KeyboardMessage.KEY_DOWN || this._message == KeyboardMessage.SYS_KEY_DOWN ) ?
+					KeyboardUpDown.DOWN : KeyboardUpDown.UP;
 			}
 		}
 		///<summary>操作されたキーの仮想キーコードを表す値を取得する。</summary>
-		public Keys KeyCode { get { return state.KeyCode; } }
+		public Keys KeyCode { get { return this._state.keyCode; } }
 		///<summary>操作されたキーのスキャンコードを表す値を取得する。</summary>
-		public int ScanCode { get { return state.ScanCode; } }
+		public int ScanCode { get { return this._state.scanCode; } }
 		///<summary>操作されたキーがテンキーなどの拡張キーかどうかを表す値を取得する。</summary>
-		public bool IsExtendedKey { get { return state.Flag.IsExtended; } }
+		public bool IsExtendedKey { get { return this._state.flag.IsExtended; } }
 		///<summary>ALTキーが押されているかどうかを表す値を取得する。</summary>
-		public bool AltDown { get { return state.Flag.AltDown; } }
-		public int ExtraInfo { get { return (int)state.ExtraInfo; } }
+		public bool AltDown { get { return this._state.flag.AltDown; } }
+		public int ExtraInfo { get { return (int)this._state.extraInfo; } }
 	}
 	///<summary>キーボードが押されているか放されているかを表す。</summary>
 	public enum KeyboardUpDown {
 		///<summary>キーは押されている。</summary>
-		Down,
+		DOWN,
 		///<summary>キーは放されている。</summary>
-		Up,
+		UP,
 	}
 
 	///<summary>メッセージコードを表す。</summary>
 	internal enum KeyboardMessage {
 		///<summary>キーが押された。</summary>
-		KeyDown = 0x100,
+		KEY_DOWN = 0x100,
 		///<summary>キーが放された。</summary>
-		KeyUp = 0x101,
+		KEY_UP = 0x101,
 		///<summary>システムキーが押された。</summary>
-		SysKeyDown = 0x104,
+		SYS_KEY_DOWN = 0x104,
 		///<summary>システムキーが放された。</summary>
-		SysKeyUp = 0x105,
+		SYS_KEY_UP = 0x105,
 	}
 	///<summary>キーボードの状態を表す。</summary>
 	internal struct KeyboardState {
 		///<summary>仮想キーコード。</summary>
-		public Keys KeyCode;
+		public Keys keyCode;
 		///<summary>スキャンコード。</summary>
-		public int ScanCode;
+		public int scanCode;
 		///<summary>各種特殊フラグ。</summary>
-		public KeyboardStateFlag Flag;
+		public KeyboardStateFlag flag;
 		///<summary>このメッセージが送られたときの時間。</summary>
-		public int Time;
+		public int time;
 		///<summary>メッセージに関連づけられた拡張情報。</summary>
-		public IntPtr ExtraInfo;
+		public IntPtr extraInfo;
 	}
 	///<summary>キーボードの状態を補足する。</summary>
 	internal struct KeyboardStateFlag {
-		private int flag;
+		private int _flag;
 		private bool IsFlagging(int value) {
-			return ( flag & value ) != 0;
+			return ( this._flag & value ) != 0;
 		}
 		private void Flag(bool value, int digit) {
-			flag = value ? ( flag | digit ) : ( flag & ~digit );
+			this._flag = value ? ( this._flag | digit ) : ( this._flag & ~digit );
 		}
 		///<summary>キーがテンキー上のキーのような拡張キーかどうかを表す。</summary>
 		public bool IsExtended { get { return IsFlagging( 0x01 ); } set { Flag( value, 0x01 ); } }
@@ -92,17 +93,17 @@ namespace HongliangSoft.Utilities.Gui {
 		private static extern bool UnhookWindowsHookEx(IntPtr hook);
 
 		private delegate int KeyboardHookDelegate(int code, KeyboardMessage message, ref KeyboardState state);
-		private const int KeyboardHookType = 13;
-		private GCHandle hookDelegate;
-		private IntPtr hook;
-		private static readonly object EventKeyboardHooked = new object();
+		private const int KEYBOARD_HOOK_TYPE = 13;
+		private GCHandle _hookDelegate;
+		private IntPtr _hook;
+		private static readonly object EVENT_KEYBOARD_HOOKED = new object();
 		///<summary>キーボードが操作されたときに発生する。</summary>
 		public event KeyboardHookedEventHandler KeyboardHooked {
 			add {
-				base.Events.AddHandler( EventKeyboardHooked, value );
+				Events.AddHandler( EVENT_KEYBOARD_HOOKED, value );
 			}
 			remove {
-				base.Events.RemoveHandler( EventKeyboardHooked, value );
+				Events.RemoveHandler( EVENT_KEYBOARD_HOOKED, value );
 			}
 		}
 		///<summary>
@@ -110,7 +111,7 @@ namespace HongliangSoft.Utilities.Gui {
 		///</summary>
 		///<param name="e">イベントのデータ。</param>
 		protected virtual void OnKeyboardHooked(KeyboardHookedEventArgs e) {
-			KeyboardHookedEventHandler handler = base.Events[EventKeyboardHooked] as KeyboardHookedEventHandler;
+			KeyboardHookedEventHandler handler = Events[EVENT_KEYBOARD_HOOKED] as KeyboardHookedEventHandler;
 			if( handler != null ) {
 				handler( this, e );
 			}
@@ -119,17 +120,17 @@ namespace HongliangSoft.Utilities.Gui {
 		///新しいインスタンスを作成する。
 		///</summary>
 		public KeyboardHook() {
-			KeyboardHookDelegate callback = new KeyboardHookDelegate( CallNextHook );
-			this.hookDelegate = GCHandle.Alloc( callback );
+			KeyboardHookDelegate callback = CallNextHook;
+			this._hookDelegate = GCHandle.Alloc( callback );
 			IntPtr module = Marshal.GetHINSTANCE( typeof( KeyboardHook ).Assembly.GetModules()[0] );
-			this.hook = SetWindowsHookEx( KeyboardHookType, callback, module, 0 );
+			this._hook = SetWindowsHookEx( KEYBOARD_HOOK_TYPE, callback, module, 0 );
 		}
 		///<summary>
 		///キーボードが操作されたときに実行するデリゲートを指定してインスタンスを作成する。
 		///</summary>
 		///<param name="handler">キーボードが操作されたときに実行するメソッドを表すイベントハンドラ。</param>
 		public KeyboardHook(KeyboardHookedEventHandler handler) : this() {
-			this.KeyboardHooked += handler;
+			KeyboardHooked += handler;
 		}
 		private int CallNextHook(int code, KeyboardMessage message, ref KeyboardState state) {
 			if( code >= 0 ) {
@@ -146,10 +147,10 @@ namespace HongliangSoft.Utilities.Gui {
 		///</summary>
 		///<param name="disposing">マネージリソースも解放する場合はtrue。</param>
 		protected override void Dispose(bool disposing) {
-			if( this.hookDelegate.IsAllocated ) {
-				UnhookWindowsHookEx( hook );
-				this.hook = IntPtr.Zero;
-				this.hookDelegate.Free();
+			if( this._hookDelegate.IsAllocated ) {
+				UnhookWindowsHookEx( this._hook );
+				this._hook = IntPtr.Zero;
+				this._hookDelegate.Free();
 			}
 			base.Dispose( disposing );
 		}

@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 using System.Threading;
-using System.Drawing;
+
+
 
 namespace LordOfRanger.Setting.Version {
-	internal class V1 : If {
-		private Mass mass;
+	internal class V1 : IF {
+		private Mass _mass;
 		private const int VERSION = 1;
 
 		public V1(Mass instance) {
-			mass = instance;
+			this._mass = instance;
 		}
 
 		private struct ArdHeader {
 			internal int id;
-			internal DataAb.Type type;
+			internal DataAb.InstanceType instanceType;
 			internal int priority;
 			internal int skillIconSize;
 			internal int disableSkillIconSize;
@@ -26,10 +28,10 @@ namespace LordOfRanger.Setting.Version {
 		}
 
 		public void Load(string filename) {
-			mass.init();
-			mass.Name = filename;
+			this._mass.Init();
+			this._mass.name = filename;
 
-			FileStream fs = new FileStream( Mass.setting_path + mass.Name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+			FileStream fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 			byte[] array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
@@ -49,11 +51,11 @@ namespace LordOfRanger.Setting.Version {
 			offset += 4;
 			int headerSize = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			mass.sequence = BitConverter.ToInt32( array, offset );
+			this._mass.Sequence = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			string title = Encoding.UTF8.GetString( array, offset, titleSize );
 			offset += titleSize;
-			mass.HotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
+			this._mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
 			int headerCount = headerSize / 28;
 			List<ArdHeader> headers = new List<ArdHeader>();
@@ -61,7 +63,7 @@ namespace LordOfRanger.Setting.Version {
 				ArdHeader ardHeader = new ArdHeader();
 				ardHeader.id = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				ardHeader.type = (DataAb.Type)BitConverter.ToInt32( array, offset );
+				ardHeader.instanceType = (DataAb.InstanceType)BitConverter.ToInt32( array, offset );
 				offset += 4;
 				ardHeader.priority = BitConverter.ToInt32( array, offset );
 				offset += 4;
@@ -77,56 +79,56 @@ namespace LordOfRanger.Setting.Version {
 			}
 
 			foreach( ArdHeader ardHeader in headers ) {
-				switch( ardHeader.type ) {
-					case DataAb.Type.COMMAND:
+				switch( ardHeader.instanceType ) {
+					case DataAb.InstanceType.COMMAND:
 						Command c = new Command();
-						c.id = ardHeader.id;
-						c.priority = ardHeader.priority;
-						c.skillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
+						c.Id = ardHeader.id;
+						c.Priority = ardHeader.priority;
+						c.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
 						offset += ardHeader.skillIconSize;
-						c.disableSkillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
+						c.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
 						c.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
-						mass.Add( c );
+						this._mass.Add( c );
 						break;
-					case DataAb.Type.BARRAGE:
+					case DataAb.InstanceType.BARRAGE:
 						Barrage b = new Barrage();
-						b.id = ardHeader.id;
-						b.priority = ardHeader.priority;
-						b.skillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
+						b.Id = ardHeader.id;
+						b.Priority = ardHeader.priority;
+						b.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
 						offset += ardHeader.skillIconSize;
-						b.disableSkillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
+						b.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
 						b.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						mass.Add( b );
+						this._mass.Add( b );
 						break;
-					case DataAb.Type.TOGGLE:
+					case DataAb.InstanceType.TOGGLE:
 						Toggle t = new Toggle();
-						t.id = ardHeader.id;
-						t.priority = ardHeader.priority;
-						t.skillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
+						t.Id = ardHeader.id;
+						t.Priority = ardHeader.priority;
+						t.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
 						offset += ardHeader.skillIconSize;
-						t.disableSkillIcon = binaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
+						t.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
 						t.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						mass.Add( t );
+						this._mass.Add( t );
 						break;
 				}
 			}
 		}
 
 		public void Save() {
-			if( !Directory.Exists( Mass.setting_path ) ) {
-				Directory.CreateDirectory( Mass.setting_path );
+			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
+				Directory.CreateDirectory( Mass.SETTING_PATH );
 				Thread.Sleep( 300 );
 			}
 			/*
@@ -152,21 +154,21 @@ namespace LordOfRanger.Setting.Version {
 			/* 
 				sequence
 			*/
-			byte[] sequence = BitConverter.GetBytes( mass.sequence );
+			byte[] sequence = BitConverter.GetBytes( this._mass.Sequence );
 			/*
 				headerSize 32bit
 			*/
 			/*
 				title variable
 			*/
-			byte[] title = Encoding.UTF8.GetBytes( mass.Name );
+			byte[] title = Encoding.UTF8.GetBytes( this._mass.name );
 			/*
 				hotKey 8bit
 			*/
-			byte hotKey = mass.HotKey;
+			byte hotKey = this._mass.hotKey;
 			/*
 				id 32bit
-				type 32bit
+				Type 32bit
 				priority 32bit
 				skillIconSize 32bit
 				disableSkillIconSize 32bit
@@ -182,15 +184,15 @@ namespace LordOfRanger.Setting.Version {
 				(sendList variable || send 8bit)
 			*/
 			List<byte> data = new List<byte>();
-			foreach( DataAb da in mass.DataList ) {
-				byte[] skillIcon = (byte[])new ImageConverter().ConvertTo( da.skillIcon, typeof( byte[] ) );
-				byte[] disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.disableSkillIcon, typeof( byte[] ) );
+			foreach( DataAb da in this._mass.DataList ) {
+				byte[] skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) );
+				byte[] disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) );
 				//id
-				header.AddRange( BitConverter.GetBytes( da.id ) );
-				//type
-				header.AddRange( BitConverter.GetBytes( (int)da.type ) );
+				header.AddRange( BitConverter.GetBytes( da.Id ) );
+				//Type
+				header.AddRange( BitConverter.GetBytes( (int)da.Type ) );
 				//priority
-				header.AddRange( BitConverter.GetBytes( da.priority ) );
+				header.AddRange( BitConverter.GetBytes( da.Priority ) );
 				//skillIconSize
 				header.AddRange( BitConverter.GetBytes( skillIcon.Length ) );
 				//disableSkillIconSize
@@ -199,8 +201,8 @@ namespace LordOfRanger.Setting.Version {
 
 				data.AddRange( skillIcon );
 				data.AddRange( disableSkillIcon );
-				switch( da.type ) {
-					case DataAb.Type.COMMAND:
+				switch( da.Type ) {
+					case DataAb.InstanceType.COMMAND:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -210,7 +212,7 @@ namespace LordOfRanger.Setting.Version {
 						//sendList
 						data.AddRange( ( (Command)da ).sendList );
 						break;
-					case DataAb.Type.BARRAGE:
+					case DataAb.InstanceType.BARRAGE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -220,7 +222,7 @@ namespace LordOfRanger.Setting.Version {
 						//send
 						data.Add( ( (Barrage)da ).send );
 						break;
-					case DataAb.Type.TOGGLE:
+					case DataAb.InstanceType.TOGGLE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -247,14 +249,14 @@ namespace LordOfRanger.Setting.Version {
 			settingBinary.Add( hotKey );
 			settingBinary.AddRange( header );
 			settingBinary.AddRange( data );
-			FileStream fs = new FileStream( Mass.setting_path + mass.Name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
+			FileStream fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
 			fs.Write( settingBinary.ToArray(), 0, settingBinary.Count );
 			fs.Close();
 		}
 
-		public static byte getHotKey(string filename) {
+		public static byte GetHotKey(string filename) {
 			try {
-				FileStream fs = new FileStream( Mass.setting_path + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+				FileStream fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				byte[] array = new byte[fs.Length];
 
 				fs.Read( array, 0, (int)fs.Length );
@@ -279,12 +281,12 @@ namespace LordOfRanger.Setting.Version {
 				return 0x00;
 			}
 		}
-		private Bitmap binaryToBitmap(byte[] binary) {
+		private Bitmap BinaryToBitmap(byte[] binary) {
 			if( binary.Length == 0 ) {
 				return null;
-			} else {
-				return (Bitmap)new ImageConverter().ConvertFrom( binary );
 			}
+			return (Bitmap)new ImageConverter().ConvertFrom( binary );
 		}
+
 	}
 }

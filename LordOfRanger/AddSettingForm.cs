@@ -11,7 +11,7 @@ namespace LordOfRanger {
 		internal AddSettingForm() {
 			InitializeComponent();
 
-			result = Result.CANCEL;
+			this.result = Result.CANCEL;
 			KeyPreview = true;
 		}
 		internal enum Result {
@@ -32,28 +32,28 @@ namespace LordOfRanger {
 			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				Close();
 			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {
-				settingName = txtSettingName.Text;
-				if( System.IO.File.Exists( Setting.Mass.setting_path + settingName + Setting.Mass.EXTENSION ) ) {
+				this.settingName = this.txtSettingName.Text;
+				if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
 					MessageBox.Show( "Please give a unique name." );
 					return;
 				}
 				Setting.Mass mass = new Setting.Mass();
-				mass.Name = settingName;
-				mass.save();
-				result = Result.OK;
+				mass.name = this.settingName;
+				mass.Save();
+				this.result = Result.OK;
 				Close();
 			}
 		}
 		private void btnOk_Click(object sender, EventArgs e) {
-			settingName = txtSettingName.Text;
-			if( System.IO.File.Exists( Setting.Mass.setting_path + settingName + Setting.Mass.EXTENSION ) ) {
+			this.settingName = this.txtSettingName.Text;
+			if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
 				MessageBox.Show( "Please give a unique name." );
 				return;
 			}
 			Setting.Mass mass = new Setting.Mass();
-			mass.Name = settingName;
-			mass.save();
-			result = Result.OK;
+			mass.name = this.settingName;
+			mass.Save();
+			this.result = Result.OK;
 			Close();
 		}
 

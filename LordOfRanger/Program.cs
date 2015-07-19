@@ -8,13 +8,13 @@ namespace LordOfRanger {
 		/// </summary>
 		[STAThread]
 		static void Main() {
-			Options.OptionsForm.load();
+			Options.OptionsForm.LoadCnf();
 			// 多重起動対策 
 			using( System.Threading.Mutex mutex = new System.Threading.Mutex( false, Application.ProductName ) ) {
 				if( mutex.WaitOne( 0, false ) ) {
 					Application.EnableVisualStyles();
 					Application.SetCompatibleTextRenderingDefault( false );
-					if( Options.Options.options.startupState == (int)Options.Options.STARTUP_STATE.NORMAL ) {
+					if( Options.Options.options.startupState == (int)Options.Options.StartupState.NORMAL ) {
 						Application.Run( new MainForm() );
 					} else {
 						new MainForm();

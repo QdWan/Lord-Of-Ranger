@@ -10,7 +10,7 @@
 		/// <summary>
 		/// このメソッドを呼ぶことでアイコンが一番手前に表示される
 		/// </summary>
-		internal void toTop() {
+		internal void ToTop() {
 			TopMost = true;
 			TopMost = false;
 		}

@@ -6,52 +6,70 @@ using System.Diagnostics;
 using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
-using HongliangSoft.Utilities.Gui;
+using LordOfRanger.Setting;
+
+
 
 namespace LordOfRanger {
 	internal partial class MainForm : Form {
 
-		private static Setting.Mass mass;
-		private Job job;
+		private static Mass _mass;
+		private Job _job;
 		internal static bool activeWindow = true;
 		internal static SkillLayer skillLayer;
-		internal static string currentSettingFile;
-		internal static Dictionary<byte, string> hotKeys;
+		private static string _currentSettingFile;
+		private static Dictionary<byte, string> _hotKeys;
 
-		private class MODE {
-			internal static string COMMAND = "Command";
-			internal static string BARRAGE = "Barrage";
-			internal static string TOGGLE = "Toggle";
+		private struct Mode {
+			internal const string COMMAND = "Command";
+			internal const string BARRAGE = "Barrage";
+			internal const string TOGGLE = "Toggle";
 		};
 
+
+		private struct DgvCol {
+
+			internal const string ENABLE_SKILL_ICON = "dgvColSkillIcon";
+			internal const string DISABLE_SKILL_ICON = "dgvColDisableSkillIcon";
+			internal const string MODE = "dgvColMode";
+			internal const string PRIORITY = "dgvColPriority";
+			internal const string SEQUENCE = "dgvColSequence";
+			internal const string SEND = "dgvColSend";
+			internal const string PUSH = "dgvColPush";
+			internal const string UP = "dgvColUp";
+			internal const string DOWN = "dgvColDown";
+			internal const string DELETE = "dgvColDelete";
+
+		}
+		
 		/// <summary>
 		/// コンストラクタ
 		/// コンポーネント初期化のほかに、変数の初期化、設定の読み込み、タイマーのスタート、キーフックのスタートを行う
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
-			hotKeys = new Dictionary<byte, string>();
+			_hotKeys = new Dictionary<byte, string>();
 			skillLayer = new SkillLayer();
 
-			mass = new Setting.Mass();
-			loadSettingList();
-			currentSettingChange( lbSettingList.SelectedItem.ToString() );
-			settingUpdate( true );
+			_mass = new Mass();
+			LoadSettingList();
+			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
+			SettingUpdate( true );
 
-			job = new Job( mass );
+			this._job = new Job( _mass );
 
 			skillLayer.Show();
 			if( Options.Options.options.activeWindowMonitoring ) {
-				timerActiveWindowCheck.Interval = Options.Options.options.activeWindowMonitoringinterval;
-				timerActiveWindowCheck.Start();
+				this.timerActiveWindowCheck.Interval = Options.Options.options.activeWindowMonitoringinterval;
+				this.timerActiveWindowCheck.Start();
 			}
-			timerBarrage.Interval = Options.Options.options.timerInterval;
-			timerBarrage.Start();
+			this.timerBarrage.Interval = Options.Options.options.timerInterval;
+			this.timerBarrage.Start();
 
 			KeyboardHook keyboardHook = new KeyboardHook();
 			keyboardHook.KeyboardHooked += KeyHookEvent;
 
-			Application.ApplicationExit += new EventHandler( Application_ApplicationExit );
+			Application.ApplicationExit += Application_ApplicationExit;
 		}
 
 
@@ -61,10 +79,10 @@ namespace LordOfRanger {
 			try {
 				if( WindowState == FormWindowState.Minimized ) {
 					Hide();
-					notifyIcon1.Visible = true;
+					this.notifyIcon1.Visible = true;
 				}
 			} catch( Exception ) {
-
+				// ignored
 			}
 		}
 
@@ -87,11 +105,11 @@ namespace LordOfRanger {
 		}
 
 		private void Application_ApplicationExit(object sender, EventArgs e) {
-			Options.OptionsForm.save();
+			Options.OptionsForm.SaveCnf();
 		}
 
 		private void optionToolStripMenuItem_Click(object sender, EventArgs e) {
-			Options.OptionsForm.save();
+			Options.OptionsForm.SaveCnf();
 			Options.OptionsForm of = new Options.OptionsForm();
 			of.ShowDialog();
 		}
@@ -114,16 +132,16 @@ namespace LordOfRanger {
 			AddSettingForm asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
-				currentSettingChange( asf.settingName );
-				settingUpdate();
+				CurrentSettingChange( asf.settingName );
+				SettingUpdate();
 			}
 		}
 
 		private void btnDeleteSetting_Click(object sender, EventArgs e) {
-			string deleteFile = lbSettingList.SelectedItem.ToString();
+			string deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "Are you sure you want to delete setting '" + deleteFile + "'?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
-				File.Delete( Setting.Mass.setting_path + deleteFile + Setting.Mass.EXTENSION );
-				settingUpdate();
+				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
+				SettingUpdate();
 			}
 		}
 
@@ -132,80 +150,80 @@ namespace LordOfRanger {
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
 			if( ksf.result == KeySetForm.Result.OK ) {
-				mass.HotKey = ksf.keyData[0];
-				txtHotKey.Text = keysToText( ksf.keyData );
+				_mass.hotKey = ksf.KeyData[0];
+				this.txtHotKey.Text = KeysToText( ksf.KeyData );
 			}
 		}
 
 		private void lbSettingList_MouseDoubleClick(object sender, MouseEventArgs e) {
-			currentSettingChange( lbSettingList.SelectedItem.ToString() );
-			settingUpdate();
+			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
+			SettingUpdate();
 		}
 
 		/// <summary>
 		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
 		/// </summary>
-		private void settingView() {
-			dgv.Rows.Clear();
-			foreach( Setting.DataAb da in mass.DataList ) {
-				int row = dgv.Rows.Add();
+		private void SettingView() {
+			this.dgv.Rows.Clear();
+			foreach( DataAb da in _mass.DataList ) {
+				int row = this.dgv.Rows.Add();
 				string mode;
-				switch( da.type ) {
-					case Setting.DataAb.Type.COMMAND:
-						dgv.Rows[row].Cells["push"].Value = keysToText( ( (Setting.Command)da ).push );
-						dgv.Rows[row].Cells["send"].Value = keysToText( ( (Setting.Command)da ).sendList );
-						mode = MODE.COMMAND;
+				switch( da.Type ) {
+					case DataAb.InstanceType.COMMAND:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
+						mode = Mode.COMMAND;
 						break;
-					case Setting.DataAb.Type.BARRAGE:
-						dgv.Rows[row].Cells["push"].Value = keysToText( ( (Setting.Barrage)da ).push );
-						dgv.Rows[row].Cells["send"].Value = keysToText( ( (Setting.Barrage)da ).send );
-						mode = MODE.BARRAGE;
+					case DataAb.InstanceType.BARRAGE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
+						mode = Mode.BARRAGE;
 						break;
-					case Setting.DataAb.Type.TOGGLE:
-						dgv.Rows[row].Cells["push"].Value = keysToText( ( (Setting.Toggle)da ).push );
-						dgv.Rows[row].Cells["send"].Value = keysToText( ( (Setting.Toggle)da ).send );
-						mode = MODE.TOGGLE;
+					case DataAb.InstanceType.TOGGLE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
+						mode = Mode.TOGGLE;
 						break;
 					default:
 						return;
 				}
-				dgv.Rows[row].Cells["sequence"].Value = da.id.ToString();
-				dgv.Rows[row].Cells["mode"].Value = mode;
-				dgv.Rows[row].Cells["priority"].Value = da.priority.ToString();
-				dgv.Rows[row].Cells["skillIcon"].Value = da.skillIcon;
-				dgv.Rows[row].Cells["disableSkillIcon"].Value = da.disableSkillIcon;
+				this.dgv.Rows[row].Cells[DgvCol.SEQUENCE].Value = da.Id.ToString();
+				this.dgv.Rows[row].Cells[DgvCol.MODE].Value = mode;
+				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = da.Priority.ToString();
+				this.dgv.Rows[row].Cells[DgvCol.ENABLE_SKILL_ICON].Value = da.SkillIcon;
+				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
 			}
 		}
 
 		/// <summary>
 		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
 		/// </summary>
-		private void loadSettingList() {
-			if( !Directory.Exists( Setting.Mass.setting_path ) ) {
-				Directory.CreateDirectory( Setting.Mass.setting_path );
+		private void LoadSettingList() {
+			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
+				Directory.CreateDirectory( Mass.SETTING_PATH );
 				Thread.Sleep( 300 );
 			}
 
-			string[] files = Directory.GetFiles( Setting.Mass.setting_path );
+			string[] files = Directory.GetFiles( Mass.SETTING_PATH );
 			if( files.Length == 0 ) {
-				mass = new Setting.Mass();
-				currentSettingChange( "new" );
-				mass.Name = currentSettingFile;
-				mass.save();
-				loadSettingList();
+				_mass = new Mass();
+				CurrentSettingChange( "new" );
+				_mass.name = _currentSettingFile;
+				_mass.Save();
+				LoadSettingList();
 				return;
 			}
-			lbSettingList.Items.Clear();
+			this.lbSettingList.Items.Clear();
 			foreach( string file in files ) {
-				if( Regex.IsMatch( file, @"\" + Setting.Mass.EXTENSION + "$" ) ) {
-					lbSettingList.Items.Add( Path.GetFileNameWithoutExtension( file ) );
+				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
+					this.lbSettingList.Items.Add( Path.GetFileNameWithoutExtension( file ) );
 				}
 			}
-			if( lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
-				lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
+			if( this.lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
+				this.lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
 			} else {
-				if( lbSettingList.Items.Count > 0 ) {
-					lbSettingList.SelectedIndex = 0;
+				if( this.lbSettingList.Items.Count > 0 ) {
+					this.lbSettingList.SelectedIndex = 0;
 				}
 			}
 		}
@@ -215,17 +233,17 @@ namespace LordOfRanger {
 		/// コンストラクタから呼ばれた場合のみ、同一ホットキーが存在する旨の警告を出す。
 		/// </summary>
 		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
-		private void loadHotKeys(bool firstFlag = false) {
-			hotKeys.Clear();
-			string[] files = Directory.GetFiles( Setting.Mass.setting_path );
+		private void LoadHotKeys(bool firstFlag = false) {
+			_hotKeys.Clear();
+			string[] files = Directory.GetFiles( Mass.SETTING_PATH );
 			foreach( string file in files ) {
-				if( Regex.IsMatch( file, @"\" + Setting.Mass.EXTENSION + "$" ) ) {
+				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
 					string filename = Path.GetFileNameWithoutExtension( file );
-					byte hotkey = Setting.Mass.getHotKey( filename );
+					byte hotkey = Mass.GetHotKey( filename );
 					if( hotkey != 0x00 ) {
 						string file2;
-						if( !hotKeys.TryGetValue( hotkey, out file2 ) ) {
-							hotKeys.Add( hotkey, filename );
+						if( !_hotKeys.TryGetValue( hotkey, out file2 ) ) {
+							_hotKeys.Add( hotkey, filename );
 						} else {
 							if( firstFlag ) {
 								MessageBox.Show( "Item with Same HotKey has already been added. \n\n'" + filename + "' AND '" + file2 + "'" );
@@ -240,27 +258,27 @@ namespace LordOfRanger {
 		/// 設定リストの再読み込みを行う。
 		/// </summary>
 		/// <param name="firstFlag"></param>
-		internal void settingUpdate(bool firstFlag = false) {
-			loadSettingList();
-			if( lbSettingList.FindStringExact( currentSettingFile ) == -1 ) {
-				currentSettingChange( lbSettingList.Items[0].ToString() );
+		private void SettingUpdate(bool firstFlag = false) {
+			LoadSettingList();
+			if( this.lbSettingList.FindStringExact( _currentSettingFile ) == -1 ) {
+				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
 			}
-			loadHotKeys( firstFlag );
-			mass.load( currentSettingFile );
-			settingView();
-			job = new Job( mass );
+			LoadHotKeys( firstFlag );
+			_mass.Load( _currentSettingFile );
+			SettingView();
+			this._job = new Job( _mass );
 
-			lblSettingName.Text = currentSettingFile;
-			lbSettingList.SelectedItem = currentSettingFile;
-			txtHotKey.Text = keysToText( mass.HotKey );
+			this.lblSettingName.Text = _currentSettingFile;
+			this.lbSettingList.SelectedItem = _currentSettingFile;
+			this.txtHotKey.Text = KeysToText( _mass.hotKey );
 		}
 
 		/// <summary>
 		/// 設定ファイルの切り替え
 		/// </summary>
 		/// <param name="name">設定ファイルの名前</param>
-		private void currentSettingChange(string name) {
-			currentSettingFile = name;
+		private void CurrentSettingChange(string name) {
+			_currentSettingFile = name;
 			Options.Options.options.currentSettingName = name;
 		}
 
@@ -275,25 +293,24 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void KeyHookEvent(object sender, KeyboardHookedEventArgs e) {
-			if( e.UpDown == KeyboardUpDown.Down ) {
+			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
-				job.keydownEvent( e );
-			} else if( e.UpDown == KeyboardUpDown.Up ) {
+				this._job.KeydownEvent( e );
+			} else if( e.UpDown == KeyboardUpDown.UP ) {
 				//キーアップイベント
-				job.keyupEvent( e );
+				this._job.KeyupEvent( e );
 
-				if( e.ExtraInfo != (int)Key.ExtraInfo ) {
+				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 					//setting change hot key
-					if( hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
-						currentSettingChange( hotKeys[(byte)e.KeyCode] );
-						settingUpdate();
+					if( _hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+						CurrentSettingChange( _hotKeys[(byte)e.KeyCode] );
+						SettingUpdate();
 						return;
 					}
 
 
-					if( (byte)e.KeyCode == Options.Options.options.hotKeyLORSwitching ) {
-						job.barrageEnable = !job.barrageEnable;
-						return;
+					if( (byte)e.KeyCode == Options.Options.options.hotKeyLorSwitching ) {
+						this._job.BarrageEnable = !this._job.BarrageEnable;
 					}
 				}
 			}
@@ -303,23 +320,23 @@ namespace LordOfRanger {
 		/// </summary>
 		private void ActiveWindowCheck() {
 			try {
-				IntPtr hWnd = API.GetForegroundWindow();
+				IntPtr hWnd = Api.GetForegroundWindow();
 				int id;
-				API.GetWindowThreadProcessId( hWnd, out id );
+				Api.GetWindowThreadProcessId( hWnd, out id );
 				string name = Process.GetProcessById( id ).ProcessName;
-				if( name == Options.Options.options.ProcessName ) {
+				if( name == Options.Options.options.processName ) {
 					if( !activeWindow ) {
 						activeWindow = true;
-						job.iconUpdate();
+						this._job.IconUpdate();
 					}
 				} else {
 					if( activeWindow ) {
 						activeWindow = false;
-						job.iconUpdate();
+						this._job.IconUpdate();
 					}
 				}
 			} catch( Exception ) {
-
+				// ignored
 			}
 		}
 
@@ -328,8 +345,8 @@ namespace LordOfRanger {
 		/// 定期的に呼ばれる。
 		/// Jobのキータイマーイベントを呼び出す
 		/// </summary>
-		private void keyPushTimer() {
-			job.timerEvent();
+		private void KeyPushTimer() {
+			this._job.TimerEvent();
 		}
 
 		/// <summary>
@@ -347,7 +364,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void timerBarrage_Tick(object sender, EventArgs e) {
-			keyPushTimer();
+			KeyPushTimer();
 		}
 
 		#endregion
@@ -361,56 +378,56 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-			if( dgv.SelectedCells.Count != 1 ) {
+			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
-			int sequence = int.Parse( (string)dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells["sequence"].Value );
-			switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-				case "push":
-				case "send":
+			int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+				case DgvCol.PUSH:
+				case DgvCol.SEND:
 					//textbox
 					KeySetForm ksf = new KeySetForm();
-					for( int i = 0; i < mass.DataList.Length; i++ ) {
-						if( mass.DataList[i].id == sequence ) {
-							switch( mass.DataList[i].type ) {
-								case Setting.DataAb.Type.COMMAND:
-									if( dgv.SelectedCells[0].OwningColumn.Name == "send" ) {
+					foreach( DataAb dataAb in _mass.DataList ) {
+						if( dataAb.Id == sequence ) {
+							switch( dataAb.Type ) {
+								case DataAb.InstanceType.COMMAND:
+									if( this.dgv.SelectedCells[0].OwningColumn.Name == DgvCol.SEND) {
 										ksf.keyType = KeySetForm.KeyType.MULTI;
 									}
 									ksf.ShowDialog();
 									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-											case "send":
-												( (Setting.Command)( mass.DataList[i] ) ).sendList = ksf.keyData;
+										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+											case DgvCol.SEND:
+												( (Command)( dataAb ) ).sendList = ksf.KeyData;
 												break;
-											case "push":
-												( (Setting.Command)( mass.DataList[i] ) ).push = ksf.keyData[0];
-												break;
-										}
-									}
-									break;
-								case Setting.DataAb.Type.BARRAGE:
-									ksf.ShowDialog();
-									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-											case "send":
-												( (Setting.Barrage)mass.DataList[i] ).send = ksf.keyData[0];
-												break;
-											case "push":
-												( (Setting.Barrage)( mass.DataList[i] ) ).push = ksf.keyData[0];
+											case DgvCol.PUSH:
+												( (Command)( dataAb ) ).push = ksf.KeyData[0];
 												break;
 										}
 									}
 									break;
-								case Setting.DataAb.Type.TOGGLE:
+								case DataAb.InstanceType.BARRAGE:
 									ksf.ShowDialog();
 									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-											case "send":
-												( (Setting.Toggle)mass.DataList[i] ).send = ksf.keyData[0];
+										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+											case DgvCol.SEND:
+												( (Barrage)dataAb ).send = ksf.KeyData[0];
 												break;
-											case "push":
-												( (Setting.Toggle)( mass.DataList[i] ) ).push = ksf.keyData[0];
+											case DgvCol.PUSH:
+												( (Barrage)( dataAb ) ).push = ksf.KeyData[0];
+												break;
+										}
+									}
+									break;
+								case DataAb.InstanceType.TOGGLE:
+									ksf.ShowDialog();
+									if( ksf.result == KeySetForm.Result.OK ) {
+										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+											case DgvCol.SEND:
+												( (Toggle)dataAb ).send = ksf.KeyData[0];
+												break;
+											case DgvCol.PUSH:
+												( (Toggle)( dataAb ) ).push = ksf.KeyData[0];
 												break;
 										}
 									}
@@ -419,29 +436,29 @@ namespace LordOfRanger {
 							break;
 						}
 					}
-					if( ksf.result == KeySetForm.Result.OK && ksf.keyData.Length != 0 ) {
-						dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells[dgv.SelectedCells[0].OwningColumn.Name].Value = keysToText( ksf.keyData );
+					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
+						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData );
 					}
 
 					ksf.Dispose();
 					break;
-				case "skillIcon":
-				case "disableSkillIcon":
+				case DgvCol.ENABLE_SKILL_ICON:
+				case DgvCol.DISABLE_SKILL_ICON:
 					OpenFileDialog ofd = new OpenFileDialog();
 					ofd.Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png";
 					ofd.Title = "Please select skillIcon";
 					ofd.InitialDirectory = Application.ExecutablePath;
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
-						dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells[dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						for( int i = 0; i < mass.DataList.Length; i++ ) {
-							if( mass.DataList[i].id == sequence ) {
-								switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-									case "skillIcon":
-										mass.DataList[i].skillIcon = new Bitmap( ofd.FileName );
+						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
+						foreach( DataAb dataAb in _mass.DataList ) {
+							if( dataAb.Id == sequence ) {
+								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+									case DgvCol.ENABLE_SKILL_ICON:
+										dataAb.SkillIcon = new Bitmap( ofd.FileName );
 										break;
-									case "disableSkillIcon":
-										mass.DataList[i].disableSkillIcon = new Bitmap( ofd.FileName );
+									case DgvCol.DISABLE_SKILL_ICON:
+										dataAb.DisableSkillIcon = new Bitmap( ofd.FileName );
 										break;
 								}
 							}
@@ -458,38 +475,38 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e) {
-			if( dgv.SelectedCells.Count != 1 ) {
+			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
-			switch( dgv.SelectedCells[0].OwningColumn.Name ) {
-				case "delete":
+			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+				case DgvCol.DELETE:
 					if( MessageBox.Show( "Are you sure you want to delete this row?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
-						int sequence = int.Parse( (string)dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells["sequence"].Value );
-						mass.RemoveAt( sequence );
-						dgv.Rows.RemoveAt( dgv.SelectedCells[0].OwningRow.Index );
+						int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						_mass.RemoveAt( sequence );
+						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 					}
 					break;
-				case "up":
+				case DgvCol.UP:
 					{
-						int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+						int rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 						if( rowIndex >= 1 ) {
-							int sequence = int.Parse( (string)dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells["sequence"].Value );
-							mass.UpAt( sequence );
-							DataGridViewRow row = dgv.Rows[rowIndex];
-							dgv.Rows.RemoveAt( rowIndex );
-							dgv.Rows.Insert( rowIndex - 1, row );
+							int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+							_mass.UpAt( sequence );
+							DataGridViewRow row = this.dgv.Rows[rowIndex];
+							this.dgv.Rows.RemoveAt( rowIndex );
+							this.dgv.Rows.Insert( rowIndex - 1, row );
 						}
 					}
 					break;
-				case "down":
+				case DgvCol.DOWN:
 					{
-						int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
-						if( rowIndex < dgv.Rows.Count - 1 ) {
-							int sequence = int.Parse( (string)dgv.Rows[dgv.SelectedCells[0].OwningRow.Index].Cells["sequence"].Value );
-							mass.DownAt( sequence );
-							DataGridViewRow row = dgv.Rows[rowIndex];
-							dgv.Rows.RemoveAt( rowIndex );
-							dgv.Rows.Insert( rowIndex + 1, row );
+						int rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+						if( rowIndex < this.dgv.Rows.Count - 1 ) {
+							int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+							_mass.DownAt( sequence );
+							DataGridViewRow row = this.dgv.Rows[rowIndex];
+							this.dgv.Rows.RemoveAt( rowIndex );
+							this.dgv.Rows.Insert( rowIndex + 1, row );
 						}
 					}
 					break;
@@ -510,24 +527,24 @@ namespace LordOfRanger {
 				int sequence;
 				switch( acf.type ) {
 					case AddCommandForm.Type.COMMAND:
-						sequence = mass.Add( new Setting.Command() );
-						mode = MODE.COMMAND;
+						sequence = _mass.Add( new Command() );
+						mode = Mode.COMMAND;
 						break;
 					case AddCommandForm.Type.BARRAGE:
-						sequence = mass.Add( new Setting.Barrage() );
-						mode = MODE.BARRAGE;
+						sequence = _mass.Add( new Barrage() );
+						mode = Mode.BARRAGE;
 						break;
 					case AddCommandForm.Type.TOGGLE:
-						sequence = mass.Add( new Setting.Toggle() );
-						mode = MODE.TOGGLE;
+						sequence = _mass.Add( new Toggle() );
+						mode = Mode.TOGGLE;
 						break;
 					default:
 						return;
 				}
-				int row = dgv.Rows.Add();
-				dgv.Rows[row].Cells["sequence"].Value = sequence.ToString();
-				dgv.Rows[row].Cells["mode"].Value = mode;
-				dgv.Rows[row].Cells["priority"].Value = "0";
+				int row = this.dgv.Rows.Add();
+				this.dgv.Rows[row].Cells[DgvCol.SEQUENCE].Value = sequence.ToString();
+				this.dgv.Rows[row].Cells[DgvCol.MODE].Value = mode;
+				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = "0";
 			}
 		}
 
@@ -537,8 +554,8 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnSave_Click(object sender, EventArgs e) {
-			mass.save();
-			settingUpdate();
+			_mass.Save();
+			SettingUpdate();
 		}
 
 		/// <summary>
@@ -547,8 +564,8 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnCancel_Click(object sender, EventArgs e) {
-			mass.load( mass.Name );
-			settingUpdate();
+			_mass.Load( _mass.name );
+			SettingUpdate();
 		}
 
 		/// <summary>
@@ -556,22 +573,22 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		private string keysToText(byte key) {
-			return Key.keyText[key];
+		private static string KeysToText(byte key) {
+			return Key.KEY_TEXT[key];
 		}
 
 		/// <summary>
 		/// byte[]で表されるキーの配列をテキストに変換
 		/// </summary>
-		/// <param name="key"></param>
+		/// <param name="keys"></param>
 		/// <returns></returns>
-		private string keysToText(byte[] keys) {
+		private static string KeysToText(byte[] keys) {
 			string s = "";
 			for( int i = 0; i < keys.Length; i++ ) {
 				if( i != 0 ) {
 					//	s += " + ";
 				}
-				s += Key.keyText[keys[i]];
+				s += Key.KEY_TEXT[keys[i]];
 			}
 			return s;
 		}
