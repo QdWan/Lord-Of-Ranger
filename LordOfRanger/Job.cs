@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-
-
+using LordOfRanger.Keyboard;
+using LordOfRanger.Setting;
 
 namespace LordOfRanger {
 
@@ -21,7 +21,7 @@ namespace LordOfRanger {
 		private static byte _reverseDirectionKey = (byte)Keys.Right;
 		private Thread _commandThread;
 		private const int ICON_SIZE = 30;
-		Setting.Mass _mass;
+		private Mass _mass;
 
 		private bool _barrageEnable = true;
 
@@ -29,7 +29,7 @@ namespace LordOfRanger {
 		/// Massファイルを読み込み、各変数に初期値を代入
 		/// </summary>
 		/// <param name="mass"></param>
-		internal Job(Setting.Mass mass) {
+		internal Job( Mass mass ) {
 			this._mass = mass;
 			_enablekeyF = new Dictionary<byte, bool>();
 			_enablekeyE = new Dictionary<byte, bool>();
@@ -41,7 +41,7 @@ namespace LordOfRanger {
 				}
 			}
 			this._enableToggle = new Dictionary<int, bool>();
-			foreach( Setting.Toggle t in mass.ToggleList ) {
+			foreach( var t in mass.ToggleList ) {
 				this._enableToggle.Add( t.Id, false );
 			}
 			IconUpdate();
@@ -67,7 +67,7 @@ namespace LordOfRanger {
 		/// 該当するキーの押下フラグをfalseにする
 		/// </summary>
 		/// <param name="e"> 離されたキー情報 </param>
-		internal void KeyupEvent(KeyboardHookedEventArgs e) {
+		internal void KeyupEvent( KeyboardHookedEventArgs e ) {
 			if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 				_enablekeyF[(byte)e.KeyCode] = false;
 				_enablekeyE[(byte)e.KeyCode] = false;
@@ -86,8 +86,8 @@ namespace LordOfRanger {
 		/// 方向キーの記憶を行う
 		/// </summary>
 		/// <param name="e"> 押されたキー情報 </param>
-		internal void KeydownEvent(KeyboardHookedEventArgs e) {
-			byte key = (byte)e.KeyCode;
+		internal void KeydownEvent( KeyboardHookedEventArgs e ) {
+			var key = (byte)e.KeyCode;
 			if( !MainForm.activeWindow || !this._barrageEnable ) {
 				return;
 			}
@@ -107,8 +107,8 @@ namespace LordOfRanger {
 				// キーボードから
 				if( this._commandThread != null ) {
 					if( ( new[] { ThreadState.Running, ThreadState.WaitSleepJoin } ).Contains( this._commandThread.ThreadState ) ) {
-						bool flag = true;
-						foreach( Setting.Barrage b in this._mass.BarrageList ) {
+						var flag = true;
+						foreach( var b in this._mass.BarrageList ) {
 							if( b.push == (byte)e.KeyCode ) {
 								flag = false;
 							}
@@ -124,34 +124,33 @@ namespace LordOfRanger {
 
 			_enablekeyF[key] = true;
 
-			byte left = _reverseDirectionKey;
-			byte right = _directionKey;
+			var left = _reverseDirectionKey;
+			var right = _directionKey;
 
 			//command
-			foreach( Setting.Command c in this._mass.CommandList ) {
-				if( CommandCheck( key, c.push ) ) {
-					e.Cancel = true;
-					this._commandThread = new Thread( ThreadCommand );
-					this._commandThread.Start( new object[] { c.sendList, left, right } );
-					break;
-				}
+			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.push ) ) ) {
+				e.Cancel = true;
+				this._commandThread = new Thread( ThreadCommand );
+				this._commandThread.Start( new object[] { c.sendList, left, right } );
+				break;
 			}
 
-			if( key == (byte)Keys.Left ) {
-				_directionKey = (byte)Keys.Left;
-				_reverseDirectionKey = (byte)Keys.Right;
-			} else if( key == (byte)Keys.Right ) {
-				_directionKey = (byte)Keys.Right;
-				_reverseDirectionKey = (byte)Keys.Left;
+			switch( key ) {
+				case (byte)Keys.Left:
+					_directionKey = (byte)Keys.Left;
+					_reverseDirectionKey = (byte)Keys.Right;
+					break;
+				case (byte)Keys.Right:
+					_directionKey = (byte)Keys.Right;
+					_reverseDirectionKey = (byte)Keys.Left;
+					break;
 			}
 
 			//toggle
-			foreach( Setting.Toggle t in this._mass.ToggleList ) {
-				if( CommandCheck( key, t.push ) ) {
-					//not typo 
-					this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
-					IconUpdate();
-				}
+			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.push ) ) ) {
+				//not typo 
+				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
+				IconUpdate();
 			}
 			_enablekeyE[key] = true;
 		}
@@ -170,33 +169,32 @@ namespace LordOfRanger {
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
 		/// <param name="o"></param>
-		private void ThreadCommand(object o) {
-			object[] obj = (object[])o;
-			byte[] sendList = (byte[])obj[0];
-			byte left = (byte)obj[1];
-			byte right = (byte)obj[2];
+		private void ThreadCommand( object o ) {
+			var obj = (object[])o;
+			var sendList = (byte[])obj[0];
+			var left = (byte)obj[1];
+			var right = (byte)obj[2];
 			if( Options.Options.options.commandUpArrowKeys ) {
-				foreach( byte sendKey in ARROW_KEY_LIST ) {
-					if( _enablekeyE[sendKey] ) {
-						Key.Up( sendKey );
-					}
+				foreach( var sendKey in ARROW_KEY_LIST.Where( sendKey => _enablekeyE[sendKey] ) ) {
+					Key.Up( sendKey );
 				}
 			}
-			foreach( byte sendKey in sendList ) {
-				byte tmpSendKey = sendKey;
-				if( tmpSendKey == (byte)Keys.Right ) {
-					tmpSendKey = right;
-				} else if( tmpSendKey == (byte)Keys.Left ) {
-					tmpSendKey = left;
+			foreach( var sendKey in sendList ) {
+				var tmpSendKey = sendKey;
+				switch( tmpSendKey ) {
+					case (byte)Keys.Right:
+						tmpSendKey = right;
+						break;
+					case (byte)Keys.Left:
+						tmpSendKey = left;
+						break;
 				}
 				KeyPush( tmpSendKey, Options.Options.options.commandUpDownInterval );
 				Sleep( Options.Options.options.commandInterval );
 			}
 			if( Options.Options.options.commandUpArrowKeys ) {
-				foreach( byte sendKey in ARROW_KEY_LIST ) {
-					if( _enablekeyE[sendKey] ) {
-						Key.Down( sendKey );
-					}
+				foreach( var sendKey in ARROW_KEY_LIST.Where( sendKey => _enablekeyE[sendKey] ) ) {
+					Key.Down( sendKey );
 				}
 			}
 		}
@@ -215,7 +213,7 @@ namespace LordOfRanger {
 				}
 			}
 			//barrage
-			foreach( Setting.Barrage b in this._mass.BarrageList ) {
+			foreach( var b in this._mass.BarrageList ) {
 				if( _enablekeyE[b.push] ) {
 					KeyPush( b.send );
 				}
@@ -223,7 +221,7 @@ namespace LordOfRanger {
 
 			//toggle
 			try {
-				foreach( Setting.Toggle t in this._mass.ToggleList ) {
+				foreach( var t in this._mass.ToggleList ) {
 					if( this._enableToggle[t.Id] ) {
 						KeyPush( t.send );
 					}
@@ -241,7 +239,7 @@ namespace LordOfRanger {
 		/// <param name="key"> 押下されたキー </param>
 		/// <param name="key2"> 判定するキー </param>
 		/// <returns> 実行すべきかどうか </returns>
-		private bool CommandCheck(byte key, byte key2) {
+		private bool CommandCheck( byte key, byte key2 ) {
 			/*
 				押されたキーが判定するキーと一致しているかどうか
 				押しっぱなしの2回目以降ではないか
@@ -262,8 +260,8 @@ namespace LordOfRanger {
 				MainForm.skillLayer.Visible = false;
 				return;
 			}
-			List<Bitmap> bmpList = new List<Bitmap>();
-			foreach( Setting.DataAb da in this._mass.DataList ) {
+			var bmpList = new List<Bitmap>();
+			foreach( var da in this._mass.DataList ) {
 				if( da.Enable && this._barrageEnable && MainForm.activeWindow ) {
 					bmpList.Add( da.SkillIcon );
 				} else {
@@ -272,11 +270,11 @@ namespace LordOfRanger {
 			}
 			Bitmap bmp;
 			if( bmpList.Count != 0 ) {
-				Bitmap[] iconList = bmpList.ToArray();
+				var iconList = bmpList.ToArray();
 				Arad.Get();
 				bmp = new Bitmap( Math.Min( iconList.Length, Options.Options.options.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Options.Options.options.oneRowIcons ) * ICON_SIZE );
-				Graphics g = Graphics.FromImage( bmp );
-				for( int i = 0; i < iconList.Length; i++ ) {
+				var g = Graphics.FromImage( bmp );
+				for( var i = 0; i < iconList.Length; i++ ) {
 					if( iconList[i] == null ) {
 						continue;
 					}
@@ -315,7 +313,7 @@ namespace LordOfRanger {
 			MainForm.skillLayer.ToTop();
 		}
 
-		private void Sleep(int sleeptime) {
+		private void Sleep( int sleeptime ) {
 			Thread.Sleep( sleeptime );
 		}
 
@@ -323,7 +321,7 @@ namespace LordOfRanger {
 		/// キー送信
 		/// </summary>
 		/// <param name="key"> 送信するキー </param>
-		private void KeyPush(byte key) {
+		private void KeyPush( byte key ) {
 			Key.Down( key );
 			Sleep( Options.Options.options.upDownInterval );
 			Key.Up( key );
@@ -334,7 +332,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="key"> 送信するキー </param>
 		/// <param name="sl"> キーダウンとキーアップの間の待ち時間(ms) </param>
-		private void KeyPush(byte key, int sl) {
+		private void KeyPush( byte key, int sl ) {
 			try {
 				Key.Down( key );
 				Sleep( sl );

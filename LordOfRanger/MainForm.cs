@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Diagnostics;
-using System.Threading;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using LordOfRanger.Keyboard;
 using LordOfRanger.Setting;
 
 
 
 namespace LordOfRanger {
-	internal partial class MainForm : Form {
+	internal partial class MainForm :Form {
 
 		private static Mass _mass;
 		private Job _job;
@@ -41,7 +43,7 @@ namespace LordOfRanger {
 			internal const string DELETE = "dgvColDelete";
 
 		}
-		
+
 		/// <summary>
 		/// コンストラクタ
 		/// コンポーネント初期化のほかに、変数の初期化、設定の読み込み、タイマーのスタート、キーフックのスタートを行う
@@ -66,7 +68,7 @@ namespace LordOfRanger {
 			this.timerBarrage.Interval = Options.Options.options.timerInterval;
 			this.timerBarrage.Start();
 
-			KeyboardHook keyboardHook = new KeyboardHook();
+			var keyboardHook = new KeyboardHook();
 			keyboardHook.KeyboardHooked += KeyHookEvent;
 
 			Application.ApplicationExit += Application_ApplicationExit;
@@ -75,7 +77,7 @@ namespace LordOfRanger {
 
 		#region form event
 
-		private void Arad_ClientSizeChanged(object sender, EventArgs e) {
+		private void Arad_ClientSizeChanged( object sender, EventArgs e ) {
 			try {
 				if( WindowState == FormWindowState.Minimized ) {
 					Hide();
@@ -86,7 +88,7 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void notifyIcon1_DoubleClick(object sender, EventArgs e) {
+		private void notifyIcon1_DoubleClick( object sender, EventArgs e ) {
 			Visible = true;
 			if( WindowState == FormWindowState.Minimized ) {
 				WindowState = FormWindowState.Normal;
@@ -94,33 +96,33 @@ namespace LordOfRanger {
 			Activate();
 		}
 
-		private void ExitToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
 			skillLayer.Close();
 			Application.Exit();
 		}
 
-		private void Main_FormClosed(object sender, FormClosedEventArgs e) {
+		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
 			skillLayer.Close();
 			Application.Exit();
 		}
 
-		private void Application_ApplicationExit(object sender, EventArgs e) {
+		private void Application_ApplicationExit( object sender, EventArgs e ) {
 			Options.OptionsForm.SaveCnf();
 		}
 
-		private void optionToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
 			Options.OptionsForm.SaveCnf();
-			Options.OptionsForm of = new Options.OptionsForm();
+			var of = new Options.OptionsForm();
 			of.ShowDialog();
 		}
 
-		private void skillIconExtractorToolStripMenuItem_Click(object sender, EventArgs e) {
-			SkillIconExtractorForm sief = new SkillIconExtractorForm();
+		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
+			var sief = new SkillIconExtractorForm();
 			sief.Show();
 		}
 
-		private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
-			AboutBox ab = new AboutBox();
+		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
+			var ab = new AboutBox();
 			ab.ShowDialog();
 		}
 
@@ -128,8 +130,8 @@ namespace LordOfRanger {
 
 		#region setting form
 
-		private void btnAddSetting_Click(object sender, EventArgs e) {
-			AddSettingForm asf = new AddSettingForm();
+		private void btnAddSetting_Click( object sender, EventArgs e ) {
+			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
 				CurrentSettingChange( asf.settingName );
@@ -137,16 +139,16 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void btnDeleteSetting_Click(object sender, EventArgs e) {
-			string deleteFile = this.lbSettingList.SelectedItem.ToString();
+		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
+			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "Are you sure you want to delete setting '" + deleteFile + "'?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
 				SettingUpdate();
 			}
 		}
 
-		private void btnHotKeyChange_Click(object sender, EventArgs e) {
-			KeySetForm ksf = new KeySetForm();
+		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
+			var ksf = new KeySetForm();
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
 			if( ksf.result == KeySetForm.Result.OK ) {
@@ -155,7 +157,7 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void lbSettingList_MouseDoubleClick(object sender, MouseEventArgs e) {
+		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
 			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
 			SettingUpdate();
 		}
@@ -165,8 +167,8 @@ namespace LordOfRanger {
 		/// </summary>
 		private void SettingView() {
 			this.dgv.Rows.Clear();
-			foreach( DataAb da in _mass.DataList ) {
-				int row = this.dgv.Rows.Add();
+			foreach( var da in _mass.DataList ) {
+				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
 					case DataAb.InstanceType.COMMAND:
@@ -204,7 +206,7 @@ namespace LordOfRanger {
 				Thread.Sleep( 300 );
 			}
 
-			string[] files = Directory.GetFiles( Mass.SETTING_PATH );
+			var files = Directory.GetFiles( Mass.SETTING_PATH );
 			if( files.Length == 0 ) {
 				_mass = new Mass();
 				CurrentSettingChange( "new" );
@@ -214,10 +216,8 @@ namespace LordOfRanger {
 				return;
 			}
 			this.lbSettingList.Items.Clear();
-			foreach( string file in files ) {
-				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
-					this.lbSettingList.Items.Add( Path.GetFileNameWithoutExtension( file ) );
-				}
+			foreach( var file in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) ) {
+				this.lbSettingList.Items.Add( Path.GetFileNameWithoutExtension( file ) );
 			}
 			if( this.lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
 				this.lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
@@ -233,13 +233,13 @@ namespace LordOfRanger {
 		/// コンストラクタから呼ばれた場合のみ、同一ホットキーが存在する旨の警告を出す。
 		/// </summary>
 		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
-		private void LoadHotKeys(bool firstFlag = false) {
+		private void LoadHotKeys( bool firstFlag = false ) {
 			_hotKeys.Clear();
-			string[] files = Directory.GetFiles( Mass.SETTING_PATH );
-			foreach( string file in files ) {
+			var files = Directory.GetFiles( Mass.SETTING_PATH );
+			foreach( var file in files ) {
 				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
-					string filename = Path.GetFileNameWithoutExtension( file );
-					byte hotkey = Mass.GetHotKey( filename );
+					var filename = Path.GetFileNameWithoutExtension( file );
+					var hotkey = Mass.GetHotKey( filename );
 					if( hotkey != 0x00 ) {
 						string file2;
 						if( !_hotKeys.TryGetValue( hotkey, out file2 ) ) {
@@ -258,7 +258,7 @@ namespace LordOfRanger {
 		/// 設定リストの再読み込みを行う。
 		/// </summary>
 		/// <param name="firstFlag"></param>
-		private void SettingUpdate(bool firstFlag = false) {
+		private void SettingUpdate( bool firstFlag = false ) {
 			LoadSettingList();
 			if( this.lbSettingList.FindStringExact( _currentSettingFile ) == -1 ) {
 				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
@@ -277,7 +277,7 @@ namespace LordOfRanger {
 		/// 設定ファイルの切り替え
 		/// </summary>
 		/// <param name="name">設定ファイルの名前</param>
-		private void CurrentSettingChange(string name) {
+		private void CurrentSettingChange( string name ) {
 			_currentSettingFile = name;
 			Options.Options.options.currentSettingName = name;
 		}
@@ -292,7 +292,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void KeyHookEvent(object sender, KeyboardHookedEventArgs e) {
+		private void KeyHookEvent( object sender, KeyboardHookedEventArgs e ) {
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
 				this._job.KeydownEvent( e );
@@ -320,10 +320,10 @@ namespace LordOfRanger {
 		/// </summary>
 		private void ActiveWindowCheck() {
 			try {
-				IntPtr hWnd = Api.GetForegroundWindow();
+				var hWnd = Api.GetForegroundWindow();
 				int id;
 				Api.GetWindowThreadProcessId( hWnd, out id );
-				string name = Process.GetProcessById( id ).ProcessName;
+				var name = Process.GetProcessById( id ).ProcessName;
 				if( name == Options.Options.options.processName ) {
 					if( !activeWindow ) {
 						activeWindow = true;
@@ -354,7 +354,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void timerActiveWindowCheck_Tick(object sender, EventArgs e) {
+		private void timerActiveWindowCheck_Tick( object sender, EventArgs e ) {
 			ActiveWindowCheck();
 		}
 
@@ -363,7 +363,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void timerBarrage_Tick(object sender, EventArgs e) {
+		private void timerBarrage_Tick( object sender, EventArgs e ) {
 			KeyPushTimer();
 		}
 
@@ -377,21 +377,21 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
+		private void dgv_CellDoubleClick( object sender, DataGridViewCellEventArgs e ) {
 			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
-			int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+			var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.PUSH:
 				case DgvCol.SEND:
 					//textbox
-					KeySetForm ksf = new KeySetForm();
-					foreach( DataAb dataAb in _mass.DataList ) {
+					var ksf = new KeySetForm();
+					foreach( var dataAb in _mass.DataList ) {
 						if( dataAb.Id == sequence ) {
 							switch( dataAb.Type ) {
 								case DataAb.InstanceType.COMMAND:
-									if( this.dgv.SelectedCells[0].OwningColumn.Name == DgvCol.SEND) {
+									if( this.dgv.SelectedCells[0].OwningColumn.Name == DgvCol.SEND ) {
 										ksf.keyType = KeySetForm.KeyType.MULTI;
 									}
 									ksf.ShowDialog();
@@ -444,14 +444,14 @@ namespace LordOfRanger {
 					break;
 				case DgvCol.ENABLE_SKILL_ICON:
 				case DgvCol.DISABLE_SKILL_ICON:
-					OpenFileDialog ofd = new OpenFileDialog();
+					var ofd = new OpenFileDialog();
 					ofd.Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png";
 					ofd.Title = "Please select skillIcon";
 					ofd.InitialDirectory = Application.ExecutablePath;
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( DataAb dataAb in _mass.DataList ) {
+						foreach( var dataAb in _mass.DataList ) {
 							if( dataAb.Id == sequence ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:
@@ -474,25 +474,25 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+		private void dgv_CellContentClick( object sender, DataGridViewCellEventArgs e ) {
 			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.DELETE:
 					if( MessageBox.Show( "Are you sure you want to delete this row?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
-						int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 						_mass.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 					}
 					break;
 				case DgvCol.UP:
 					{
-						int rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 						if( rowIndex >= 1 ) {
-							int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 							_mass.UpAt( sequence );
-							DataGridViewRow row = this.dgv.Rows[rowIndex];
+							var row = this.dgv.Rows[rowIndex];
 							this.dgv.Rows.RemoveAt( rowIndex );
 							this.dgv.Rows.Insert( rowIndex - 1, row );
 						}
@@ -500,11 +500,11 @@ namespace LordOfRanger {
 					break;
 				case DgvCol.DOWN:
 					{
-						int rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 						if( rowIndex < this.dgv.Rows.Count - 1 ) {
-							int sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 							_mass.DownAt( sequence );
-							DataGridViewRow row = this.dgv.Rows[rowIndex];
+							var row = this.dgv.Rows[rowIndex];
 							this.dgv.Rows.RemoveAt( rowIndex );
 							this.dgv.Rows.Insert( rowIndex + 1, row );
 						}
@@ -519,8 +519,8 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btnAddRow_Click(object sender, EventArgs e) {
-			AddCommandForm acf = new AddCommandForm();
+		private void btnAddRow_Click( object sender, EventArgs e ) {
+			var acf = new AddCommandForm();
 			acf.ShowDialog();
 			if( acf.result == AddCommandForm.Result.OK ) {
 				string mode;
@@ -541,7 +541,7 @@ namespace LordOfRanger {
 					default:
 						return;
 				}
-				int row = this.dgv.Rows.Add();
+				var row = this.dgv.Rows.Add();
 				this.dgv.Rows[row].Cells[DgvCol.SEQUENCE].Value = sequence.ToString();
 				this.dgv.Rows[row].Cells[DgvCol.MODE].Value = mode;
 				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = "0";
@@ -553,7 +553,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btnSave_Click(object sender, EventArgs e) {
+		private void btnSave_Click( object sender, EventArgs e ) {
 			_mass.Save();
 			SettingUpdate();
 		}
@@ -563,7 +563,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btnCancel_Click(object sender, EventArgs e) {
+		private void btnCancel_Click( object sender, EventArgs e ) {
 			_mass.Load( _mass.name );
 			SettingUpdate();
 		}
@@ -573,7 +573,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		private static string KeysToText(byte key) {
+		private static string KeysToText( byte key ) {
 			return Key.KEY_TEXT[key];
 		}
 
@@ -582,9 +582,9 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="keys"></param>
 		/// <returns></returns>
-		private static string KeysToText(byte[] keys) {
-			string s = "";
-			for( int i = 0; i < keys.Length; i++ ) {
+		private static string KeysToText( byte[] keys ) {
+			var s = "";
+			for( var i = 0; i < keys.Length; i++ ) {
 				if( i != 0 ) {
 					//	s += " + ";
 				}

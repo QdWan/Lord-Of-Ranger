@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
+using System.Windows.Forms;
 
 namespace LordOfRanger {
 	/// <summary>
 	/// npkファイルからスキルアイコンを取得するフォーム
 	/// </summary>
-	internal partial class SkillIconExtractorForm : Form {
+	internal partial class SkillIconExtractorForm :Form {
 		internal SkillIconExtractorForm() {
 			InitializeComponent();
 		}
@@ -57,9 +57,9 @@ namespace LordOfRanger {
 		private const uint COMPRESS_NONE = 0x05;
 
 
-		private void btnExtract_Click(object sender, EventArgs e) {
-			string dir = this.txtDirectory.Text;
-			foreach( string filename in Directory.GetFiles( dir ) ) {
+		private void btnExtract_Click( object sender, EventArgs e ) {
+			var dir = this.txtDirectory.Text;
+			foreach( var filename in Directory.GetFiles( dir ) ) {
 				if( System.Text.RegularExpressions.Regex.IsMatch( filename, @"\.npk", System.Text.RegularExpressions.RegexOptions.IgnoreCase ) ) {
 					try {
 						extract_npk( filename );
@@ -75,29 +75,29 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void extract_npk(string file) {
-			int offset = 0;
-			FileStream fs = new FileStream( file, FileMode.Open, FileAccess.Read );
-			byte[] array = new byte[fs.Length];
+		private void extract_npk( string file ) {
+			var offset = 0;
+			var fs = new FileStream( file, FileMode.Open, FileAccess.Read );
+			var array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
 
-			NpkHeader header = new NpkHeader();
+			var header = new NpkHeader();
 			header.flag = Encoding.UTF8.GetString( array, offset, 16 );
 			offset += 16;
 			header.count = BitConverter.ToUInt32( array, offset );
 			offset += 4;
 
-			List<NpkIndex> allFileIndex = new List<NpkIndex>();
-			for( int i = 0; i < header.count; ++i ) {
-				NpkIndex index = new NpkIndex();
+			var allFileIndex = new List<NpkIndex>();
+			for( var i = 0; i < header.count; ++i ) {
+				var index = new NpkIndex();
 				index.offset = BitConverter.ToUInt32( array, offset );
 				offset += 4;
 				index.size = BitConverter.ToUInt32( array, offset );
 				offset += 4;
 
-				char[] indexName = new char[256];
-				for( int j = 0; j < 256; j++ ) {
+				var indexName = new char[256];
+				for( var j = 0; j < 256; j++ ) {
 					indexName[j] = (char)( array[offset++] ^ this._decordFlag[j] );
 				}
 				index.name = new string( indexName );
@@ -105,17 +105,17 @@ namespace LordOfRanger {
 				allFileIndex.Add( index );
 			}
 
-			foreach( NpkIndex index in allFileIndex ) {
+			foreach( var index in allFileIndex ) {
 				if( System.Text.RegularExpressions.Regex.IsMatch( index.name, "skillicon" ) ) {
 					extract_img_npk( array, (int)index.offset, index.name );
 				}
 			}
 		}
-		private void extract_img_npk(byte[] array, int indexOffset, string indexName) {
+		private void extract_img_npk( byte[] array, int indexOffset, string indexName ) {
 
-			int offset = indexOffset;
-			string filePathNoextern = indexName.Substring( 0, indexName.LastIndexOf( '.' ) );
-			NImgFHeader header = new NImgFHeader();
+			var offset = indexOffset;
+			var filePathNoextern = indexName.Substring( 0, indexName.LastIndexOf( '.' ) );
+			var header = new NImgFHeader();
 			header.flag = Encoding.UTF8.GetString( array, offset, 16 );
 			offset += 16;
 			header.indexSize = BitConverter.ToUInt32( array, offset );
@@ -133,9 +133,9 @@ namespace LordOfRanger {
 				return;
 			}
 
-			List<NImgFIndex> allFileIndex = new List<NImgFIndex>();
-			for( int i = 0; i < header.indexCount; ++i ) {
-				NImgFIndex index = new NImgFIndex();
+			var allFileIndex = new List<NImgFIndex>();
+			for( var i = 0; i < header.indexCount; ++i ) {
+				var index = new NImgFIndex();
 
 				index.dwType = BitConverter.ToUInt32( array, offset );
 				offset += 4;
@@ -168,17 +168,16 @@ namespace LordOfRanger {
 
 
 			const int bufferSize = 1024 * 1024 * 3;
-			byte[] tempFileData = new byte[bufferSize];
-			byte[] tempZlibData = new byte[bufferSize];
+			var tempFileData = new byte[bufferSize];
 			offset = indexOffset + (int)header.indexSize + 32;
 
-			int count = 0;
-			foreach( NImgFIndex index in allFileIndex ) {
+			var count = 0;
+			foreach( var index in allFileIndex ) {
 				if( index.dwType == ARGB_NONE ) {
 					continue;
 				}
 
-				uint size = index.size;
+				var size = index.size;
 
 				if( index.dwCompress == COMPRESS_NONE ) {
 					if( index.dwType == ARGB_8888 ) {
@@ -190,8 +189,8 @@ namespace LordOfRanger {
 
 				if( index.dwCompress == COMPRESS_ZLIB ) {
 
-					MemoryStream ms = new MemoryStream( array, offset + 2, (int)size - 2 );
-					DeflateStream ds = new DeflateStream( ms, CompressionMode.Decompress );
+					var ms = new MemoryStream( array, offset + 2, (int)size - 2 );
+					var ds = new DeflateStream( ms, CompressionMode.Decompress );
 					try {
 
 						ds.Read( tempFileData, 0, tempFileData.Length );
@@ -203,7 +202,7 @@ namespace LordOfRanger {
 					ms.Close();
 					ds.Close();
 				} else if( index.dwCompress == COMPRESS_NONE ) {
-					MemoryStream ms = new MemoryStream( array, offset + 2, (int)size );
+					var ms = new MemoryStream( array, offset + 2, (int)size );
 					ms.Read( tempFileData, 0, tempFileData.Length );
 					ms.Close();
 				} else {
@@ -213,23 +212,23 @@ namespace LordOfRanger {
 				Directory.CreateDirectory( filePathNoextern );
 
 
-				string filename = Path.GetFileName( filePathNoextern );
+				var filename = Path.GetFileName( filePathNoextern );
 				convert_to_png( filePathNoextern + "/" + filename + "_" + count++ + ".png", (int)index.width, (int)index.height, index.dwType, tempFileData );
 				offset += (int)size;
 			}
 		}
 
-		private void convert_to_png(string fileName, int width, int height, uint type, byte[] data) {
-			Bitmap bmp = new Bitmap( width, height );
-			for( int i = 0; i < height; i++ ) {
-				for( int j = 0; j < width; ++j ) {
+		private void convert_to_png( string fileName, int width, int height, uint type, byte[] data ) {
+			var bmp = new Bitmap( width, height );
+			for( var i = 0; i < height; i++ ) {
+				for( var j = 0; j < width; ++j ) {
 					switch( type ) {
 						case ARGB_1555:
 							{
-								int r = ( ( ( data[i * width * 2 + j * 2 + 1] & 127 ) >> 2 ) << 3 ) % 256;   // red
-								int g = ( ( ( ( data[i * width * 2 + j * 2 + 1] & 0x0003 ) << 3 ) | ( ( data[i * width * 2 + j * 2] >> 5 ) & 0x0007 ) ) << 3 ) % 256;   // green
-								int b = ( ( data[i * width * 2 + j * 2] & 0x003f ) << 3 ) % 256;   // blue
-								int a = ( ( data[i * width * 2 + j * 2 + 1] >> 7 ) ) % 256 == 0 ? 0 : 255;  // alpha
+								var r = ( ( ( data[i * width * 2 + j * 2 + 1] & 127 ) >> 2 ) << 3 ) % 256;   // red
+								var g = ( ( ( ( data[i * width * 2 + j * 2 + 1] & 0x0003 ) << 3 ) | ( ( data[i * width * 2 + j * 2] >> 5 ) & 0x0007 ) ) << 3 ) % 256;   // green
+								var b = ( ( data[i * width * 2 + j * 2] & 0x003f ) << 3 ) % 256;   // blue
+								var a = ( ( data[i * width * 2 + j * 2 + 1] >> 7 ) ) % 256 == 0 ? 0 : 255;  // alpha
 
 								bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
 							}
@@ -237,10 +236,10 @@ namespace LordOfRanger {
 						case ARGB_4444:
 							{
 
-								int r = ( ( data[i * width * 2 + j * 2 + 1] & 0x0f ) << 4 ) % 256;    // red
-								int g = ( ( ( data[i * width * 2 + j * 2 + 0] & 0xf0 ) >> 4 ) << 4 ) % 256; // green
-								int b = ( ( data[i * width * 2 + j * 2 + 0] & 0x0f ) << 4 ) % 256;  // blue
-								int a = ( ( data[i * width * 2 + j * 2 + 1] & 0xf0 ) >> 4 ) << 4;   // alpha
+								var r = ( ( data[i * width * 2 + j * 2 + 1] & 0x0f ) << 4 ) % 256;    // red
+								var g = ( ( ( data[i * width * 2 + j * 2 + 0] & 0xf0 ) >> 4 ) << 4 ) % 256; // green
+								var b = ( ( data[i * width * 2 + j * 2 + 0] & 0x0f ) << 4 ) % 256;  // blue
+								var a = ( ( data[i * width * 2 + j * 2 + 1] & 0xf0 ) >> 4 ) << 4;   // alpha
 
 								bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
 							}
@@ -269,8 +268,8 @@ namespace LordOfRanger {
 
 		}
 
-		private void btnBrowse_Click(object sender, EventArgs e) {
-			FolderBrowserDialog fbd = new FolderBrowserDialog();
+		private void btnBrowse_Click( object sender, EventArgs e ) {
+			var fbd = new FolderBrowserDialog();
 			fbd.ShowNewFolderButton = false;
 			fbd.SelectedPath = this.txtDirectory.Text;
 			if( fbd.ShowDialog( this ) == DialogResult.OK ) {

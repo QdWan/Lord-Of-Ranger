@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace LordOfRanger {
+namespace LordOfRanger.Keyboard {
 	static class Key {
 		private static Random _rnd = new Random();
 		public static readonly UIntPtr EXTRA_INFO = (UIntPtr)_rnd.Next();

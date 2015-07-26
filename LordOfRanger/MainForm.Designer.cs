@@ -24,10 +24,10 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+			var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+			var dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			var dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			var dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using LordOfRanger.Setting.Version;
 
@@ -69,7 +70,7 @@ namespace LordOfRanger.Setting {
 		/// 各変数に初期値を代入する
 		/// </summary>
 		internal Mass() {
-			int i = 8;
+			var i = 8;
 			if( true ) {
 				if( true ) {
 					i++;
@@ -93,7 +94,7 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="instance"> 追加するインスタンス </param>
 		/// <returns> 追加されたインスタンスのid </returns>
-		internal int Add(DataAb instance) {
+		internal int Add( DataAb instance ) {
 			if( instance.Id == 0 ) {
 				instance.Id = ++Sequence;
 			}
@@ -117,15 +118,15 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="sequence"> 削除するインスタンスのid </param>
 		/// <returns> 削除が成功したかどうか </returns>
-		internal bool RemoveAt(int sequence) {
-			for( int i = 0; i < this._dataList.Count; i++ ) {
+		internal bool RemoveAt( int sequence ) {
+			for( var i = 0; i < this._dataList.Count; i++ ) {
 				if( this._dataList[i].Id == sequence ) {
-					DataAb.InstanceType instanceType = this._dataList[i].Type;
+					var instanceType = this._dataList[i].Type;
 					this._dataList.RemoveAt( i );
 
 					switch( instanceType ) {
 						case DataAb.InstanceType.BARRAGE:
-							for( int j = 0; j < this._barrageList.Count; j++ ) {
+							for( var j = 0; j < this._barrageList.Count; j++ ) {
 								if( this._barrageList[j].Id == sequence ) {
 									this._barrageList.RemoveAt( j );
 									return true;
@@ -133,7 +134,7 @@ namespace LordOfRanger.Setting {
 							}
 							break;
 						case DataAb.InstanceType.COMMAND:
-							for( int j = 0; j < this._commandList.Count; j++ ) {
+							for( var j = 0; j < this._commandList.Count; j++ ) {
 								if( this._commandList[j].Id == sequence ) {
 									this._commandList.RemoveAt( j );
 									return true;
@@ -141,7 +142,7 @@ namespace LordOfRanger.Setting {
 							}
 							break;
 						case DataAb.InstanceType.TOGGLE:
-							for( int j = 0; j < this._toggleList.Count; j++ ) {
+							for( var j = 0; j < this._toggleList.Count; j++ ) {
 								if( this._toggleList[j].Id == sequence ) {
 									this._toggleList.RemoveAt( j );
 									return true;
@@ -160,10 +161,10 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="sequence"> 移動するインスタンスのid </param>
 		/// <returns> 移動が成功したかどうか </returns>
-		internal bool UpAt(int sequence) {
-			for( int i = 0; i < this._dataList.Count; i++ ) {
+		internal bool UpAt( int sequence ) {
+			for( var i = 0; i < this._dataList.Count; i++ ) {
 				if( this._dataList[i].Id == sequence ) {
-					DataAb da = DataList[i];
+					var da = DataList[i];
 					this._dataList.RemoveAt( i );
 					this._dataList.Insert( i - 1, da );
 					return true;
@@ -177,10 +178,10 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="sequence"> 移動するインスタンスのid </param>
 		/// <returns> 移動が成功したかどうか </returns>
-		internal bool DownAt(int sequence) {
-			for( int i = 0; i < this._dataList.Count; i++ ) {
+		internal bool DownAt( int sequence ) {
+			for( var i = 0; i < this._dataList.Count; i++ ) {
 				if( this._dataList[i].Id == sequence ) {
-					DataAb da = DataList[i];
+					var da = DataList[i];
 					this._dataList.RemoveAt( i );
 					this._dataList.Insert( i + 1, da );
 					return true;
@@ -195,12 +196,10 @@ namespace LordOfRanger.Setting {
 		/// <param name="sequence"> 有効無効を切り替えるインスタンスのid </param>
 		/// <param name="enable"> 有効無効どちらに切り替えるか </param>
 		/// <returns> 切り替えが成功したかどうか </returns>
-		internal bool ChangeEnable(int sequence, bool enable) {
-			for( int i = 0; i < this._dataList.Count; i++ ) {
-				if( this._dataList[i].Id == sequence ) {
-					this._dataList[i].Enable = enable;
-					return true;
-				}
+		internal bool ChangeEnable( int sequence, bool enable ) {
+			foreach( var t in this._dataList.Where( t => t.Id == sequence ) ) {
+				t.Enable = enable;
+				return true;
 			}
 			return false;
 		}
@@ -221,7 +220,7 @@ namespace LordOfRanger.Setting {
 		/// この設定ファイルの保存
 		/// </summary>
 		internal void Save() {
-			V v = new V( this );
+			var v = new V( this );
 			v.Save();
 		}
 
@@ -229,8 +228,8 @@ namespace LordOfRanger.Setting {
 		/// 設定ファイルの読み込み
 		/// </summary>
 		/// <param name="filename"> 読み込むファイル名 </param>
-		internal void Load(string filename) {
-			V v = new V( this );
+		internal void Load( string filename ) {
+			var v = new V( this );
 			v.Load( filename );
 		}
 
@@ -239,7 +238,7 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="filename"> 取得するファイル名 </param>
 		/// <returns> ホットキー </returns>
-		internal static byte GetHotKey(string filename) {
+		internal static byte GetHotKey( string filename ) {
 			return V.GetHotKey( filename );
 		}
 	}

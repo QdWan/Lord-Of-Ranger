@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LordOfRanger.Keyboard;
 
 namespace LordOfRanger.Options {
 	internal partial class OptionsForm : Form {
@@ -53,16 +54,16 @@ namespace LordOfRanger.Options {
 				Options.options = new Options();
 			}
 			if( System.IO.File.Exists( _fileName ) ) {
-				System.Xml.Serialization.XmlSerializer serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-				System.IO.StreamReader sr = new System.IO.StreamReader( _fileName, new System.Text.UTF8Encoding( false ) );
+				var serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
+				var sr = new System.IO.StreamReader( _fileName, new System.Text.UTF8Encoding( false ) );
 				Options.options = (Options)serializer2.Deserialize( sr );
 				sr.Close();
 			}
 		}
 
 		internal static void SaveCnf() {
-			System.Xml.Serialization.XmlSerializer serializer1 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-			System.IO.StreamWriter sw = new System.IO.StreamWriter( _fileName, false, new System.Text.UTF8Encoding( false ) );
+			var serializer1 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
+			var sw = new System.IO.StreamWriter( _fileName, false, new System.Text.UTF8Encoding( false ) );
 			serializer1.Serialize( sw, Options.options );
 			sw.Close();
 		}

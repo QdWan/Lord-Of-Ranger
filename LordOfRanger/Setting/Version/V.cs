@@ -27,12 +27,9 @@ namespace LordOfRanger.Setting.Version {
 		/// VERSIONはreadonlyなので基本的には最新版のインスタンスしか生成されない
 		/// </summary>
 		/// <param name="instance"> 操作する対象のインスタンス </param>
-		internal V(Mass instance) {
+		internal V( Mass instance ) {
 			this._instance = instance;
 			switch( VERSION ) {
-				case 1:
-					this._vif = new V1( instance );
-					break;
 				case 2:
 					this._vif = new V2( instance );
 					break;
@@ -44,14 +41,14 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="filename"> バージョンを取得するファイルのファイル名 </param>
 		/// <returns> バージョン </returns>
-		private static int GetVersion(string filename) {
-			FileStream fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
-			byte[] array = new byte[fs.Length];
+		private static int GetVersion( string filename ) {
+			var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+			var array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
 			fs.Close();
 
-			int offset = 0;
+			var offset = 0;
 			return BitConverter.ToInt32( array, offset );
 		}
 
@@ -61,7 +58,7 @@ namespace LordOfRanger.Setting.Version {
 		/// バージョンによって欠落している要素があればデフォルト値が入る
 		/// </summary>
 		/// <param name="filename"> 読み込むファイルのファイル名 </param>
-		internal void Load(string filename) {
+		internal void Load( string filename ) {
 			switch( GetVersion( filename ) ) {
 				case 1:
 					this._vif = new V1( this._instance );
@@ -87,7 +84,7 @@ namespace LordOfRanger.Setting.Version {
 		/// </summary>
 		/// <param name="filename"> ファイルのホットキーを取得する </param>
 		/// <returns></returns>
-		internal static byte GetHotKey(string filename) {
+		internal static byte GetHotKey( string filename ) {
 			switch( GetVersion( filename ) ) {
 				case 1:
 					return V1.GetHotKey( filename );
