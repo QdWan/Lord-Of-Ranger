@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using LordOfRanger.Keyboard;
 using LordOfRanger.Setting;
@@ -19,7 +20,7 @@ namespace LordOfRanger {
 		private Dictionary<int, bool> _enableToggle;
 		private static byte _directionKey = (byte)Keys.Left;
 		private static byte _reverseDirectionKey = (byte)Keys.Right;
-		private Thread _commandThread;
+		private Task _commandTask;
 		private const int ICON_SIZE = 30;
 		private Mass _mass;
 
@@ -105,19 +106,16 @@ namespace LordOfRanger {
 				return;
 			} else {
 				// キーボードから
-				if( this._commandThread != null ) {
-					if( ( new[] { ThreadState.Running, ThreadState.WaitSleepJoin } ).Contains( this._commandThread.ThreadState ) ) {
-						var flag = true;
-						foreach( var b in this._mass.BarrageList ) {
-							if( b.push == (byte)e.KeyCode ) {
-								flag = false;
-							}
-						}
-						if( flag ) {
-							//コマンド中のキー入力で、且つ入力されたキーが連打設定されていない場合はキャンセル
-							e.Cancel = true;
-							return;
-						}
+				if( this._commandTask?.Status == TaskStatus.Running ) {
+					if( (byte)Keys.Left <= key && key <= (byte)Keys.Down ) {
+						//コマンド中のキー入力で、且つ入力されたキーが方向キーだった場合キャンセル
+						e.Cancel = true;
+						return;
+					}
+					if( this._mass.CommandList.Any( c => c.push == key ) ) {
+						//コマンドキーだった場合キャンセル
+						e.Cancel = true;
+						return;
 					}
 				}
 			}
@@ -130,8 +128,11 @@ namespace LordOfRanger {
 			//command
 			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.push ) ) ) {
 				e.Cancel = true;
-				this._commandThread = new Thread( ThreadCommand );
-				this._commandThread.Start( new object[] { c.sendList, left, right } );
+				this._commandTask = Task.Run( () => {
+					ThreadCommand( new object[] {
+						c.sendList, left, right
+					} );
+				} );
 				break;
 			}
 
@@ -207,24 +208,18 @@ namespace LordOfRanger {
 			if( !MainForm.activeWindow || !this._barrageEnable ) {
 				return;
 			}
-			if( this._commandThread != null ) {
-				if( ( new[] { ThreadState.Running, ThreadState.WaitSleepJoin } ).Contains( this._commandThread.ThreadState ) ) {
-					return;
-				}
+			if( this._commandTask?.Status == TaskStatus.Running ) {
+				return;
 			}
 			//barrage
-			foreach( var b in this._mass.BarrageList ) {
-				if( _enablekeyE[b.push] ) {
-					KeyPush( b.send );
-				}
+			foreach( var b in this._mass.BarrageList.Where( b => _enablekeyE[b.push] ) ) {
+				KeyPush( b.send );
 			}
 
 			//toggle
 			try {
-				foreach( var t in this._mass.ToggleList ) {
-					if( this._enableToggle[t.Id] ) {
-						KeyPush( t.send );
-					}
+				foreach( var t in this._mass.ToggleList.Where( t => this._enableToggle[t.Id] ) ) {
+					KeyPush( t.send );
 				}
 			} catch( KeyNotFoundException ) {
 				//It happens at the timing of the changeover.
@@ -245,11 +240,7 @@ namespace LordOfRanger {
 				押しっぱなしの2回目以降ではないか
 				2回目以降の場合、EnablekeyEがtrueになっているため、実行するべきではないと判定される。
 			*/
-			if( key == key2 && !_enablekeyE[key2] && _enablekeyF[key2] ) {
-				return true;
-			} else {
-				return false;
-			}
+			return key == key2 && !_enablekeyE[key2] && _enablekeyF[key2];
 		}
 
 		/// <summary>
