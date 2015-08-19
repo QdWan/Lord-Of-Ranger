@@ -12,8 +12,8 @@ namespace LordOfRanger {
 	static class Arad {
 
 		private static Process _process;
-		internal static int x = 0;
-		internal static int y = 0;
+		internal static int x;
+		internal static int y;
 		internal static int w = 800;
 		internal static int h = 600;
 
@@ -27,7 +27,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <returns>アラド戦記プロセス</returns>
 		internal static Process Get() {
-			Process tempProcess = Process.GetProcesses().FirstOrDefault( hProcess => hProcess.ProcessName == Options.Options.options.processName );
+			var tempProcess = Process.GetProcesses().FirstOrDefault( hProcess => hProcess.ProcessName == Options.Options.options.processName );
 			if( tempProcess == null ) {
 				return null;
 			}

@@ -11,8 +11,8 @@ namespace LordOfRanger {
 		public AboutBox() {
 			InitializeComponent();
 
-			string appVersion = Application.ProductVersion;
-			string appProductName = Application.ProductName;
+			var appVersion = Application.ProductVersion;
+			var appProductName = Application.ProductName;
 
 			this.lblInfo.Text = "\n\n" + appProductName + "\n";
 			this.lblInfo.Text += "Application Version : " + appVersion;

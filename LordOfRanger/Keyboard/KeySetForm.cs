@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace LordOfRanger {
+namespace LordOfRanger.Keyboard {
 	/// <summary>
 	/// キーを設定するフォーム
 	/// keyTypeがSINGLEの場合は1つだけ
 	/// keyTypeがMULTIの場合は複数のキーを設定でき、入力されたキーはkeyDataから取得できる
 	/// </summary>
-	internal partial class KeySetForm : Form {
+	internal partial class KeySetForm :Form {
 
 		private List<byte> _keyList = new List<byte>();
 		internal Result result;
@@ -40,8 +40,8 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void KeySetForm_KeyUp(object sender, KeyEventArgs e) {
-			byte keycode = (byte)e.KeyCode;
+		private void KeySetForm_KeyUp( object sender, KeyEventArgs e ) {
+			var keycode = (byte)e.KeyCode;
 			if( keycode == (byte)Keys.Return ) {
 				this.result = Result.OK;
 				Close();
@@ -83,18 +83,18 @@ namespace LordOfRanger {
 			}
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e) {
+		private void btnCancel_Click( object sender, EventArgs e ) {
 			this._keyList.Clear();
 			this.result = Result.CANCEL;
 			Close();
 		}
 
-		private void btnOk_Click(object sender, EventArgs e) {
+		private void btnOk_Click( object sender, EventArgs e ) {
 			this.result = Result.OK;
 			Close();
 		}
 
-		class NotForcusButton : Button {
+		class NotForcusButton :Button {
 			public NotForcusButton() {
 				SetStyle( ControlStyles.Selectable, false );
 			}

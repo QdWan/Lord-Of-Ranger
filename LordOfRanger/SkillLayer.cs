@@ -2,7 +2,7 @@
 	/// <summary>
 	/// スキルアイコン表示用フォーム
 	/// </summary>
-	internal partial class SkillLayer : LayeredWindowSurface {
+	internal partial class SkillLayer :LayeredWindowSurface {
 		internal SkillLayer() {
 			InitializeComponent();
 		}

@@ -5,7 +5,7 @@ namespace LordOfRanger {
 	/// <summary>
 	/// 行追加時に、コマンド、トグル、連打を選択するフォーム
 	/// </summary>
-	internal partial class AddCommandForm : Form {
+	internal partial class AddCommandForm :Form {
 		internal Result result;
 		internal Type type;
 		internal AddCommandForm() {
@@ -26,7 +26,7 @@ namespace LordOfRanger {
 			TOGGLE
 		}
 
-		private void btnOk_Click(object sender, EventArgs e) {
+		private void btnOk_Click( object sender, EventArgs e ) {
 			if( this.rbCommand.Checked ) {
 				this.type = Type.COMMAND;
 			} else if( this.rbBarrage.Checked ) {
@@ -41,11 +41,11 @@ namespace LordOfRanger {
 			Close();
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e) {
+		private void btnCancel_Click( object sender, EventArgs e ) {
 			Close();
 		}
 
-		private void AddCommandForm_KeyUp(object sender, KeyEventArgs e) {
+		private void AddCommandForm_KeyUp( object sender, KeyEventArgs e ) {
 			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				Close();
 			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {

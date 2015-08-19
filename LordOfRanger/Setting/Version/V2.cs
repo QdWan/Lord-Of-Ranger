@@ -8,11 +8,11 @@ using System.Threading;
 
 
 namespace LordOfRanger.Setting.Version {
-	internal class V2 : IF {
+	internal class V2 :IF {
 		private Mass _mass;
 		private const int VERSION = 2;
 
-		public V2(Mass instance) {
+		public V2( Mass instance ) {
 			this._mass = instance;
 		}
 
@@ -26,7 +26,7 @@ namespace LordOfRanger.Setting.Version {
 			internal int sendDataSize;
 		}
 
-		public void Load(string filename) {
+		public void Load( string filename ) {
 			this._mass.Init();
 			this._mass.name = filename;
 
@@ -136,7 +136,6 @@ namespace LordOfRanger.Setting.Version {
 				hotKeySize 32bit
 				8 bit only.
 			*/
-			byte[] hotKeySize;
 
 			/*
 				headerSize 32bit
@@ -175,9 +174,9 @@ namespace LordOfRanger.Setting.Version {
 			*/
 			List<byte> data = new List<byte>();
 			foreach( DataAb da in this._mass.DataList ) {
-				byte[] skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) );
+				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
 
-				byte[] disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) );
+				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];
 				//id
 				header.AddRange( BitConverter.GetBytes( da.Id ) );
 				//Type
@@ -226,7 +225,7 @@ namespace LordOfRanger.Setting.Version {
 				}
 
 			}
-			hotKeySize = BitConverter.GetBytes( 1 );
+			var hotKeySize = BitConverter.GetBytes( 1 );
 			headerSize = BitConverter.GetBytes( header.Count );
 
 			List<byte> settingBinary = new List<byte>();
@@ -241,7 +240,7 @@ namespace LordOfRanger.Setting.Version {
 			fs.Write( settingBinary.ToArray(), 0, settingBinary.Count );
 			fs.Close();
 		}
-		public static byte GetHotKey(string filename) {
+		public static byte GetHotKey( string filename ) {
 			try {
 				FileStream fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				byte[] array = new byte[fs.Length];
@@ -249,12 +248,12 @@ namespace LordOfRanger.Setting.Version {
 				fs.Read( array, 0, (int)fs.Length );
 				fs.Close();
 
-				int offset = 0;
-				int version = BitConverter.ToInt32( array, offset );
+				var offset = 0;
+				//	var version = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				int hotKeySize = BitConverter.ToInt32( array, offset );
+				var hotKeySize = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				int headerSize = BitConverter.ToInt32( array, offset );
+				//	var headerSize = BitConverter.ToInt32( array, offset );
 				offset += 4;
 				//	sequence = BitConverter.ToInt32( array, offset );
 				offset += 4;
@@ -264,7 +263,7 @@ namespace LordOfRanger.Setting.Version {
 			}
 		}
 
-		private Bitmap BinaryToBitmap(byte[] binary) {
+		private Bitmap BinaryToBitmap( byte[] binary ) {
 			if( binary.Length == 0 ) {
 				return null;
 			}

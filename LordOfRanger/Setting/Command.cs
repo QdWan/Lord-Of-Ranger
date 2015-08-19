@@ -10,7 +10,7 @@ namespace LordOfRanger.Setting {
 	/// パラメータの詳細はDataAb参照
 	/// 細かい実装についてはJobクラスを参照
 	/// </summary>
-	internal class Command : DataAb {
+	internal class Command :DataAb {
 
 		internal byte push;
 		internal byte[] sendList = new byte[0];
