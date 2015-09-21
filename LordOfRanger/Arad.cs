@@ -27,14 +27,12 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <returns>アラド戦記プロセス</returns>
 		internal static Process Get() {
-			var tempProcess = Process.GetProcesses().FirstOrDefault( hProcess => hProcess.ProcessName == Options.Options.options.processName );
-			if( tempProcess == null ) {
+
+			_process = Process.GetProcessesByName( "ARAD" ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+
+			if( _process == null ) {
 				return null;
 			}
-			_process = tempProcess;
-
-			//MARGIN_TOP = API.GetSystemMetrics( API.SystemMetric.SM_CYSIZE ) + 4;
-
 
 			Api.Rect rect;
 			try {

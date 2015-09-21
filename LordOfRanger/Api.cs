@@ -17,6 +17,12 @@ namespace LordOfRanger {
 		[DllImport( "user32.dll" )]
 		internal static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
+		[DllImport( "USER32.DLL", CharSet = CharSet.Auto )]
+		internal static extern int ShowWindow( IntPtr hWnd, int nCmdShow );
+		[DllImport( "USER32.DLL", CharSet = CharSet.Auto )]
+		internal static extern bool SetForegroundWindow( IntPtr hWnd );
+		internal const int SW_NORMAL = 1;
+		
 		//構造体
 		[StructLayout( LayoutKind.Sequential, Pack = 4 )]
 		internal struct Rect {

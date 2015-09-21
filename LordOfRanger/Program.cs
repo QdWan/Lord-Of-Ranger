@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LordOfRanger {
@@ -21,6 +23,15 @@ namespace LordOfRanger {
 						Application.Run();
 					}
 				} else {
+					var hThisProcess = Process.GetCurrentProcess();
+					var hProcesses = Process.GetProcessesByName( hThisProcess.ProcessName );
+					var iThisProcessId = hThisProcess.Id;
+
+					foreach( var hProcess in hProcesses.Where( hProcess => hProcess.Id != iThisProcessId ) ) {
+						Api.ShowWindow( hProcess.MainWindowHandle, Api.SW_NORMAL );
+						Api.SetForegroundWindow( hProcess.MainWindowHandle );
+						break;
+					}
 					MessageBox.Show( "Already been started!" );
 				}
 			}
