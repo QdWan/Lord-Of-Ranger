@@ -253,7 +253,7 @@ namespace LordOfRanger {
 			}
 			var bmpList = new List<Bitmap>();
 			foreach( var da in this._mass.DataList ) {
-				if( da.Enable && this._barrageEnable && MainForm.activeWindow ) {
+				if( da.Enable && this._barrageEnable ) {
 					bmpList.Add( da.SkillIcon );
 				} else {
 					bmpList.Add( da.DisableSkillIcon );
@@ -262,6 +262,10 @@ namespace LordOfRanger {
 			Bitmap bmp;
 			if( bmpList.Count != 0 ) {
 				var iconList = bmpList.ToArray();
+				if( !Arad.IsAlive || !MainForm.activeWindow ) {
+					MainForm.skillLayer.Visible = false;
+					return;
+				}
 				Arad.Get();
 				bmp = new Bitmap( Math.Min( iconList.Length, Options.Options.options.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Options.Options.options.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
