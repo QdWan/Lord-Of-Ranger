@@ -247,21 +247,25 @@ namespace LordOfRanger {
 		/// レイヤーウィンドウの更新
 		/// </summary>
 		internal void IconUpdate() {
+			Bitmap bmp;
 			if( !Options.Options.options.iconViewFlag ) {
-				MainForm.skillLayer.Visible = false;
-				return;
+				bmp = new Bitmap( 1, 1 );
+				goto gotoLabelDraw;
 			}
 			var bmpList = new List<Bitmap>();
 			foreach( var da in this._mass.DataList ) {
-				if( da.Enable && this._barrageEnable && MainForm.activeWindow ) {
+				if( da.Enable && this._barrageEnable ) {
 					bmpList.Add( da.SkillIcon );
 				} else {
 					bmpList.Add( da.DisableSkillIcon );
 				}
 			}
-			Bitmap bmp;
 			if( bmpList.Count != 0 ) {
 				var iconList = bmpList.ToArray();
+				if( !Arad.IsAlive || !MainForm.activeWindow ) {
+					bmp = new Bitmap( 1, 1 );
+					goto gotoLabelDraw;
+				}
 				Arad.Get();
 				bmp = new Bitmap( Math.Min( iconList.Length, Options.Options.options.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Options.Options.options.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
@@ -299,9 +303,9 @@ namespace LordOfRanger {
 					break;
 
 			}
+			gotoLabelDraw:
 			MainForm.skillLayer.DrawImage( bmp );
 			MainForm.skillLayer.UpdateLayeredWindow();
-			MainForm.skillLayer.ToTop();
 		}
 
 		private void Sleep( int sleeptime ) {

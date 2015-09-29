@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-
-
+using System.Runtime.CompilerServices;
 
 namespace LordOfRanger {
 	/// <summary>
@@ -11,11 +10,32 @@ namespace LordOfRanger {
 	/// </summary>
 	static class Arad {
 
-		private static Process _process;
+		internal static Process process;
 		internal static int x;
 		internal static int y;
 		internal static int w = 800;
 		internal static int h = 600;
+		private static bool _isAlive = false;
+		internal static bool IsAlive {
+			get {
+				if( _isAlive ) {
+					_isAlive = !process.HasExited;
+				} else {
+					Get();
+				}
+				return _isAlive;
+			}
+		}
+
+		internal static bool IsActiveWindow {
+			get {
+				var hWnd = Api.GetForegroundWindow();
+				int id;
+				Api.GetWindowThreadProcessId( hWnd, out id );
+				return process.Id == id;
+
+			}
+		}
 
 		private const int MARGIN_LEFT = 0;
 		private static int _marginTop = 0;
@@ -28,24 +48,25 @@ namespace LordOfRanger {
 		/// <returns>アラド戦記プロセス</returns>
 		internal static Process Get() {
 
-			_process = Process.GetProcessesByName( "ARAD" ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+			process = Process.GetProcessesByName( Options.Options.options.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
 
-			if( _process == null ) {
+			if( process == null ) {
+				_isAlive = false;
 				return null;
 			}
-
+			_isAlive = true;
 			Api.Rect rect;
 			try {
-				Api.GetWindowRect( _process.MainWindowHandle, out rect );
+				Api.GetWindowRect( process.MainWindowHandle, out rect );
 			} catch( Exception ) {
-				return _process;
+				return process;
 			}
 			x = rect.left + MARGIN_LEFT;
 			y = rect.top + _marginTop;
 			w = rect.right - rect.left - MARGIN_LEFT - MARGIN_RIGHT;
 			h = rect.bottom - rect.top - MARGIN_BOTTOM - _marginTop;
 
-			return _process;
+			return process;
 		}
 	}
 }
