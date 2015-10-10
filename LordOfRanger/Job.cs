@@ -87,12 +87,11 @@ namespace LordOfRanger {
 		/// 方向キーの記憶を行う
 		/// </summary>
 		/// <param name="e"> 押されたキー情報 </param>
-		internal void KeydownEvent( KeyboardHookedEventArgs e ) {
+		internal async void KeydownEvent( KeyboardHookedEventArgs e ) {
 			var key = (byte)e.KeyCode;
 			if( !MainForm.activeWindow || !this._barrageEnable ) {
 				return;
 			}
-
 			//このキー入力がどこから発行されたものか判定
 			if( e.ExtraInfo == (int)Key.EXTRA_INFO ) {
 				//LORから
@@ -111,6 +110,10 @@ namespace LordOfRanger {
 						//コマンド中のキー入力で、且つ入力されたキーが方向キーだった場合キャンセル
 						e.Cancel = true;
 						return;
+					}
+					if( this._mass.BarrageList.Any( b => b.push == key ) ) {
+						//連打キーだった場合コマンドの終了待機
+						await this._commandTask;
 					}
 					if( this._mass.CommandList.Any( c => c.push == key ) ) {
 						//コマンドキーだった場合キャンセル
@@ -254,7 +257,7 @@ namespace LordOfRanger {
 			}
 			var bmpList = new List<Bitmap>();
 			foreach( var da in this._mass.DataList ) {
-				if( da.Enable && this._barrageEnable ) {
+				if( da.Enable && this._barrageEnable) {
 					bmpList.Add( da.SkillIcon );
 				} else {
 					bmpList.Add( da.DisableSkillIcon );
@@ -306,6 +309,7 @@ namespace LordOfRanger {
 			gotoLabelDraw:
 			MainForm.skillLayer.DrawImage( bmp );
 			MainForm.skillLayer.UpdateLayeredWindow();
+			MainForm.skillLayer.ToTop();
 		}
 
 		private void Sleep( int sleeptime ) {
