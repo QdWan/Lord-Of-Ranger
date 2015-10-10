@@ -17,7 +17,7 @@ namespace LordOfRanger {
 
 		private static Mass _mass;
 		private Job _job;
-		internal static bool activeWindow = true;
+		internal static bool activeWindow = false;
 		private static bool alive = false;
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
