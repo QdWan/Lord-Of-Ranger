@@ -125,7 +125,7 @@
 			this.groupBox6.Size = new System.Drawing.Size(398, 91);
 			this.groupBox6.TabIndex = 2;
 			this.groupBox6.TabStop = false;
-			this.groupBox6.Text = "General";
+			this.groupBox6.Text = "一般";
 			// 
 			// txtGeneralProcessName
 			// 
@@ -629,6 +629,7 @@
 			this.Name = "OptionsForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
+			this.Text = "設定";
 			this.Load += new System.EventHandler(this.OptionsForm_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
