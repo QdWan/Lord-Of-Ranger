@@ -35,9 +35,6 @@
 		/* Hot Key */
 		public byte hotKeyLorSwitching = 0x00;
 
-		/* Advanced */
-		public bool commandUpArrowKeys = true;
-
 		/*restore*/
 		public string currentSettingName = "";
 	}

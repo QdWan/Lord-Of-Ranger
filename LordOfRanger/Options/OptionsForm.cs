@@ -92,11 +92,7 @@ namespace LordOfRanger.Options {
 			/* Hot Key */
 			this._tmpHotKey = Options.options.hotKeyLorSwitching;
 			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
-
-			/* Advanced */
-			this.chkAdvancedCommandUpArrowKeys.Checked = Options.options.commandUpArrowKeys;
-
-
+			
 			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
 			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 		}
@@ -123,10 +119,7 @@ namespace LordOfRanger.Options {
 
 			/* Hot Key */
 			Options.options.hotKeyLorSwitching = this._tmpHotKey;
-
-			/* Advanced */
-			Options.options.commandUpArrowKeys = this.chkAdvancedCommandUpArrowKeys.Checked;
-
+			
 			SaveCnf();
 			LoadCnf();
 		}

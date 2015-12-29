@@ -59,8 +59,6 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.nudOtherActiveWindowMonitoringTimerInterval = new System.Windows.Forms.NumericUpDown();
 			this.chkOtherActiveWindowMonitoringEnable = new System.Windows.Forms.CheckBox();
-			this.tabAdvanced = new System.Windows.Forms.TabPage();
-			this.chkAdvancedCommandUpArrowKeys = new System.Windows.Forms.CheckBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.btnApply = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
@@ -84,7 +82,6 @@
 			this.groupBox3.SuspendLayout();
 			this.panelOtherActiveWindowMonitoring.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudOtherActiveWindowMonitoringTimerInterval)).BeginInit();
-			this.tabAdvanced.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -97,7 +94,6 @@
 			this.tabControl1.Controls.Add(this.tabInterval);
 			this.tabControl1.Controls.Add(this.tabSkillIcon);
 			this.tabControl1.Controls.Add(this.tabOther);
-			this.tabControl1.Controls.Add(this.tabAdvanced);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -569,27 +565,6 @@
 			this.chkOtherActiveWindowMonitoringEnable.UseVisualStyleBackColor = true;
 			this.chkOtherActiveWindowMonitoringEnable.CheckedChanged += new System.EventHandler(this.chkOtherActiveWindowMonitoringEnable_CheckedChanged);
 			// 
-			// tabAdvanced
-			// 
-			this.tabAdvanced.Controls.Add(this.chkAdvancedCommandUpArrowKeys);
-			this.tabAdvanced.Location = new System.Drawing.Point(4, 27);
-			this.tabAdvanced.Name = "tabAdvanced";
-			this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
-			this.tabAdvanced.Size = new System.Drawing.Size(412, 338);
-			this.tabAdvanced.TabIndex = 4;
-			this.tabAdvanced.Text = "詳細設定";
-			this.tabAdvanced.UseVisualStyleBackColor = true;
-			// 
-			// chkAdvancedCommandUpArrowKeys
-			// 
-			this.chkAdvancedCommandUpArrowKeys.AutoSize = true;
-			this.chkAdvancedCommandUpArrowKeys.Location = new System.Drawing.Point(21, 20);
-			this.chkAdvancedCommandUpArrowKeys.Name = "chkAdvancedCommandUpArrowKeys";
-			this.chkAdvancedCommandUpArrowKeys.Size = new System.Drawing.Size(267, 58);
-			this.chkAdvancedCommandUpArrowKeys.TabIndex = 0;
-			this.chkAdvancedCommandUpArrowKeys.Text = "このツールがコマンドを入力中、\r\nキーボードから方向キーの入力があった場合\r\n方向キーの入力をキャンセルする";
-			this.chkAdvancedCommandUpArrowKeys.UseVisualStyleBackColor = true;
-			// 
 			// splitContainer1
 			// 
 			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -681,8 +656,6 @@
 			this.panelOtherActiveWindowMonitoring.ResumeLayout(false);
 			this.panelOtherActiveWindowMonitoring.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudOtherActiveWindowMonitoringTimerInterval)).EndInit();
-			this.tabAdvanced.ResumeLayout(false);
-			this.tabAdvanced.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -733,7 +706,5 @@
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox txtGeneralProcessName;
 		private System.Windows.Forms.Label label12;
-		private System.Windows.Forms.TabPage tabAdvanced;
-		private System.Windows.Forms.CheckBox chkAdvancedCommandUpArrowKeys;
 	}
 }

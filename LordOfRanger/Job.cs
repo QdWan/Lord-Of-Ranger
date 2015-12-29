@@ -178,11 +178,6 @@ namespace LordOfRanger {
 			var sendList = (byte[])obj[0];
 			var left = (byte)obj[1];
 			var right = (byte)obj[2];
-			if( Options.Options.options.commandUpArrowKeys ) {
-				foreach( var sendKey in ARROW_KEY_LIST.Where( sendKey => _enablekeyE[sendKey] ) ) {
-					Key.Up( sendKey );
-				}
-			}
 			foreach( var sendKey in sendList ) {
 				var tmpSendKey = sendKey;
 				switch( tmpSendKey ) {
@@ -195,11 +190,6 @@ namespace LordOfRanger {
 				}
 				KeyPush( tmpSendKey, Options.Options.options.commandUpDownInterval );
 				Sleep( Options.Options.options.commandInterval );
-			}
-			if( Options.Options.options.commandUpArrowKeys ) {
-				foreach( var sendKey in ARROW_KEY_LIST.Where( sendKey => _enablekeyE[sendKey] ) ) {
-					Key.Down( sendKey );
-				}
 			}
 		}
 
