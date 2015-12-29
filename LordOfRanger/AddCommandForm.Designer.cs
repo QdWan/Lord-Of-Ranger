@@ -72,9 +72,9 @@
 			this.rbToggle.AutoSize = true;
 			this.rbToggle.Location = new System.Drawing.Point(20, 56);
 			this.rbToggle.Name = "rbToggle";
-			this.rbToggle.Size = new System.Drawing.Size(57, 16);
+			this.rbToggle.Size = new System.Drawing.Size(71, 16);
 			this.rbToggle.TabIndex = 4;
-			this.rbToggle.Text = "Toggle";
+			this.rbToggle.Text = "連打切替";
 			this.rbToggle.UseVisualStyleBackColor = true;
 			// 
 			// rbBarrage
@@ -82,9 +82,9 @@
 			this.rbBarrage.AutoSize = true;
 			this.rbBarrage.Location = new System.Drawing.Point(20, 34);
 			this.rbBarrage.Name = "rbBarrage";
-			this.rbBarrage.Size = new System.Drawing.Size(63, 16);
+			this.rbBarrage.Size = new System.Drawing.Size(47, 16);
 			this.rbBarrage.TabIndex = 3;
-			this.rbBarrage.Text = "Barrage";
+			this.rbBarrage.Text = "連打";
 			this.rbBarrage.UseVisualStyleBackColor = true;
 			// 
 			// rbCommand
@@ -92,9 +92,9 @@
 			this.rbCommand.AutoSize = true;
 			this.rbCommand.Location = new System.Drawing.Point(20, 12);
 			this.rbCommand.Name = "rbCommand";
-			this.rbCommand.Size = new System.Drawing.Size(73, 16);
+			this.rbCommand.Size = new System.Drawing.Size(58, 16);
 			this.rbCommand.TabIndex = 2;
-			this.rbCommand.Text = "Command";
+			this.rbCommand.Text = "コマンド";
 			this.rbCommand.UseVisualStyleBackColor = true;
 			// 
 			// AddCommandForm

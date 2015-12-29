@@ -32,7 +32,6 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.tabInterval = new System.Windows.Forms.TabPage();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.label11 = new System.Windows.Forms.Label();
 			this.nudIntervalToggleTimer = new System.Windows.Forms.NumericUpDown();
 			this.nudIntervalToggleUpDown = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
@@ -115,7 +114,7 @@
 			this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
 			this.tabGeneral.Size = new System.Drawing.Size(412, 338);
 			this.tabGeneral.TabIndex = 2;
-			this.tabGeneral.Text = "General";
+			this.tabGeneral.Text = "一般";
 			this.tabGeneral.UseVisualStyleBackColor = true;
 			// 
 			// groupBox6
@@ -146,9 +145,9 @@
 			this.label12.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label12.Location = new System.Drawing.Point(12, 64);
 			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(96, 18);
+			this.label12.Size = new System.Drawing.Size(101, 18);
 			this.label12.TabIndex = 13;
-			this.label12.Text = "Process Name:";
+			this.label12.Text = "対象プロセス名 :";
 			// 
 			// cmbGeneralStartupState
 			// 
@@ -156,8 +155,8 @@
 			this.cmbGeneralStartupState.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.cmbGeneralStartupState.FormattingEnabled = true;
 			this.cmbGeneralStartupState.Items.AddRange(new object[] {
-            "Normal",
-            "Minimized"});
+            "通常\t",
+            "タスクトレイ"});
 			this.cmbGeneralStartupState.Location = new System.Drawing.Point(257, 26);
 			this.cmbGeneralStartupState.Name = "cmbGeneralStartupState";
 			this.cmbGeneralStartupState.Size = new System.Drawing.Size(121, 26);
@@ -169,9 +168,9 @@
 			this.label9.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label9.Location = new System.Drawing.Point(12, 29);
 			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(88, 18);
+			this.label9.Size = new System.Drawing.Size(89, 18);
 			this.label9.TabIndex = 0;
-			this.label9.Text = "Startup State";
+			this.label9.Text = "起動時の状態 :";
 			// 
 			// tabInterval
 			// 
@@ -183,12 +182,11 @@
 			this.tabInterval.Padding = new System.Windows.Forms.Padding(3);
 			this.tabInterval.Size = new System.Drawing.Size(412, 338);
 			this.tabInterval.TabIndex = 0;
-			this.tabInterval.Text = "Interval";
+			this.tabInterval.Text = "連打間隔";
 			this.tabInterval.UseVisualStyleBackColor = true;
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.label11);
 			this.groupBox2.Controls.Add(this.nudIntervalToggleTimer);
 			this.groupBox2.Controls.Add(this.nudIntervalToggleUpDown);
 			this.groupBox2.Controls.Add(this.label3);
@@ -199,17 +197,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(396, 102);
 			this.groupBox2.TabIndex = 9;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Toggle And Barrage";
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label11.Location = new System.Drawing.Point(110, 28);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(86, 14);
-			this.label11.TabIndex = 13;
-			this.label11.Text = "(Restart Required)";
+			this.groupBox2.Text = "連打、連打切替";
 			// 
 			// nudIntervalToggleTimer
 			// 
@@ -265,9 +253,9 @@
 			this.label3.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label3.Location = new System.Drawing.Point(6, 26);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(98, 18);
+			this.label3.Size = new System.Drawing.Size(123, 18);
 			this.label3.TabIndex = 5;
-			this.label3.Text = "Timer Interval:";
+			this.label3.Text = "連打間隔(要再起動) :";
 			// 
 			// label2
 			// 
@@ -276,7 +264,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(194, 31);
 			this.label2.TabIndex = 3;
-			this.label2.Text = "KeyUp And KeyDown Interval:";
+			this.label2.Text = "キーを押してから離すまでの時間:";
 			// 
 			// groupBox1
 			// 
@@ -290,7 +278,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(396, 99);
 			this.groupBox1.TabIndex = 8;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Command";
+			this.groupBox1.Text = "コマンド";
 			// 
 			// nudIntervalCommandUpDown
 			// 
@@ -347,7 +335,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(194, 29);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Sleep Time After Key Input:";
+			this.label1.Text = "キー入力後の待機時間 :";
 			// 
 			// label4
 			// 
@@ -356,7 +344,7 @@
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(194, 31);
 			this.label4.TabIndex = 7;
-			this.label4.Text = "KeyUp And KeyDown Interval:";
+			this.label4.Text = "キーを押してから離すまでの時間:";
 			// 
 			// tabSkillIcon
 			// 
@@ -366,7 +354,7 @@
 			this.tabSkillIcon.Padding = new System.Windows.Forms.Padding(3);
 			this.tabSkillIcon.Size = new System.Drawing.Size(412, 338);
 			this.tabSkillIcon.TabIndex = 1;
-			this.tabSkillIcon.Text = "Skill Icon";
+			this.tabSkillIcon.Text = "スキルアイコン";
 			this.tabSkillIcon.UseVisualStyleBackColor = true;
 			// 
 			// groupBox5
@@ -379,7 +367,7 @@
 			this.groupBox5.Size = new System.Drawing.Size(395, 142);
 			this.groupBox5.TabIndex = 5;
 			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "Skill Icon";
+			this.groupBox5.Text = "スキルアイコン";
 			// 
 			// chkSkillIconEnable
 			// 
@@ -387,9 +375,9 @@
 			this.chkSkillIconEnable.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.chkSkillIconEnable.Location = new System.Drawing.Point(16, 19);
 			this.chkSkillIconEnable.Name = "chkSkillIconEnable";
-			this.chkSkillIconEnable.Size = new System.Drawing.Size(65, 22);
+			this.chkSkillIconEnable.Size = new System.Drawing.Size(51, 22);
 			this.chkSkillIconEnable.TabIndex = 0;
-			this.chkSkillIconEnable.Text = "Enable";
+			this.chkSkillIconEnable.Text = "有効";
 			this.chkSkillIconEnable.UseVisualStyleBackColor = true;
 			this.chkSkillIconEnable.CheckedChanged += new System.EventHandler(this.chkSkillIconEnable_CheckedChanged);
 			// 
@@ -411,10 +399,10 @@
 			this.cmbSkillIconDisplayPosition.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.cmbSkillIconDisplayPosition.FormattingEnabled = true;
 			this.cmbSkillIconDisplayPosition.Items.AddRange(new object[] {
-            "TopLeft",
-            "TopRight",
-            "BottomLeft",
-            "BottomRight"});
+            "左上",
+            "右上",
+            "左下",
+            "右下"});
 			this.cmbSkillIconDisplayPosition.Location = new System.Drawing.Point(123, 41);
 			this.cmbSkillIconDisplayPosition.Name = "cmbSkillIconDisplayPosition";
 			this.cmbSkillIconDisplayPosition.Size = new System.Drawing.Size(121, 26);
@@ -426,9 +414,9 @@
 			this.label6.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label6.Location = new System.Drawing.Point(4, 43);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(104, 18);
+			this.label6.Size = new System.Drawing.Size(61, 18);
 			this.label6.TabIndex = 4;
-			this.label6.Text = "Display position:";
+			this.label6.Text = "表示位置:";
 			// 
 			// label5
 			// 
@@ -436,9 +424,9 @@
 			this.label5.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label5.Location = new System.Drawing.Point(3, 10);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(263, 18);
+			this.label5.Size = new System.Drawing.Size(156, 18);
 			this.label5.TabIndex = 1;
-			this.label5.Text = "Number of icons to be displayed in one line:";
+			this.label5.Text = "1行に表示するアイコン数 :";
 			// 
 			// nudOneRowIcons
 			// 
@@ -468,7 +456,7 @@
 			this.tabOther.Padding = new System.Windows.Forms.Padding(3);
 			this.tabOther.Size = new System.Drawing.Size(412, 338);
 			this.tabOther.TabIndex = 3;
-			this.tabOther.Text = "Other";
+			this.tabOther.Text = "その他";
 			this.tabOther.UseVisualStyleBackColor = true;
 			// 
 			// groupBox4
@@ -481,7 +469,7 @@
 			this.groupBox4.Size = new System.Drawing.Size(396, 51);
 			this.groupBox4.TabIndex = 3;
 			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Hot Key";
+			this.groupBox4.Text = "ホットキー";
 			// 
 			// txtOtherHotKeyLORSwitching
 			// 
@@ -499,9 +487,9 @@
 			this.label8.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label8.Location = new System.Drawing.Point(7, 20);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(246, 18);
+			this.label8.Size = new System.Drawing.Size(245, 18);
 			this.label8.TabIndex = 0;
-			this.label8.Text = "Lord Of Ranger Enable/Disable Switching";
+			this.label8.Text = "Lord Of Rangerの有効/無効切替ホットキー";
 			// 
 			// groupBox3
 			// 
@@ -514,17 +502,17 @@
 			this.groupBox3.Size = new System.Drawing.Size(396, 99);
 			this.groupBox3.TabIndex = 2;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Active Window Monitoring";
+			this.groupBox3.Text = "アクティブウィンドウ監視";
 			// 
 			// label10
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label10.Location = new System.Drawing.Point(272, 16);
+			this.label10.Location = new System.Drawing.Point(328, 18);
 			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(106, 18);
+			this.label10.Size = new System.Drawing.Size(56, 18);
 			this.label10.TabIndex = 12;
-			this.label10.Text = "Restart Required";
+			this.label10.Text = "要再起動";
 			// 
 			// panelOtherActiveWindowMonitoring
 			// 
@@ -541,9 +529,9 @@
 			this.label7.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label7.Location = new System.Drawing.Point(6, 9);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(98, 18);
+			this.label7.Size = new System.Drawing.Size(61, 18);
 			this.label7.TabIndex = 9;
-			this.label7.Text = "Timer Interval:";
+			this.label7.Text = "監視間隔:";
 			// 
 			// nudOtherActiveWindowMonitoringTimerInterval
 			// 
@@ -575,9 +563,9 @@
 			this.chkOtherActiveWindowMonitoringEnable.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.chkOtherActiveWindowMonitoringEnable.Location = new System.Drawing.Point(15, 26);
 			this.chkOtherActiveWindowMonitoringEnable.Name = "chkOtherActiveWindowMonitoringEnable";
-			this.chkOtherActiveWindowMonitoringEnable.Size = new System.Drawing.Size(65, 22);
+			this.chkOtherActiveWindowMonitoringEnable.Size = new System.Drawing.Size(51, 22);
 			this.chkOtherActiveWindowMonitoringEnable.TabIndex = 1;
-			this.chkOtherActiveWindowMonitoringEnable.Text = "Enable";
+			this.chkOtherActiveWindowMonitoringEnable.Text = "有効";
 			this.chkOtherActiveWindowMonitoringEnable.UseVisualStyleBackColor = true;
 			this.chkOtherActiveWindowMonitoringEnable.CheckedChanged += new System.EventHandler(this.chkOtherActiveWindowMonitoringEnable_CheckedChanged);
 			// 
@@ -589,7 +577,7 @@
 			this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
 			this.tabAdvanced.Size = new System.Drawing.Size(412, 338);
 			this.tabAdvanced.TabIndex = 4;
-			this.tabAdvanced.Text = "Advanced";
+			this.tabAdvanced.Text = "詳細設定";
 			this.tabAdvanced.UseVisualStyleBackColor = true;
 			// 
 			// chkAdvancedCommandUpArrowKeys
@@ -597,9 +585,9 @@
 			this.chkAdvancedCommandUpArrowKeys.AutoSize = true;
 			this.chkAdvancedCommandUpArrowKeys.Location = new System.Drawing.Point(21, 20);
 			this.chkAdvancedCommandUpArrowKeys.Name = "chkAdvancedCommandUpArrowKeys";
-			this.chkAdvancedCommandUpArrowKeys.Size = new System.Drawing.Size(271, 40);
+			this.chkAdvancedCommandUpArrowKeys.Size = new System.Drawing.Size(267, 58);
 			this.chkAdvancedCommandUpArrowKeys.TabIndex = 0;
-			this.chkAdvancedCommandUpArrowKeys.Text = "When enter the command,\r\nif arrow key had been pressed,it releases.";
+			this.chkAdvancedCommandUpArrowKeys.Text = "このツールがコマンドを入力中、\r\nキーボードから方向キーの入力があった場合\r\n方向キーの入力をキャンセルする";
 			this.chkAdvancedCommandUpArrowKeys.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer1
@@ -630,7 +618,7 @@
 			this.btnApply.Name = "btnApply";
 			this.btnApply.Size = new System.Drawing.Size(75, 23);
 			this.btnApply.TabIndex = 2;
-			this.btnApply.Text = "Apply";
+			this.btnApply.Text = "適用";
 			this.btnApply.UseVisualStyleBackColor = true;
 			this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
 			// 
@@ -640,7 +628,7 @@
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Text = "キャンセル";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
@@ -743,7 +731,6 @@
 		private System.Windows.Forms.NumericUpDown nudOtherActiveWindowMonitoringTimerInterval;
 		private System.Windows.Forms.CheckBox chkOtherActiveWindowMonitoringEnable;
 		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.TextBox txtGeneralProcessName;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TabPage tabAdvanced;

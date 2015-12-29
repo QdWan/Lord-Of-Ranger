@@ -24,10 +24,10 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			var dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			var dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-			var dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
@@ -106,7 +106,7 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.dgv);
-			this.splitContainer1.Size = new System.Drawing.Size(694, 608);
+			this.splitContainer1.Size = new System.Drawing.Size(694, 610);
 			this.splitContainer1.SplitterDistance = 39;
 			this.splitContainer1.TabIndex = 8;
 			this.splitContainer1.TabStop = false;
@@ -138,13 +138,13 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(7, 13);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(44, 12);
+			this.label1.Size = new System.Drawing.Size(52, 12);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "HotKey:";
+			this.label1.Text = "ホットキー:";
 			// 
 			// txtHotKey
 			// 
-			this.txtHotKey.Location = new System.Drawing.Point(57, 9);
+			this.txtHotKey.Location = new System.Drawing.Point(63, 9);
 			this.txtHotKey.Name = "txtHotKey";
 			this.txtHotKey.ReadOnly = true;
 			this.txtHotKey.Size = new System.Drawing.Size(96, 19);
@@ -152,11 +152,11 @@
 			// 
 			// btnHotKeyChange
 			// 
-			this.btnHotKeyChange.Location = new System.Drawing.Point(159, 6);
+			this.btnHotKeyChange.Location = new System.Drawing.Point(165, 6);
 			this.btnHotKeyChange.Name = "btnHotKeyChange";
 			this.btnHotKeyChange.Size = new System.Drawing.Size(67, 23);
 			this.btnHotKeyChange.TabIndex = 0;
-			this.btnHotKeyChange.Text = "change";
+			this.btnHotKeyChange.Text = "変更";
 			this.btnHotKeyChange.UseVisualStyleBackColor = true;
 			this.btnHotKeyChange.Click += new System.EventHandler(this.btnHotKeyChange_Click);
 			// 
@@ -166,7 +166,7 @@
 			this.btnAddRow.Name = "btnAddRow";
 			this.btnAddRow.Size = new System.Drawing.Size(75, 23);
 			this.btnAddRow.TabIndex = 0;
-			this.btnAddRow.Text = "Add Row";
+			this.btnAddRow.Text = "行の追加";
 			this.btnAddRow.UseVisualStyleBackColor = true;
 			this.btnAddRow.Click += new System.EventHandler(this.btnAddRow_Click);
 			// 
@@ -194,7 +194,7 @@
 			this.dgv.Location = new System.Drawing.Point(0, 0);
 			this.dgv.Name = "dgv";
 			this.dgv.RowTemplate.Height = 21;
-			this.dgv.Size = new System.Drawing.Size(694, 565);
+			this.dgv.Size = new System.Drawing.Size(694, 567);
 			this.dgv.TabIndex = 7;
 			this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
 			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
@@ -205,7 +205,7 @@
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 2;
-			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Text = "キャンセル";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
@@ -215,7 +215,7 @@
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 1;
-			this.btnSave.Text = "Save";
+			this.btnSave.Text = "保存";
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
@@ -224,7 +224,7 @@
 			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this.splitContainer2.IsSplitterFixed = true;
-			this.splitContainer2.Location = new System.Drawing.Point(0, 26);
+			this.splitContainer2.Location = new System.Drawing.Point(0, 24);
 			this.splitContainer2.Name = "splitContainer2";
 			// 
 			// splitContainer2.Panel1
@@ -235,7 +235,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-			this.splitContainer2.Size = new System.Drawing.Size(848, 640);
+			this.splitContainer2.Size = new System.Drawing.Size(848, 642);
 			this.splitContainer2.SplitterDistance = 150;
 			this.splitContainer2.TabIndex = 9;
 			this.splitContainer2.TabStop = false;
@@ -257,8 +257,8 @@
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.btnDeleteSetting);
 			this.splitContainer4.Panel2.Controls.Add(this.btnAddSetting);
-			this.splitContainer4.Size = new System.Drawing.Size(150, 640);
-			this.splitContainer4.SplitterDistance = 575;
+			this.splitContainer4.Size = new System.Drawing.Size(150, 642);
+			this.splitContainer4.SplitterDistance = 577;
 			this.splitContainer4.TabIndex = 1;
 			this.splitContainer4.TabStop = false;
 			// 
@@ -269,7 +269,7 @@
 			this.lbSettingList.ItemHeight = 12;
 			this.lbSettingList.Location = new System.Drawing.Point(0, 0);
 			this.lbSettingList.Name = "lbSettingList";
-			this.lbSettingList.Size = new System.Drawing.Size(150, 575);
+			this.lbSettingList.Size = new System.Drawing.Size(150, 577);
 			this.lbSettingList.TabIndex = 0;
 			this.lbSettingList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbSettingList_MouseDoubleClick);
 			// 
@@ -280,7 +280,7 @@
 			this.btnDeleteSetting.Name = "btnDeleteSetting";
 			this.btnDeleteSetting.Size = new System.Drawing.Size(125, 23);
 			this.btnDeleteSetting.TabIndex = 1;
-			this.btnDeleteSetting.Text = "Delete Setting";
+			this.btnDeleteSetting.Text = "設定ファイル削除";
 			this.btnDeleteSetting.UseVisualStyleBackColor = true;
 			this.btnDeleteSetting.Click += new System.EventHandler(this.btnDeleteSetting_Click);
 			// 
@@ -290,7 +290,7 @@
 			this.btnAddSetting.Name = "btnAddSetting";
 			this.btnAddSetting.Size = new System.Drawing.Size(125, 23);
 			this.btnAddSetting.TabIndex = 0;
-			this.btnAddSetting.Text = "Add Setting";
+			this.btnAddSetting.Text = "設定ファイル作成";
 			this.btnAddSetting.UseVisualStyleBackColor = true;
 			this.btnAddSetting.Click += new System.EventHandler(this.btnAddSetting_Click);
 			// 
@@ -312,7 +312,7 @@
 			// splitContainer5.Panel2
 			// 
 			this.splitContainer5.Panel2.Controls.Add(this.splitContainer1);
-			this.splitContainer5.Size = new System.Drawing.Size(694, 640);
+			this.splitContainer5.Size = new System.Drawing.Size(694, 642);
 			this.splitContainer5.SplitterDistance = 28;
 			this.splitContainer5.TabIndex = 9;
 			this.splitContainer5.TabStop = false;
@@ -339,12 +339,12 @@
 			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
 			this.contextMenuStrip1.Name = "contextMenuStrip1";
-			this.contextMenuStrip1.Size = new System.Drawing.Size(105, 26);
+			this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
 			// 
 			// ExitToolStripMenuItem
 			// 
 			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
 			this.ExitToolStripMenuItem.Text = "EXIT";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
@@ -365,7 +365,7 @@
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(848, 26);
+			this.menuStrip1.Size = new System.Drawing.Size(848, 24);
 			this.menuStrip1.TabIndex = 10;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -375,21 +375,21 @@
             this.optionToolStripMenuItem,
             this.skillIconExtractorToolStripMenuItem});
 			this.sETTINGToolStripMenuItem.Name = "sETTINGToolStripMenuItem";
-			this.sETTINGToolStripMenuItem.Size = new System.Drawing.Size(50, 22);
-			this.sETTINGToolStripMenuItem.Text = "Tools";
+			this.sETTINGToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+			this.sETTINGToolStripMenuItem.Text = "ツール";
 			// 
 			// optionToolStripMenuItem
 			// 
 			this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-			this.optionToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.optionToolStripMenuItem.Text = "Options...";
+			this.optionToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+			this.optionToolStripMenuItem.Text = "オプション";
 			this.optionToolStripMenuItem.Click += new System.EventHandler(this.optionToolStripMenuItem_Click);
 			// 
 			// skillIconExtractorToolStripMenuItem
 			// 
 			this.skillIconExtractorToolStripMenuItem.Name = "skillIconExtractorToolStripMenuItem";
-			this.skillIconExtractorToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.skillIconExtractorToolStripMenuItem.Text = "Skill IconExtractor";
+			this.skillIconExtractorToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+			this.skillIconExtractorToolStripMenuItem.Text = "スキルアイコン抽出";
 			this.skillIconExtractorToolStripMenuItem.Click += new System.EventHandler(this.skillIconExtractorToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
@@ -397,21 +397,21 @@
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
-			this.helpToolStripMenuItem.Text = "Help";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+			this.helpToolStripMenuItem.Text = "ヘルプ";
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
-			this.aboutToolStripMenuItem.Text = "About";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.aboutToolStripMenuItem.Text = "Lord Of Rangerについて";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// dgvColSkillIcon
 			// 
 			this.dgvColSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
 			this.dgvColSkillIcon.Frozen = true;
-			this.dgvColSkillIcon.HeaderText = "Skill Icon";
+			this.dgvColSkillIcon.HeaderText = "icon";
 			this.dgvColSkillIcon.MinimumWidth = 50;
 			this.dgvColSkillIcon.Name = "dgvColSkillIcon";
 			this.dgvColSkillIcon.Width = 50;
@@ -420,7 +420,7 @@
 			// 
 			this.dgvColDisableSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
 			this.dgvColDisableSkillIcon.Frozen = true;
-			this.dgvColDisableSkillIcon.HeaderText = "Disable Skill Icon";
+			this.dgvColDisableSkillIcon.HeaderText = "無効icon";
 			this.dgvColDisableSkillIcon.MinimumWidth = 50;
 			this.dgvColDisableSkillIcon.Name = "dgvColDisableSkillIcon";
 			this.dgvColDisableSkillIcon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -431,7 +431,7 @@
 			// 
 			this.dgvColMode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
 			this.dgvColMode.Frozen = true;
-			this.dgvColMode.HeaderText = "Mode";
+			this.dgvColMode.HeaderText = "mode";
 			this.dgvColMode.Name = "dgvColMode";
 			this.dgvColMode.ReadOnly = true;
 			this.dgvColMode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -449,7 +449,7 @@
 			// 
 			this.dgvColPriority.FillWeight = 47.41861F;
 			this.dgvColPriority.Frozen = true;
-			this.dgvColPriority.HeaderText = "Priority";
+			this.dgvColPriority.HeaderText = "優先度";
 			this.dgvColPriority.Items.AddRange(new object[] {
             "0",
             "1",
@@ -482,7 +482,7 @@
 			// 
 			this.dgvColPush.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
 			this.dgvColPush.FillWeight = 92.4663F;
-			this.dgvColPush.HeaderText = "Push Key";
+			this.dgvColPush.HeaderText = "キーボードから入力されるキー";
 			this.dgvColPush.Name = "dgvColPush";
 			this.dgvColPush.ReadOnly = true;
 			this.dgvColPush.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -491,7 +491,7 @@
 			// 
 			this.dgvColSend.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
 			this.dgvColSend.FillWeight = 92.4663F;
-			this.dgvColSend.HeaderText = "Send Key";
+			this.dgvColSend.HeaderText = "送信されるキー";
 			this.dgvColSend.Name = "dgvColSend";
 			this.dgvColSend.ReadOnly = true;
 			this.dgvColSend.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -500,36 +500,36 @@
 			// 
 			this.dgvColUp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle1.NullValue = "Up";
+			dataGridViewCellStyle1.NullValue = "上へ";
 			this.dgvColUp.DefaultCellStyle = dataGridViewCellStyle1;
-			this.dgvColUp.HeaderText = "Up";
+			this.dgvColUp.HeaderText = "上へ";
 			this.dgvColUp.MinimumWidth = 25;
 			this.dgvColUp.Name = "dgvColUp";
-			this.dgvColUp.Text = "Up";
-			this.dgvColUp.Width = 25;
+			this.dgvColUp.Text = "上へ";
+			this.dgvColUp.Width = 30;
 			// 
 			// dgvColDown
 			// 
 			this.dgvColDown.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle2.NullValue = "Down";
+			dataGridViewCellStyle2.NullValue = "下へ";
 			this.dgvColDown.DefaultCellStyle = dataGridViewCellStyle2;
-			this.dgvColDown.HeaderText = "Down";
+			this.dgvColDown.HeaderText = "下へ";
 			this.dgvColDown.Name = "dgvColDown";
-			this.dgvColDown.Text = "Down";
-			this.dgvColDown.Width = 39;
+			this.dgvColDown.Text = "下へ";
+			this.dgvColDown.Width = 30;
 			// 
 			// dgvColDelete
 			// 
 			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
 			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle3.NullValue = "DELETE";
+			dataGridViewCellStyle3.NullValue = "削除";
 			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle3;
 			this.dgvColDelete.FillWeight = 92.4663F;
-			this.dgvColDelete.HeaderText = "Delete";
+			this.dgvColDelete.HeaderText = "削除";
 			this.dgvColDelete.Name = "dgvColDelete";
-			this.dgvColDelete.Text = "Delete";
-			this.dgvColDelete.Width = 44;
+			this.dgvColDelete.Text = "削除";
+			this.dgvColDelete.Width = 32;
 			// 
 			// MainForm
 			// 
