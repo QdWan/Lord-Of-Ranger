@@ -32,7 +32,7 @@ namespace LordOfRanger {
 						Api.SetForegroundWindow( hProcess.MainWindowHandle );
 						break;
 					}
-					MessageBox.Show( "Already been started!" );
+					MessageBox.Show( "既にLordOfRangerが起動されています。" );
 				}
 			}
 		}

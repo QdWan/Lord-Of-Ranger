@@ -27,6 +27,7 @@
 			this.lblInfo = new System.Windows.Forms.Label();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.btnOK = new System.Windows.Forms.Button();
+			this.llblSiteLink = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -44,6 +45,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
+			this.splitContainer1.Panel2.Controls.Add(this.llblSiteLink);
 			this.splitContainer1.Panel2.Controls.Add(this.lblInfo);
 			this.splitContainer1.Size = new System.Drawing.Size(406, 241);
 			this.splitContainer1.SplitterDistance = 135;
@@ -52,10 +54,9 @@
 			// 
 			// lblInfo
 			// 
-			this.lblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.lblInfo.Location = new System.Drawing.Point(0, 0);
 			this.lblInfo.Name = "lblInfo";
-			this.lblInfo.Size = new System.Drawing.Size(267, 241);
+			this.lblInfo.Size = new System.Drawing.Size(267, 153);
 			this.lblInfo.TabIndex = 0;
 			// 
 			// splitContainer2
@@ -88,6 +89,17 @@
 			this.btnOK.UseVisualStyleBackColor = true;
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
+			// llblSiteLink
+			// 
+			this.llblSiteLink.AutoSize = true;
+			this.llblSiteLink.Location = new System.Drawing.Point(97, 214);
+			this.llblSiteLink.Name = "llblSiteLink";
+			this.llblSiteLink.Size = new System.Drawing.Size(164, 18);
+			this.llblSiteLink.TabIndex = 1;
+			this.llblSiteLink.TabStop = true;
+			this.llblSiteLink.Text = "http://arad.test.jp.net/lor/";
+			this.llblSiteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblSiteLink_LinkClicked);
+			// 
 			// AboutBox
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -100,8 +112,9 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AboutBox";
-			this.Text = "AboutBox";
+			this.Text = "Lord Of Rangerについて";
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			this.splitContainer1.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
@@ -118,5 +131,6 @@
 		private System.Windows.Forms.Label lblInfo;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.Button btnOK;
+		private System.Windows.Forms.LinkLabel llblSiteLink;
 	}
 }

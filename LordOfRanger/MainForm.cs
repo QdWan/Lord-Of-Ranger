@@ -17,16 +17,16 @@ namespace LordOfRanger {
 
 		private static Mass _mass;
 		private Job _job;
-		internal static bool activeWindow = true;
+		internal static bool activeWindow = false;
 		private static bool alive = false;
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
 		private static Dictionary<byte, string> _hotKeys;
 
 		private struct Mode {
-			internal const string COMMAND = "Command";
-			internal const string BARRAGE = "Barrage";
-			internal const string TOGGLE = "Toggle";
+			internal const string COMMAND = "コマンド";
+			internal const string BARRAGE = "連打";
+			internal const string TOGGLE = "連打切替";
 		};
 
 
@@ -142,7 +142,7 @@ namespace LordOfRanger {
 
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
-			if( MessageBox.Show( "Are you sure you want to delete setting '" + deleteFile + "'?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
+			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
 				SettingUpdate();
 			}
@@ -247,7 +247,7 @@ namespace LordOfRanger {
 							_hotKeys.Add( hotkey, filename );
 						} else {
 							if( firstFlag ) {
-								MessageBox.Show( "Item with Same HotKey has already been added. \n\n'" + filename + "' AND '" + file2 + "'" );
+								MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
 							}
 						}
 					}
@@ -455,7 +455,7 @@ namespace LordOfRanger {
 				case DgvCol.DISABLE_SKILL_ICON:
 					var ofd = new OpenFileDialog();
 					ofd.Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png";
-					ofd.Title = "Please select skillIcon";
+					ofd.Title = "スキルアイコン画像を選択";
 					ofd.InitialDirectory = Application.ExecutablePath;
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
@@ -489,7 +489,7 @@ namespace LordOfRanger {
 			}
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.DELETE:
-					if( MessageBox.Show( "Are you sure you want to delete this row?", "warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
+					if( MessageBox.Show( "この行を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 						_mass.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
