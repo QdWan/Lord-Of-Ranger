@@ -128,7 +128,7 @@ namespace LordOfRanger {
 			var left = _reverseDirectionKey;
 			var right = _directionKey;
 
-			//command
+			//コマンド
 			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.push ) ) ) {
 				e.Cancel = true;
 				this._commandTask = Task.Run( () => {
@@ -150,7 +150,7 @@ namespace LordOfRanger {
 					break;
 			}
 
-			//toggle
+			//切替
 			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.push ) ) ) {
 				//not typo 
 				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
@@ -161,15 +161,6 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// コマンドを実行するスレッドから呼び出される関数
-		/// 
-		/// --オプション設定が有効の場合は
-		/// 始めに押下中の方向キーを放し、
-		/// sendList配列の中身のキーを順に押下していく
-		/// 終わり次第押下中だった方向キーを押下し直す
-		/// 
-		/// --オプション設定が無効の場合は
-		/// sendListの配列の中身のキーを順に押していく
-		/// 
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
 		/// <param name="o"></param>
@@ -204,12 +195,12 @@ namespace LordOfRanger {
 			if( this._commandTask?.Status == TaskStatus.Running ) {
 				return;
 			}
-			//barrage
+			//連打
 			foreach( var b in this._mass.BarrageList.Where( b => _enablekeyE[b.push] ) ) {
 				KeyPush( b.send );
 			}
 
-			//toggle
+			//切替
 			try {
 				foreach( var t in this._mass.ToggleList.Where( t => this._enableToggle[t.Id] ) ) {
 					KeyPush( t.send );
