@@ -25,24 +25,26 @@ namespace LordOfRanger {
 				try {
 					if( IsFileLocked( filename ) ) {
 						MessageBox.Show( "ファイルがロックされています。"+filename );
+						this.lblStatus.Text = "";
 						this.progressBar1.Visible = false;
 						this.btnExtract.Enabled = true;
 						return;
 					}
-					await Task.Run( () => {
-						var ext = new Extract( filename );
-						foreach( var index in ext.npkIndexList ) {
-							if( Regex.IsMatch( index.name, "skillicon" ) ) {
-								var filePathNoextern = index.name.Substring( 0, index.name.LastIndexOf( '.' ) ) + "/";
+					var ext = new Extract( filename );
+					foreach( var index in ext.npkIndexList ) {
+						if( Regex.IsMatch( index.name, "skillicon" ) ) {
+							var filePathNoextern = index.name.Substring( 0, index.name.LastIndexOf( '.' ) ) + "/";
+							this.lblStatus.Text = index.name;
+							await Task.Run( () => {
 								if( !Directory.Exists( filePathNoextern ) ) {
 									Directory.CreateDirectory( filePathNoextern );
 								}
 								foreach( var nImgIndex in index.NImgHeader.NImgIndex ) {
 									nImgIndex.NImg.ToBitmap().Save( filePathNoextern + nImgIndex.index + ".png" );
 								}
-							}
+							} );
 						}
-					} );
+					}
 				} catch( Exception ex ) {
 					Console.WriteLine( ex );
 				}
@@ -52,6 +54,7 @@ namespace LordOfRanger {
 			} else {
 				Process.Start( Application.StartupPath );
 			}
+			this.lblStatus.Text = "";
 			this.progressBar1.Visible = false;
 			this.btnExtract.Enabled = true;
 		}

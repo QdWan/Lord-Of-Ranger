@@ -30,8 +30,9 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.lblStatus = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -142,19 +143,12 @@
 			// 
 			// splitContainer3.Panel2
 			// 
+			this.splitContainer3.Panel2.Controls.Add(this.lblStatus);
 			this.splitContainer3.Panel2.Controls.Add(this.progressBar1);
 			this.splitContainer3.Panel2.Controls.Add(this.statusStrip1);
 			this.splitContainer3.Size = new System.Drawing.Size(407, 135);
 			this.splitContainer3.SplitterDistance = 106;
 			this.splitContainer3.TabIndex = 4;
-			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(407, 22);
-			this.statusStrip1.TabIndex = 0;
-			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// progressBar1
 			// 
@@ -164,6 +158,22 @@
 			this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
 			this.progressBar1.TabIndex = 1;
 			this.progressBar1.Visible = false;
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(407, 22);
+			this.statusStrip1.TabIndex = 0;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.AutoSize = true;
+			this.lblStatus.Location = new System.Drawing.Point(122, 8);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(0, 12);
+			this.lblStatus.TabIndex = 2;
 			// 
 			// SkillIconExtractorForm
 			// 
@@ -207,5 +217,6 @@
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.Label lblStatus;
 	}
 }
