@@ -8,7 +8,8 @@ namespace LordOfRanger.Setting {
 		internal enum InstanceType {
 			COMMAND,
 			BARRAGE,
-			TOGGLE
+			TOGGLE,
+			MOUSE
 		}
 
 		/// <summary>
@@ -22,7 +23,7 @@ namespace LordOfRanger.Setting {
 
 		/// <summary>
 		/// インスタンスのタイプ
-		/// COMMAND,BARRAGE,TOGGLEの3パターンある
+		/// COMMAND,BARRAGE,TOGGLE,MOUSEの4パターンある
 		/// </summary>
 		internal abstract InstanceType Type {
 			get;

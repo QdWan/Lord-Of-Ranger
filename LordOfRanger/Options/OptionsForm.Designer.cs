@@ -63,6 +63,10 @@
 			this.btnApply = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
+			this.tabMouse = new System.Windows.Forms.TabPage();
+			this.groupBox7 = new System.Windows.Forms.GroupBox();
+			this.cmbMouseReClick = new System.Windows.Forms.ComboBox();
+			this.label13 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox6.SuspendLayout();
@@ -86,12 +90,15 @@
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			this.tabMouse.SuspendLayout();
+			this.groupBox7.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabGeneral);
 			this.tabControl1.Controls.Add(this.tabInterval);
+			this.tabControl1.Controls.Add(this.tabMouse);
 			this.tabControl1.Controls.Add(this.tabSkillIcon);
 			this.tabControl1.Controls.Add(this.tabOther);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -617,6 +624,51 @@
 			this.btnOk.UseVisualStyleBackColor = true;
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
+			// tabMouse
+			// 
+			this.tabMouse.Controls.Add(this.groupBox7);
+			this.tabMouse.Location = new System.Drawing.Point(4, 27);
+			this.tabMouse.Name = "tabMouse";
+			this.tabMouse.Size = new System.Drawing.Size(412, 338);
+			this.tabMouse.TabIndex = 4;
+			this.tabMouse.Text = "マウス操作";
+			this.tabMouse.UseVisualStyleBackColor = true;
+			// 
+			// groupBox7
+			// 
+			this.groupBox7.Controls.Add(this.cmbMouseReClick);
+			this.groupBox7.Controls.Add(this.label13);
+			this.groupBox7.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox7.Location = new System.Drawing.Point(8, 3);
+			this.groupBox7.Name = "groupBox7";
+			this.groupBox7.Size = new System.Drawing.Size(398, 91);
+			this.groupBox7.TabIndex = 3;
+			this.groupBox7.TabStop = false;
+			this.groupBox7.Text = "マウス操作";
+			// 
+			// cmbMouseReClick
+			// 
+			this.cmbMouseReClick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbMouseReClick.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.cmbMouseReClick.FormattingEnabled = true;
+			this.cmbMouseReClick.Items.AddRange(new object[] {
+            "実行中の操作を優先",
+            "後に押した操作を優先"});
+			this.cmbMouseReClick.Location = new System.Drawing.Point(239, 39);
+			this.cmbMouseReClick.Name = "cmbMouseReClick";
+			this.cmbMouseReClick.Size = new System.Drawing.Size(153, 26);
+			this.cmbMouseReClick.TabIndex = 1;
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.label13.Location = new System.Drawing.Point(12, 29);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(221, 36);
+			this.label13.TabIndex = 0;
+			this.label13.Text = "マウス操作実行中に\r\n再度マウス操作キーを押した時の動作 :";
+			// 
 			// OptionsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -661,6 +713,9 @@
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
+			this.tabMouse.ResumeLayout(false);
+			this.groupBox7.ResumeLayout(false);
+			this.groupBox7.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -707,5 +762,9 @@
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox txtGeneralProcessName;
 		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.TabPage tabMouse;
+		private System.Windows.Forms.GroupBox groupBox7;
+		private System.Windows.Forms.ComboBox cmbMouseReClick;
+		private System.Windows.Forms.Label label13;
 	}
 }

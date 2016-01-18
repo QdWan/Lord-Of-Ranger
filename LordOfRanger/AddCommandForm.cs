@@ -23,7 +23,8 @@ namespace LordOfRanger {
 		internal enum Type {
 			COMMAND,
 			BARRAGE,
-			TOGGLE
+			TOGGLE,
+			MOUSE
 		}
 
 		private void btnOk_Click( object sender, EventArgs e ) {
@@ -33,6 +34,8 @@ namespace LordOfRanger {
 				this.type = Type.BARRAGE;
 			} else if( this.rbToggle.Checked ) {
 				this.type = Type.TOGGLE;
+			} else if( this.rbMouse.Checked ) {
+				this.type = Type.MOUSE;
 			} else {
 				MessageBox.Show( "Please select the type." );
 				return;
@@ -55,6 +58,8 @@ namespace LordOfRanger {
 					this.type = Type.BARRAGE;
 				} else if( this.rbToggle.Checked ) {
 					this.type = Type.TOGGLE;
+				} else if( this.rbMouse.Checked ) {
+					this.type = Type.MOUSE;
 				} else {
 					MessageBox.Show( "Please select the type." );
 					return;

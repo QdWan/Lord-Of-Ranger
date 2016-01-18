@@ -16,7 +16,7 @@ namespace LordOfRanger.Setting.Version {
 		/// <summary>
 		/// 最新のバージョン
 		/// </summary>
-		private const int VERSION = 2;
+		private const int VERSION = 3;
 
 		private IF _vif;
 		private Mass _instance;
@@ -30,8 +30,8 @@ namespace LordOfRanger.Setting.Version {
 		internal V( Mass instance ) {
 			this._instance = instance;
 			switch( VERSION ) {
-				case 2:
-					this._vif = new V2( instance );
+				case 3:
+					this._vif = new V3( instance );
 					break;
 			}
 		}
@@ -66,6 +66,9 @@ namespace LordOfRanger.Setting.Version {
 				case 2:
 					this._vif = new V2( this._instance );
 					break;
+				case 3:
+					this._vif = new V3(this._instance );
+					break;
 				default:
 					return;
 			}
@@ -90,6 +93,8 @@ namespace LordOfRanger.Setting.Version {
 					return V1.GetHotKey( filename );
 				case 2:
 					return V2.GetHotKey( filename );
+				case 3:
+					return V3.GetHotKey( filename );
 				default:
 					return 0x00;
 			}

@@ -22,6 +22,9 @@
 		public int commandUpDownInterval = 30;
 		public int timerInterval = 30;
 
+		/*Mouse*/
+		public int mouseReClick = 0;
+
 		/* icon */
 		public bool iconViewFlag = true;
 		public int oneRowIcons = 6; //the number of one row of icons.

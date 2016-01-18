@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using LordOfRanger.Keyboard;
+using LordOfRanger.Mouse;
 using LordOfRanger.Setting;
 
 
@@ -27,6 +28,8 @@ namespace LordOfRanger {
 			internal const string COMMAND = "コマンド";
 			internal const string BARRAGE = "連打";
 			internal const string TOGGLE = "連打切替";
+			internal const string MOUSE = "マウス操作";
+
 		};
 
 
@@ -186,6 +189,11 @@ namespace LordOfRanger {
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
+						break;
+					case DataAb.InstanceType.MOUSE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
+						mode = Mode.MOUSE;
 						break;
 					default:
 						return;
@@ -441,6 +449,26 @@ namespace LordOfRanger {
 										}
 									}
 									break;
+								case DataAb.InstanceType.MOUSE:
+									switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+										case DgvCol.SEND:
+											ksf.Dispose();
+											var msf = new MouseSetForm();
+											msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
+											msf.ShowDialog();
+											if( msf.result == MouseSetForm.Result.OK ) {
+												( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
+												this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
+											}
+											return;
+										case DgvCol.PUSH:
+											ksf.ShowDialog();
+											if( ksf.result == KeySetForm.Result.OK ) {
+												( (Setting.Mouse)( dataAb ) ).push = ksf.KeyData[0];
+											}
+											break;
+									}
+									break;
 							}
 							break;
 						}
@@ -495,29 +523,27 @@ namespace LordOfRanger {
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 					}
 					break;
-				case DgvCol.UP:
-					{
-						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-						if( rowIndex >= 1 ) {
-							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-							_mass.UpAt( sequence );
-							var row = this.dgv.Rows[rowIndex];
-							this.dgv.Rows.RemoveAt( rowIndex );
-							this.dgv.Rows.Insert( rowIndex - 1, row );
-						}
+				case DgvCol.UP: {
+					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+					if( rowIndex >= 1 ) {
+						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						_mass.UpAt( sequence );
+						var row = this.dgv.Rows[rowIndex];
+						this.dgv.Rows.RemoveAt( rowIndex );
+						this.dgv.Rows.Insert( rowIndex - 1, row );
 					}
+				}
 					break;
-				case DgvCol.DOWN:
-					{
-						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-						if( rowIndex < this.dgv.Rows.Count - 1 ) {
-							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-							_mass.DownAt( sequence );
-							var row = this.dgv.Rows[rowIndex];
-							this.dgv.Rows.RemoveAt( rowIndex );
-							this.dgv.Rows.Insert( rowIndex + 1, row );
-						}
+				case DgvCol.DOWN: {
+					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+					if( rowIndex < this.dgv.Rows.Count - 1 ) {
+						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						_mass.DownAt( sequence );
+						var row = this.dgv.Rows[rowIndex];
+						this.dgv.Rows.RemoveAt( rowIndex );
+						this.dgv.Rows.Insert( rowIndex + 1, row );
 					}
+				}
 					break;
 			}
 		}
@@ -546,6 +572,10 @@ namespace LordOfRanger {
 					case AddCommandForm.Type.TOGGLE:
 						sequence = _mass.Add( new Toggle() );
 						mode = Mode.TOGGLE;
+						break;
+					case AddCommandForm.Type.MOUSE:
+						sequence = _mass.Add( new Setting.Mouse() );
+						mode = Mode.MOUSE;
 						break;
 					default:
 						return;
