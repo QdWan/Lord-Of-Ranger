@@ -23,6 +23,7 @@ namespace LordOfRanger {
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
 		private static Dictionary<byte, string> _hotKeys;
+		private bool _otherWindowOpen = false;
 
 		private struct Mode {
 			internal const string COMMAND = "コマンド";
@@ -115,19 +116,25 @@ namespace LordOfRanger {
 		}
 
 		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			Options.OptionsForm.SaveCnf();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
+			this._otherWindowOpen = false;
 		}
 
 		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var sief = new SkillIconExtractorForm();
 			sief.Show();
+			this._otherWindowOpen = false;
 		}
 
 		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var ab = new AboutBox();
 			ab.ShowDialog();
+			this._otherWindowOpen = false;
 		}
 
 		#endregion
@@ -135,12 +142,14 @@ namespace LordOfRanger {
 		#region setting form
 
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
 				CurrentSettingChange( asf.settingName );
 				SettingUpdate();
 			}
+			this._otherWindowOpen = false;
 		}
 
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
@@ -152,6 +161,7 @@ namespace LordOfRanger {
 		}
 
 		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var ksf = new KeySetForm();
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
@@ -159,6 +169,7 @@ namespace LordOfRanger {
 				_mass.hotKey = ksf.KeyData[0];
 				this.txtHotKey.Text = KeysToText( ksf.KeyData );
 			}
+			this._otherWindowOpen = false;
 		}
 
 		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
@@ -302,6 +313,9 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void KeyHookEvent( object sender, KeyboardHookedEventArgs e ) {
+			if( this._otherWindowOpen ) {
+				return;
+			}
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
 				this._job.KeydownEvent( e );
@@ -398,6 +412,7 @@ namespace LordOfRanger {
 			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
+			this._otherWindowOpen = true;
 			var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.PUSH:
@@ -503,6 +518,7 @@ namespace LordOfRanger {
 					}
 					break;
 			}
+			this._otherWindowOpen = false;
 		}
 
 		/// <summary>
