@@ -25,6 +25,18 @@ namespace LordOfRanger {
 		private static Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen = false;
 
+		private bool _editedFlag;
+		private bool EditedFlag {
+			get {
+				return this._editedFlag;
+			}
+			set {
+				this._editedFlag = value;
+				this.btnSave.Enabled = value;
+				this.btnCancel.Enabled = value;
+			}
+		}
+
 		private struct Mode {
 			internal const string COMMAND = "コマンド";
 			internal const string BARRAGE = "連打";
@@ -79,6 +91,28 @@ namespace LordOfRanger {
 			Application.ApplicationExit += Application_ApplicationExit;
 		}
 
+		/// <summary>
+		/// 変更されていた場合、変更を保存するかどうかの確認をする。
+		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
+		/// </summary>
+		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
+		private bool ConfirmSettingChange() {
+			if( EditedFlag ) {
+				var result = MessageBox.Show( "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
+				switch( result ) {
+					case DialogResult.Yes:
+						EditedFlag = false;
+						_mass.Save();
+						break;
+					case DialogResult.No:
+						EditedFlag = false;
+						break;
+					case DialogResult.Cancel:
+						return true;
+				}
+			}
+			return false;
+		}
 
 		#region form event
 
@@ -104,6 +138,12 @@ namespace LordOfRanger {
 		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
 			skillLayer.Close();
 			Application.Exit();
+		}
+		
+		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				e.Cancel = true;
+			}
 		}
 
 		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
@@ -142,6 +182,9 @@ namespace LordOfRanger {
 		#region setting form
 
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				return;
+			}
 			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
@@ -173,6 +216,9 @@ namespace LordOfRanger {
 		}
 
 		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				return;
+			}
 			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
 			SettingUpdate();
 		}
@@ -291,6 +337,7 @@ namespace LordOfRanger {
 			this.lblSettingName.Text = _currentSettingFile;
 			this.lbSettingList.SelectedItem = _currentSettingFile;
 			this.txtHotKey.Text = KeysToText( _mass.hotKey );
+			EditedFlag = false;
 		}
 
 		/// <summary>
@@ -326,6 +373,9 @@ namespace LordOfRanger {
 				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 					//setting change hot key
 					if( _hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+						if( ConfirmSettingChange() ) {
+							e.Cancel = true;
+						}
 						CurrentSettingChange( _hotKeys[(byte)e.KeyCode] );
 						SettingUpdate();
 						return;
@@ -472,6 +522,9 @@ namespace LordOfRanger {
 											msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
 											msf.ShowDialog();
 											if( msf.result == MouseSetForm.Result.OK ) {
+												if( msf.editedFlag ) {
+													EditedFlag = true;
+												}
 												( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
 												this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
 											}
@@ -537,6 +590,7 @@ namespace LordOfRanger {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 						_mass.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
+						EditedFlag = true;
 					}
 					break;
 				case DgvCol.UP: {
@@ -562,6 +616,24 @@ namespace LordOfRanger {
 				}
 					break;
 			}
+		}
+		
+		/// <summary>
+		/// セルの変更を検知し、変更フラグをたてる。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dgv_CellValueChanged( object sender, DataGridViewCellEventArgs e ) {
+			EditedFlag = true;
+		}
+
+		/// <summary>
+		/// ホットキーの変更を検知し、変更フラグをたてる。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void txtHotKey_TextChanged( object sender, EventArgs e ) {
+			EditedFlag = true;
 		}
 
 		/// <summary>
@@ -609,6 +681,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
+			EditedFlag = false;
 			_mass.Save();
 			SettingUpdate();
 		}
@@ -619,6 +692,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
+			EditedFlag = false;
 			_mass.Load( _mass.name );
 			SettingUpdate();
 		}
@@ -649,5 +723,6 @@ namespace LordOfRanger {
 		}
 
 		#endregion
+
 	}
 }

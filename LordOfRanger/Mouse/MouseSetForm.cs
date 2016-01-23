@@ -16,6 +16,7 @@ namespace LordOfRanger.Mouse {
 		private MouseHook _mouseHook;
 		private bool _autoInputFlag;
 		private int _autoInputRowIndex;
+		internal bool editedFlag;
 
 		internal MouseSetForm() {
 			this.result = Result.CANCEL;
@@ -188,6 +189,15 @@ namespace LordOfRanger.Mouse {
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Style.BackColor = Color.LavenderBlush;
 					break;
 			}
+		}
+
+		/// <summary>
+		/// データグリッドビューの変更を検知し、フラグを立てておきメインフォームに伝える。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dgv_CellValueChanged( object sender, DataGridViewCellEventArgs e ) {
+			this.editedFlag = true;
 		}
 
 		private void AutoInput( object sender, MouseHookedEventArgs e ) {
