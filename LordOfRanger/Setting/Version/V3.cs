@@ -118,7 +118,8 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						var msList = new List<LordOfRanger.Mouse.Set>();
 						var tmpOffset = offset;
-						while( true ) {
+						while( tmpOffset < offset + ardHeader.sendDataSize ) {
+
 							var op = (LordOfRanger.Mouse.Set.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							var x = BitConverter.ToInt32( array, tmpOffset );
@@ -130,10 +131,7 @@ namespace LordOfRanger.Setting.Version {
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							msList.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
-
-							if( tmpOffset >= offset + ardHeader.sendDataSize ) {
-								break;
-							}
+							
 						}
 						offset = tmpOffset;
 						m.sendList = msList.ToArray();
