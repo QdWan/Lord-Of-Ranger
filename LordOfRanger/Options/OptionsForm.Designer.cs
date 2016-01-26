@@ -41,6 +41,10 @@
 			this.nudIntervalCommandKeys = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
+			this.tabMouse = new System.Windows.Forms.TabPage();
+			this.groupBox7 = new System.Windows.Forms.GroupBox();
+			this.cmbMouseReClick = new System.Windows.Forms.ComboBox();
+			this.label13 = new System.Windows.Forms.Label();
 			this.tabSkillIcon = new System.Windows.Forms.TabPage();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.chkSkillIconEnable = new System.Windows.Forms.CheckBox();
@@ -63,10 +67,6 @@
 			this.btnApply = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
-			this.tabMouse = new System.Windows.Forms.TabPage();
-			this.groupBox7 = new System.Windows.Forms.GroupBox();
-			this.cmbMouseReClick = new System.Windows.Forms.ComboBox();
-			this.label13 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox6.SuspendLayout();
@@ -77,6 +77,8 @@
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).BeginInit();
+			this.tabMouse.SuspendLayout();
+			this.groupBox7.SuspendLayout();
 			this.tabSkillIcon.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			this.panelSkillIcon.SuspendLayout();
@@ -90,8 +92,6 @@
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
-			this.tabMouse.SuspendLayout();
-			this.groupBox7.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -348,6 +348,51 @@
 			this.label4.Size = new System.Drawing.Size(194, 31);
 			this.label4.TabIndex = 7;
 			this.label4.Text = "キーを押してから離すまでの時間:";
+			// 
+			// tabMouse
+			// 
+			this.tabMouse.Controls.Add(this.groupBox7);
+			this.tabMouse.Location = new System.Drawing.Point(4, 27);
+			this.tabMouse.Name = "tabMouse";
+			this.tabMouse.Size = new System.Drawing.Size(412, 338);
+			this.tabMouse.TabIndex = 4;
+			this.tabMouse.Text = "マウス操作";
+			this.tabMouse.UseVisualStyleBackColor = true;
+			// 
+			// groupBox7
+			// 
+			this.groupBox7.Controls.Add(this.cmbMouseReClick);
+			this.groupBox7.Controls.Add(this.label13);
+			this.groupBox7.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox7.Location = new System.Drawing.Point(8, 3);
+			this.groupBox7.Name = "groupBox7";
+			this.groupBox7.Size = new System.Drawing.Size(398, 91);
+			this.groupBox7.TabIndex = 3;
+			this.groupBox7.TabStop = false;
+			this.groupBox7.Text = "マウス操作";
+			// 
+			// cmbMouseReClick
+			// 
+			this.cmbMouseReClick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbMouseReClick.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.cmbMouseReClick.FormattingEnabled = true;
+			this.cmbMouseReClick.Items.AddRange(new object[] {
+            "実行中の操作を優先",
+            "後に押した操作を優先"});
+			this.cmbMouseReClick.Location = new System.Drawing.Point(239, 39);
+			this.cmbMouseReClick.Name = "cmbMouseReClick";
+			this.cmbMouseReClick.Size = new System.Drawing.Size(153, 26);
+			this.cmbMouseReClick.TabIndex = 1;
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.label13.Location = new System.Drawing.Point(12, 29);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(221, 36);
+			this.label13.TabIndex = 0;
+			this.label13.Text = "マウス操作実行中に\r\n再度マウス操作キーを押した時の動作 :";
 			// 
 			// tabSkillIcon
 			// 
@@ -624,51 +669,6 @@
 			this.btnOk.UseVisualStyleBackColor = true;
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
-			// tabMouse
-			// 
-			this.tabMouse.Controls.Add(this.groupBox7);
-			this.tabMouse.Location = new System.Drawing.Point(4, 27);
-			this.tabMouse.Name = "tabMouse";
-			this.tabMouse.Size = new System.Drawing.Size(412, 338);
-			this.tabMouse.TabIndex = 4;
-			this.tabMouse.Text = "マウス操作";
-			this.tabMouse.UseVisualStyleBackColor = true;
-			// 
-			// groupBox7
-			// 
-			this.groupBox7.Controls.Add(this.cmbMouseReClick);
-			this.groupBox7.Controls.Add(this.label13);
-			this.groupBox7.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox7.Location = new System.Drawing.Point(8, 3);
-			this.groupBox7.Name = "groupBox7";
-			this.groupBox7.Size = new System.Drawing.Size(398, 91);
-			this.groupBox7.TabIndex = 3;
-			this.groupBox7.TabStop = false;
-			this.groupBox7.Text = "マウス操作";
-			// 
-			// cmbMouseReClick
-			// 
-			this.cmbMouseReClick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cmbMouseReClick.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.cmbMouseReClick.FormattingEnabled = true;
-			this.cmbMouseReClick.Items.AddRange(new object[] {
-            "実行中の操作を優先",
-            "後に押した操作を優先"});
-			this.cmbMouseReClick.Location = new System.Drawing.Point(239, 39);
-			this.cmbMouseReClick.Name = "cmbMouseReClick";
-			this.cmbMouseReClick.Size = new System.Drawing.Size(153, 26);
-			this.cmbMouseReClick.TabIndex = 1;
-			// 
-			// label13
-			// 
-			this.label13.AutoSize = true;
-			this.label13.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label13.Location = new System.Drawing.Point(12, 29);
-			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(221, 36);
-			this.label13.TabIndex = 0;
-			this.label13.Text = "マウス操作実行中に\r\n再度マウス操作キーを押した時の動作 :";
-			// 
 			// OptionsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -681,6 +681,7 @@
 			this.Name = "OptionsForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "設定";
 			this.Load += new System.EventHandler(this.OptionsForm_Load);
 			this.tabControl1.ResumeLayout(false);
@@ -695,6 +696,9 @@
 			this.groupBox1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).EndInit();
+			this.tabMouse.ResumeLayout(false);
+			this.groupBox7.ResumeLayout(false);
+			this.groupBox7.PerformLayout();
 			this.tabSkillIcon.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
 			this.groupBox5.PerformLayout();
@@ -713,9 +717,6 @@
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
-			this.tabMouse.ResumeLayout(false);
-			this.groupBox7.ResumeLayout(false);
-			this.groupBox7.PerformLayout();
 			this.ResumeLayout(false);
 
 		}

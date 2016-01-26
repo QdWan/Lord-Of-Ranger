@@ -30,9 +30,9 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.lblStatus = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.lblStatus = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -150,6 +150,14 @@
 			this.splitContainer3.SplitterDistance = 106;
 			this.splitContainer3.TabIndex = 4;
 			// 
+			// lblStatus
+			// 
+			this.lblStatus.AutoSize = true;
+			this.lblStatus.Location = new System.Drawing.Point(122, 8);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(0, 12);
+			this.lblStatus.TabIndex = 2;
+			// 
 			// progressBar1
 			// 
 			this.progressBar1.Location = new System.Drawing.Point(3, 2);
@@ -167,14 +175,6 @@
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
-			// lblStatus
-			// 
-			this.lblStatus.AutoSize = true;
-			this.lblStatus.Location = new System.Drawing.Point(122, 8);
-			this.lblStatus.Name = "lblStatus";
-			this.lblStatus.Size = new System.Drawing.Size(0, 12);
-			this.lblStatus.TabIndex = 2;
-			// 
 			// SkillIconExtractorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -186,7 +186,7 @@
 			this.MinimizeBox = false;
 			this.Name = "SkillIconExtractorForm";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

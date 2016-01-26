@@ -26,10 +26,10 @@
 			this.btnOk = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.rbMouse = new System.Windows.Forms.RadioButton();
 			this.rbToggle = new System.Windows.Forms.RadioButton();
 			this.rbBarrage = new System.Windows.Forms.RadioButton();
 			this.rbCommand = new System.Windows.Forms.RadioButton();
-			this.rbMouse = new System.Windows.Forms.RadioButton();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -69,6 +69,16 @@
 			this.panel1.Size = new System.Drawing.Size(177, 141);
 			this.panel1.TabIndex = 2;
 			// 
+			// rbMouse
+			// 
+			this.rbMouse.AutoSize = true;
+			this.rbMouse.Location = new System.Drawing.Point(20, 78);
+			this.rbMouse.Name = "rbMouse";
+			this.rbMouse.Size = new System.Drawing.Size(74, 16);
+			this.rbMouse.TabIndex = 5;
+			this.rbMouse.Text = "マウス操作";
+			this.rbMouse.UseVisualStyleBackColor = true;
+			// 
 			// rbToggle
 			// 
 			this.rbToggle.AutoSize = true;
@@ -99,16 +109,6 @@
 			this.rbCommand.Text = "コマンド";
 			this.rbCommand.UseVisualStyleBackColor = true;
 			// 
-			// rbMouse
-			// 
-			this.rbMouse.AutoSize = true;
-			this.rbMouse.Location = new System.Drawing.Point(20, 78);
-			this.rbMouse.Name = "rbMouse";
-			this.rbMouse.Size = new System.Drawing.Size(74, 16);
-			this.rbMouse.TabIndex = 5;
-			this.rbMouse.Text = "マウス操作";
-			this.rbMouse.UseVisualStyleBackColor = true;
-			// 
 			// AddCommandForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -118,6 +118,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AddCommandForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AddCommandForm_KeyUp);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();

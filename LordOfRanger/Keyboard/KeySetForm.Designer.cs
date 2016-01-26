@@ -23,8 +23,8 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.btnOk = new NotForcusButton();
-			this.btnCancel = new NotForcusButton();
+			this.btnOk = new LordOfRanger.Keyboard.KeySetForm.NotForcusButton();
+			this.btnCancel = new LordOfRanger.Keyboard.KeySetForm.NotForcusButton();
 			this.lblInputKey = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
@@ -74,15 +74,15 @@
 			this.Name = "KeySetForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeySetForm_KeyUp);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button btnOk;
-		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Label lblInputKey;
+		private NotForcusButton btnOk;
+		private NotForcusButton btnCancel;
 	}
 }

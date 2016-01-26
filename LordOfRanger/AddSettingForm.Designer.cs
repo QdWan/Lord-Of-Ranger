@@ -81,6 +81,7 @@
 			this.MinimizeBox = false;
 			this.Name = "AddSettingForm";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AddSettingForm_KeyUp);
 			this.ResumeLayout(false);
 			this.PerformLayout();

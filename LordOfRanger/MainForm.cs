@@ -166,6 +166,8 @@ namespace LordOfRanger {
 		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var sief = new SkillIconExtractorForm();
+			sief.Left = Left + ( Width - sief.Width ) / 2;
+			sief.Top = Top + ( Height - sief.Height ) / 2;
 			sief.Show();
 			this._otherWindowOpen = false;
 		}
