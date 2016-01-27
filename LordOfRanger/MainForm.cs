@@ -530,6 +530,7 @@ namespace LordOfRanger {
 												( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
 												this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
 											}
+											this._otherWindowOpen = false;
 											return;
 										case DgvCol.PUSH:
 											ksf.ShowDialog();
