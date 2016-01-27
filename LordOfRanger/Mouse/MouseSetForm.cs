@@ -231,7 +231,7 @@ namespace LordOfRanger.Mouse {
 			}
 		}
 		private void dgvTextBox_KeyPress( object sender, KeyPressEventArgs e ) {
-			if( (e.KeyChar > '0' && e.KeyChar < '9') || e.KeyChar == 13 || e.KeyChar == '\b' ) {
+			if( (e.KeyChar >= '0' && e.KeyChar <= '9') || e.KeyChar == 13 || e.KeyChar == '\b' ) {
 				return;
 			}
 			e.Handled = true;
