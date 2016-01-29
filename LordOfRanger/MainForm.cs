@@ -168,7 +168,7 @@ namespace LordOfRanger {
 			var sief = new SkillIconExtractorForm();
 			sief.Left = Left + ( Width - sief.Width ) / 2;
 			sief.Top = Top + ( Height - sief.Height ) / 2;
-			sief.Show();
+			sief.ShowDialog();
 			this._otherWindowOpen = false;
 		}
 
