@@ -19,7 +19,7 @@ namespace LordOfRanger {
 		private static Mass _mass;
 		private Job _job;
 		internal static bool activeWindow = false;
-		private static bool alive = false;
+		private static bool _alive = false;
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
 		private static Dictionary<byte, string> _hotKeys;
@@ -396,8 +396,8 @@ namespace LordOfRanger {
 		private void ActiveWindowCheck() {
 			try {
 				if( Arad.IsAlive ) {
-					if( !alive ) {
-						alive = true;
+					if( !_alive ) {
+						_alive = true;
 						this._job.IconUpdate();
 					}
 					if( Arad.IsActiveWindow ) {
@@ -412,8 +412,8 @@ namespace LordOfRanger {
 						}
 					}
 				} else {
-					if( alive ) {
-						alive = false;
+					if( _alive ) {
+						_alive = false;
 						activeWindow = false;
 						this._job.IconUpdate();
 					}
