@@ -80,6 +80,9 @@ namespace LordOfRanger.Options {
 			this.nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
 			this.nudIntervalToggleTimer.Value = Options.options.timerInterval;
 
+			/* mouse */
+			this.cmbMouseReClick.SelectedIndex = Options.options.mouseReClick;
+
 			/* icon */
 			this.chkSkillIconEnable.Checked = Options.options.iconViewFlag;
 			this.nudOneRowIcons.Value = Options.options.oneRowIcons;
@@ -107,6 +110,9 @@ namespace LordOfRanger.Options {
 			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
 			Options.options.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
 			Options.options.timerInterval = (int)this.nudIntervalToggleTimer.Value;
+
+			/* mouse */
+			Options.options.mouseReClick = this.cmbMouseReClick.SelectedIndex;
 
 			/* icon */
 			Options.options.iconViewFlag = this.chkSkillIconEnable.Checked;

@@ -29,6 +29,10 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
+			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.lblStatus = new System.Windows.Forms.Label();
+			this.progressBar1 = new System.Windows.Forms.ProgressBar();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -37,6 +41,10 @@
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+			this.splitContainer3.Panel1.SuspendLayout();
+			this.splitContainer3.Panel2.SuspendLayout();
+			this.splitContainer3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnExtract
@@ -65,7 +73,7 @@
 			this.txtDirectory.Location = new System.Drawing.Point(0, 0);
 			this.txtDirectory.Name = "txtDirectory";
 			this.txtDirectory.ReadOnly = true;
-			this.txtDirectory.Size = new System.Drawing.Size(206, 19);
+			this.txtDirectory.Size = new System.Drawing.Size(300, 19);
 			this.txtDirectory.TabIndex = 2;
 			this.txtDirectory.TabStop = false;
 			this.txtDirectory.Text = "C:\\Nexon\\ARAD\\ImagePacks2";
@@ -86,8 +94,8 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.btnBrowse);
 			this.splitContainer1.Panel2.Controls.Add(this.btnExtract);
-			this.splitContainer1.Size = new System.Drawing.Size(305, 127);
-			this.splitContainer1.SplitterDistance = 206;
+			this.splitContainer1.Size = new System.Drawing.Size(407, 106);
+			this.splitContainer1.SplitterDistance = 300;
 			this.splitContainer1.TabIndex = 3;
 			this.splitContainer1.TabStop = false;
 			// 
@@ -107,7 +115,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.txtDirectory);
-			this.splitContainer2.Size = new System.Drawing.Size(206, 127);
+			this.splitContainer2.Size = new System.Drawing.Size(300, 106);
 			this.splitContainer2.SplitterDistance = 25;
 			this.splitContainer2.TabIndex = 3;
 			this.splitContainer2.TabStop = false;
@@ -117,19 +125,68 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(3, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(101, 12);
+			this.label1.Size = new System.Drawing.Size(260, 12);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Npk File Directory:";
+			this.label1.Text = "NPKファイルの入っているディレクトリを選択してください。";
+			// 
+			// splitContainer3
+			// 
+			this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer3.Name = "splitContainer3";
+			this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer3.Panel1
+			// 
+			this.splitContainer3.Panel1.Controls.Add(this.splitContainer1);
+			// 
+			// splitContainer3.Panel2
+			// 
+			this.splitContainer3.Panel2.Controls.Add(this.lblStatus);
+			this.splitContainer3.Panel2.Controls.Add(this.progressBar1);
+			this.splitContainer3.Panel2.Controls.Add(this.statusStrip1);
+			this.splitContainer3.Size = new System.Drawing.Size(407, 135);
+			this.splitContainer3.SplitterDistance = 106;
+			this.splitContainer3.TabIndex = 4;
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.AutoSize = true;
+			this.lblStatus.Location = new System.Drawing.Point(122, 8);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(0, 12);
+			this.lblStatus.TabIndex = 2;
+			// 
+			// progressBar1
+			// 
+			this.progressBar1.Location = new System.Drawing.Point(3, 2);
+			this.progressBar1.Name = "progressBar1";
+			this.progressBar1.Size = new System.Drawing.Size(114, 23);
+			this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			this.progressBar1.TabIndex = 1;
+			this.progressBar1.Visible = false;
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(407, 22);
+			this.statusStrip1.TabIndex = 0;
+			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// SkillIconExtractorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(305, 127);
-			this.Controls.Add(this.splitContainer1);
+			this.ClientSize = new System.Drawing.Size(407, 135);
+			this.Controls.Add(this.splitContainer3);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "SkillIconExtractorForm";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -140,6 +197,11 @@
 			this.splitContainer2.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
+			this.splitContainer3.Panel1.ResumeLayout(false);
+			this.splitContainer3.Panel2.ResumeLayout(false);
+			this.splitContainer3.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+			this.splitContainer3.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -152,5 +214,9 @@
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.SplitContainer splitContainer3;
+		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.Label lblStatus;
 	}
 }

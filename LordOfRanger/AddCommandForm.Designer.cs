@@ -26,6 +26,7 @@
 			this.btnOk = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.rbMouse = new System.Windows.Forms.RadioButton();
 			this.rbToggle = new System.Windows.Forms.RadioButton();
 			this.rbBarrage = new System.Windows.Forms.RadioButton();
 			this.rbCommand = new System.Windows.Forms.RadioButton();
@@ -34,7 +35,7 @@
 			// 
 			// btnOk
 			// 
-			this.btnOk.Location = new System.Drawing.Point(12, 82);
+			this.btnOk.Location = new System.Drawing.Point(12, 106);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(75, 23);
 			this.btnOk.TabIndex = 0;
@@ -45,7 +46,7 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(93, 82);
+			this.btnCancel.Location = new System.Drawing.Point(93, 106);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
@@ -56,6 +57,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.rbMouse);
 			this.panel1.Controls.Add(this.rbToggle);
 			this.panel1.Controls.Add(this.rbBarrage);
 			this.panel1.Controls.Add(this.rbCommand);
@@ -64,8 +66,18 @@
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(177, 117);
+			this.panel1.Size = new System.Drawing.Size(177, 141);
 			this.panel1.TabIndex = 2;
+			// 
+			// rbMouse
+			// 
+			this.rbMouse.AutoSize = true;
+			this.rbMouse.Location = new System.Drawing.Point(20, 78);
+			this.rbMouse.Name = "rbMouse";
+			this.rbMouse.Size = new System.Drawing.Size(74, 16);
+			this.rbMouse.TabIndex = 5;
+			this.rbMouse.Text = "マウス操作";
+			this.rbMouse.UseVisualStyleBackColor = true;
 			// 
 			// rbToggle
 			// 
@@ -101,11 +113,12 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(177, 117);
+			this.ClientSize = new System.Drawing.Size(177, 141);
 			this.Controls.Add(this.panel1);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AddCommandForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AddCommandForm_KeyUp);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
@@ -121,5 +134,6 @@
 		private System.Windows.Forms.RadioButton rbToggle;
 		private System.Windows.Forms.RadioButton rbBarrage;
 		private System.Windows.Forms.RadioButton rbCommand;
+		private System.Windows.Forms.RadioButton rbMouse;
 	}
 }

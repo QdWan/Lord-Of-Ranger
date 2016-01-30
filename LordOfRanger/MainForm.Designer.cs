@@ -24,10 +24,10 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
@@ -35,6 +35,16 @@
 			this.btnHotKeyChange = new System.Windows.Forms.Button();
 			this.btnAddRow = new System.Windows.Forms.Button();
 			this.dgv = new System.Windows.Forms.DataGridView();
+			this.dgvColSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
+			this.dgvColDisableSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
+			this.dgvColMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColSequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColPriority = new System.Windows.Forms.DataGridViewComboBoxColumn();
+			this.dgvColPush = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColUp = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.dgvColDown = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -55,16 +65,6 @@
 			this.skillIconExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.dgvColSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
-			this.dgvColDisableSkillIcon = new System.Windows.Forms.DataGridViewImageColumn();
-			this.dgvColMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgvColSequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgvColPriority = new System.Windows.Forms.DataGridViewComboBoxColumn();
-			this.dgvColPush = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgvColSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgvColUp = new System.Windows.Forms.DataGridViewButtonColumn();
-			this.dgvColDown = new System.Windows.Forms.DataGridViewButtonColumn();
-			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -149,6 +149,7 @@
 			this.txtHotKey.ReadOnly = true;
 			this.txtHotKey.Size = new System.Drawing.Size(96, 19);
 			this.txtHotKey.TabIndex = 1;
+			this.txtHotKey.TextChanged += new System.EventHandler(this.txtHotKey_TextChanged);
 			// 
 			// btnHotKeyChange
 			// 
@@ -198,6 +199,131 @@
 			this.dgv.TabIndex = 7;
 			this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
 			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
+			this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
+			// 
+			// dgvColSkillIcon
+			// 
+			this.dgvColSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+			this.dgvColSkillIcon.Frozen = true;
+			this.dgvColSkillIcon.HeaderText = "icon";
+			this.dgvColSkillIcon.MinimumWidth = 50;
+			this.dgvColSkillIcon.Name = "dgvColSkillIcon";
+			this.dgvColSkillIcon.Width = 50;
+			// 
+			// dgvColDisableSkillIcon
+			// 
+			this.dgvColDisableSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+			this.dgvColDisableSkillIcon.Frozen = true;
+			this.dgvColDisableSkillIcon.HeaderText = "無効icon";
+			this.dgvColDisableSkillIcon.MinimumWidth = 50;
+			this.dgvColDisableSkillIcon.Name = "dgvColDisableSkillIcon";
+			this.dgvColDisableSkillIcon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.dgvColDisableSkillIcon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.dgvColDisableSkillIcon.Width = 50;
+			// 
+			// dgvColMode
+			// 
+			this.dgvColMode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+			this.dgvColMode.Frozen = true;
+			this.dgvColMode.HeaderText = "mode";
+			this.dgvColMode.Name = "dgvColMode";
+			this.dgvColMode.ReadOnly = true;
+			this.dgvColMode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			this.dgvColMode.Width = 57;
+			// 
+			// dgvColSequence
+			// 
+			this.dgvColSequence.Frozen = true;
+			this.dgvColSequence.HeaderText = "sequence";
+			this.dgvColSequence.Name = "dgvColSequence";
+			this.dgvColSequence.Visible = false;
+			this.dgvColSequence.Width = 5;
+			// 
+			// dgvColPriority
+			// 
+			this.dgvColPriority.FillWeight = 47.41861F;
+			this.dgvColPriority.Frozen = true;
+			this.dgvColPriority.HeaderText = "優先度";
+			this.dgvColPriority.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"});
+			this.dgvColPriority.Name = "dgvColPriority";
+			this.dgvColPriority.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.dgvColPriority.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.dgvColPriority.Visible = false;
+			this.dgvColPriority.Width = 5;
+			// 
+			// dgvColPush
+			// 
+			this.dgvColPush.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.dgvColPush.FillWeight = 92.4663F;
+			this.dgvColPush.HeaderText = "キーボードから入力されるキー";
+			this.dgvColPush.Name = "dgvColPush";
+			this.dgvColPush.ReadOnly = true;
+			this.dgvColPush.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			// 
+			// dgvColSend
+			// 
+			this.dgvColSend.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.dgvColSend.FillWeight = 92.4663F;
+			this.dgvColSend.HeaderText = "送信されるキー";
+			this.dgvColSend.Name = "dgvColSend";
+			this.dgvColSend.ReadOnly = true;
+			this.dgvColSend.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+			// 
+			// dgvColUp
+			// 
+			this.dgvColUp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle1.NullValue = "上へ";
+			this.dgvColUp.DefaultCellStyle = dataGridViewCellStyle1;
+			this.dgvColUp.HeaderText = "上へ";
+			this.dgvColUp.MinimumWidth = 25;
+			this.dgvColUp.Name = "dgvColUp";
+			this.dgvColUp.Text = "上へ";
+			this.dgvColUp.Width = 30;
+			// 
+			// dgvColDown
+			// 
+			this.dgvColDown.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle2.NullValue = "下へ";
+			this.dgvColDown.DefaultCellStyle = dataGridViewCellStyle2;
+			this.dgvColDown.HeaderText = "下へ";
+			this.dgvColDown.Name = "dgvColDown";
+			this.dgvColDown.Text = "下へ";
+			this.dgvColDown.Width = 30;
+			// 
+			// dgvColDelete
+			// 
+			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle3.NullValue = "削除";
+			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle3;
+			this.dgvColDelete.FillWeight = 92.4663F;
+			this.dgvColDelete.HeaderText = "削除";
+			this.dgvColDelete.Name = "dgvColDelete";
+			this.dgvColDelete.Text = "削除";
+			this.dgvColDelete.Width = 32;
 			// 
 			// btnCancel
 			// 
@@ -407,130 +533,6 @@
 			this.aboutToolStripMenuItem.Text = "Lord Of Rangerについて";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// dgvColSkillIcon
-			// 
-			this.dgvColSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-			this.dgvColSkillIcon.Frozen = true;
-			this.dgvColSkillIcon.HeaderText = "icon";
-			this.dgvColSkillIcon.MinimumWidth = 50;
-			this.dgvColSkillIcon.Name = "dgvColSkillIcon";
-			this.dgvColSkillIcon.Width = 50;
-			// 
-			// dgvColDisableSkillIcon
-			// 
-			this.dgvColDisableSkillIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-			this.dgvColDisableSkillIcon.Frozen = true;
-			this.dgvColDisableSkillIcon.HeaderText = "無効icon";
-			this.dgvColDisableSkillIcon.MinimumWidth = 50;
-			this.dgvColDisableSkillIcon.Name = "dgvColDisableSkillIcon";
-			this.dgvColDisableSkillIcon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.dgvColDisableSkillIcon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.dgvColDisableSkillIcon.Width = 50;
-			// 
-			// dgvColMode
-			// 
-			this.dgvColMode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-			this.dgvColMode.Frozen = true;
-			this.dgvColMode.HeaderText = "mode";
-			this.dgvColMode.Name = "dgvColMode";
-			this.dgvColMode.ReadOnly = true;
-			this.dgvColMode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-			this.dgvColMode.Width = 57;
-			// 
-			// dgvColSequence
-			// 
-			this.dgvColSequence.Frozen = true;
-			this.dgvColSequence.HeaderText = "sequence";
-			this.dgvColSequence.Name = "dgvColSequence";
-			this.dgvColSequence.Visible = false;
-			this.dgvColSequence.Width = 5;
-			// 
-			// dgvColPriority
-			// 
-			this.dgvColPriority.FillWeight = 47.41861F;
-			this.dgvColPriority.Frozen = true;
-			this.dgvColPriority.HeaderText = "優先度";
-			this.dgvColPriority.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20"});
-			this.dgvColPriority.Name = "dgvColPriority";
-			this.dgvColPriority.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.dgvColPriority.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.dgvColPriority.Visible = false;
-			this.dgvColPriority.Width = 5;
-			// 
-			// dgvColPush
-			// 
-			this.dgvColPush.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.dgvColPush.FillWeight = 92.4663F;
-			this.dgvColPush.HeaderText = "キーボードから入力されるキー";
-			this.dgvColPush.Name = "dgvColPush";
-			this.dgvColPush.ReadOnly = true;
-			this.dgvColPush.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-			// 
-			// dgvColSend
-			// 
-			this.dgvColSend.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.dgvColSend.FillWeight = 92.4663F;
-			this.dgvColSend.HeaderText = "送信されるキー";
-			this.dgvColSend.Name = "dgvColSend";
-			this.dgvColSend.ReadOnly = true;
-			this.dgvColSend.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-			// 
-			// dgvColUp
-			// 
-			this.dgvColUp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle1.NullValue = "上へ";
-			this.dgvColUp.DefaultCellStyle = dataGridViewCellStyle1;
-			this.dgvColUp.HeaderText = "上へ";
-			this.dgvColUp.MinimumWidth = 25;
-			this.dgvColUp.Name = "dgvColUp";
-			this.dgvColUp.Text = "上へ";
-			this.dgvColUp.Width = 30;
-			// 
-			// dgvColDown
-			// 
-			this.dgvColDown.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle2.NullValue = "下へ";
-			this.dgvColDown.DefaultCellStyle = dataGridViewCellStyle2;
-			this.dgvColDown.HeaderText = "下へ";
-			this.dgvColDown.Name = "dgvColDown";
-			this.dgvColDown.Text = "下へ";
-			this.dgvColDown.Width = 30;
-			// 
-			// dgvColDelete
-			// 
-			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle3.NullValue = "削除";
-			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle3;
-			this.dgvColDelete.FillWeight = 92.4663F;
-			this.dgvColDelete.HeaderText = "削除";
-			this.dgvColDelete.Name = "dgvColDelete";
-			this.dgvColDelete.Text = "削除";
-			this.dgvColDelete.Width = 32;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -543,6 +545,7 @@
 			this.MinimumSize = new System.Drawing.Size(500, 300);
 			this.Name = "MainForm";
 			this.Text = "Lord Of Ranger";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
 			this.ClientSizeChanged += new System.EventHandler(this.Arad_ClientSizeChanged);
 			this.splitContainer1.Panel1.ResumeLayout(false);

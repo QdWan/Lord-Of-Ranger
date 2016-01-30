@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using LordOfRanger.Keyboard;
+using LordOfRanger.Mouse;
 using LordOfRanger.Setting;
 
 
@@ -18,15 +19,30 @@ namespace LordOfRanger {
 		private static Mass _mass;
 		private Job _job;
 		internal static bool activeWindow = false;
-		private static bool alive = false;
+		private static bool _alive = false;
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
 		private static Dictionary<byte, string> _hotKeys;
+		private bool _otherWindowOpen = false;
+
+		private bool _editedFlag;
+		private bool EditedFlag {
+			get {
+				return this._editedFlag;
+			}
+			set {
+				this._editedFlag = value;
+				this.btnSave.Enabled = value;
+				this.btnCancel.Enabled = value;
+			}
+		}
 
 		private struct Mode {
 			internal const string COMMAND = "コマンド";
 			internal const string BARRAGE = "連打";
 			internal const string TOGGLE = "連打切替";
+			internal const string MOUSE = "マウス操作";
+
 		};
 
 
@@ -75,6 +91,28 @@ namespace LordOfRanger {
 			Application.ApplicationExit += Application_ApplicationExit;
 		}
 
+		/// <summary>
+		/// 変更されていた場合、変更を保存するかどうかの確認をする。
+		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
+		/// </summary>
+		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
+		private bool ConfirmSettingChange() {
+			if( EditedFlag ) {
+				var result = MessageBox.Show( "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
+				switch( result ) {
+					case DialogResult.Yes:
+						EditedFlag = false;
+						_mass.Save();
+						break;
+					case DialogResult.No:
+						EditedFlag = false;
+						break;
+					case DialogResult.Cancel:
+						return true;
+				}
+			}
+			return false;
+		}
 
 		#region form event
 
@@ -101,6 +139,12 @@ namespace LordOfRanger {
 			skillLayer.Close();
 			Application.Exit();
 		}
+		
+		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				e.Cancel = true;
+			}
+		}
 
 		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
 			skillLayer.Close();
@@ -112,19 +156,27 @@ namespace LordOfRanger {
 		}
 
 		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			Options.OptionsForm.SaveCnf();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
+			this._otherWindowOpen = false;
 		}
 
 		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var sief = new SkillIconExtractorForm();
-			sief.Show();
+			sief.Left = Left + ( Width - sief.Width ) / 2;
+			sief.Top = Top + ( Height - sief.Height ) / 2;
+			sief.ShowDialog();
+			this._otherWindowOpen = false;
 		}
 
 		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var ab = new AboutBox();
 			ab.ShowDialog();
+			this._otherWindowOpen = false;
 		}
 
 		#endregion
@@ -132,12 +184,17 @@ namespace LordOfRanger {
 		#region setting form
 
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				return;
+			}
+			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
 				CurrentSettingChange( asf.settingName );
 				SettingUpdate();
 			}
+			this._otherWindowOpen = false;
 		}
 
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
@@ -149,6 +206,7 @@ namespace LordOfRanger {
 		}
 
 		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
 			var ksf = new KeySetForm();
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
@@ -156,9 +214,13 @@ namespace LordOfRanger {
 				_mass.hotKey = ksf.KeyData[0];
 				this.txtHotKey.Text = KeysToText( ksf.KeyData );
 			}
+			this._otherWindowOpen = false;
 		}
 
 		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				return;
+			}
 			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
 			SettingUpdate();
 		}
@@ -186,6 +248,11 @@ namespace LordOfRanger {
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
+						break;
+					case DataAb.InstanceType.MOUSE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
+						mode = Mode.MOUSE;
 						break;
 					default:
 						return;
@@ -272,6 +339,7 @@ namespace LordOfRanger {
 			this.lblSettingName.Text = _currentSettingFile;
 			this.lbSettingList.SelectedItem = _currentSettingFile;
 			this.txtHotKey.Text = KeysToText( _mass.hotKey );
+			EditedFlag = false;
 		}
 
 		/// <summary>
@@ -294,6 +362,9 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void KeyHookEvent( object sender, KeyboardHookedEventArgs e ) {
+			if( this._otherWindowOpen ) {
+				return;
+			}
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
 				this._job.KeydownEvent( e );
@@ -304,6 +375,9 @@ namespace LordOfRanger {
 				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 					//setting change hot key
 					if( _hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+						if( ConfirmSettingChange() ) {
+							e.Cancel = true;
+						}
 						CurrentSettingChange( _hotKeys[(byte)e.KeyCode] );
 						SettingUpdate();
 						return;
@@ -322,8 +396,8 @@ namespace LordOfRanger {
 		private void ActiveWindowCheck() {
 			try {
 				if( Arad.IsAlive ) {
-					if( !alive ) {
-						alive = true;
+					if( !_alive ) {
+						_alive = true;
 						this._job.IconUpdate();
 					}
 					if( Arad.IsActiveWindow ) {
@@ -338,8 +412,8 @@ namespace LordOfRanger {
 						}
 					}
 				} else {
-					if( alive ) {
-						alive = false;
+					if( _alive ) {
+						_alive = false;
 						activeWindow = false;
 						this._job.IconUpdate();
 					}
@@ -390,6 +464,7 @@ namespace LordOfRanger {
 			if( this.dgv.SelectedCells.Count != 1 ) {
 				return;
 			}
+			this._otherWindowOpen = true;
 			var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.PUSH:
@@ -441,6 +516,30 @@ namespace LordOfRanger {
 										}
 									}
 									break;
+								case DataAb.InstanceType.MOUSE:
+									switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+										case DgvCol.SEND:
+											ksf.Dispose();
+											var msf = new MouseSetForm();
+											msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
+											msf.ShowDialog();
+											if( msf.result == MouseSetForm.Result.OK ) {
+												if( msf.editedFlag ) {
+													EditedFlag = true;
+												}
+												( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
+												this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
+											}
+											this._otherWindowOpen = false;
+											return;
+										case DgvCol.PUSH:
+											ksf.ShowDialog();
+											if( ksf.result == KeySetForm.Result.OK ) {
+												( (Setting.Mouse)( dataAb ) ).push = ksf.KeyData[0];
+											}
+											break;
+									}
+									break;
 							}
 							break;
 						}
@@ -475,6 +574,7 @@ namespace LordOfRanger {
 					}
 					break;
 			}
+			this._otherWindowOpen = false;
 		}
 
 		/// <summary>
@@ -493,33 +593,50 @@ namespace LordOfRanger {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 						_mass.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
+						EditedFlag = true;
 					}
 					break;
-				case DgvCol.UP:
-					{
-						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-						if( rowIndex >= 1 ) {
-							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-							_mass.UpAt( sequence );
-							var row = this.dgv.Rows[rowIndex];
-							this.dgv.Rows.RemoveAt( rowIndex );
-							this.dgv.Rows.Insert( rowIndex - 1, row );
-						}
+				case DgvCol.UP: {
+					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+					if( rowIndex >= 1 ) {
+						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						_mass.UpAt( sequence );
+						var row = this.dgv.Rows[rowIndex];
+						this.dgv.Rows.RemoveAt( rowIndex );
+						this.dgv.Rows.Insert( rowIndex - 1, row );
 					}
+				}
 					break;
-				case DgvCol.DOWN:
-					{
-						var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-						if( rowIndex < this.dgv.Rows.Count - 1 ) {
-							var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-							_mass.DownAt( sequence );
-							var row = this.dgv.Rows[rowIndex];
-							this.dgv.Rows.RemoveAt( rowIndex );
-							this.dgv.Rows.Insert( rowIndex + 1, row );
-						}
+				case DgvCol.DOWN: {
+					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+					if( rowIndex < this.dgv.Rows.Count - 1 ) {
+						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+						_mass.DownAt( sequence );
+						var row = this.dgv.Rows[rowIndex];
+						this.dgv.Rows.RemoveAt( rowIndex );
+						this.dgv.Rows.Insert( rowIndex + 1, row );
 					}
+				}
 					break;
 			}
+		}
+		
+		/// <summary>
+		/// セルの変更を検知し、変更フラグをたてる。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dgv_CellValueChanged( object sender, DataGridViewCellEventArgs e ) {
+			EditedFlag = true;
+		}
+
+		/// <summary>
+		/// ホットキーの変更を検知し、変更フラグをたてる。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void txtHotKey_TextChanged( object sender, EventArgs e ) {
+			EditedFlag = true;
 		}
 
 		/// <summary>
@@ -547,6 +664,10 @@ namespace LordOfRanger {
 						sequence = _mass.Add( new Toggle() );
 						mode = Mode.TOGGLE;
 						break;
+					case AddCommandForm.Type.MOUSE:
+						sequence = _mass.Add( new Setting.Mouse() );
+						mode = Mode.MOUSE;
+						break;
 					default:
 						return;
 				}
@@ -563,6 +684,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
+			EditedFlag = false;
 			_mass.Save();
 			SettingUpdate();
 		}
@@ -573,6 +695,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
+			EditedFlag = false;
 			_mass.Load( _mass.name );
 			SettingUpdate();
 		}
@@ -603,5 +726,6 @@ namespace LordOfRanger {
 		}
 
 		#endregion
+
 	}
 }

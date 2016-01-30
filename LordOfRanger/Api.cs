@@ -125,6 +125,27 @@ namespace LordOfRanger {
 
 		#endregion
 
+		#region マウス操作
+
+		[DllImport( "user32.dll" )]
+		public static extern bool SetCursorPos( int x, int y );
+
+		[DllImport( "user32.dll" )]
+		public static extern void mouse_event( int e, int dx, int dy, uint data, UIntPtr extraInfo );
+
+		[DllImport( "User32.dll" )]
+		public static extern bool GetCursorPos( out Win32Point pt );
+
+		[StructLayout( LayoutKind.Sequential )]
+		public struct Win32Point {
+
+			private int X;
+			private int Y;
+
+		}
+
+		#endregion
+		
 		#region キーボード操作
 
 		[DllImport( "user32.dll" )]

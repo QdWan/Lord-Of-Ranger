@@ -8,7 +8,7 @@ using LordOfRanger.Setting.Version;
 namespace LordOfRanger.Setting {
 	/// <summary>
 	/// ユーザーが作成した設定ファイル1つ分を纏めるクラス
-	/// 中身はDataAbを継承したCommand,Toggle,Barrageクラスのインスタンスの配列
+	/// 中身はDataAbを継承したCommand,Toggle,Barrage,Mouseクラスのインスタンスの配列
 	/// </summary>
 	internal class Mass {
 		internal static readonly string SETTING_PATH = Application.StartupPath + "/setting/";
@@ -20,6 +20,7 @@ namespace LordOfRanger.Setting {
 		private List<Command> _commandList;
 		private List<Barrage> _barrageList;
 		private List<Toggle> _toggleList;
+		private List<Mouse> _mouseList; 
 
 
 		/// <summary>
@@ -59,6 +60,15 @@ namespace LordOfRanger.Setting {
 			}
 		}
 
+		/// <summary>
+		/// トグル行のみをまとめた配列
+		/// </summary>
+		internal Mouse[] MouseList{
+			get{
+				return this._mouseList.ToArray();
+			}
+		}
+
 		internal int Sequence {
 			get;
 			set;
@@ -85,6 +95,7 @@ namespace LordOfRanger.Setting {
 			this._commandList = new List<Command>();
 			this._barrageList = new List<Barrage>();
 			this._toggleList = new List<Toggle>();
+			this._mouseList = new List<Mouse>();
 		}
 
 		#region Data Interface
@@ -108,6 +119,9 @@ namespace LordOfRanger.Setting {
 					break;
 				case DataAb.InstanceType.TOGGLE:
 					this._toggleList.Add( (Toggle)instance );
+					break;
+				case DataAb.InstanceType.MOUSE:
+					this._mouseList.Add((Mouse)instance );
 					break;
 			}
 			return instance.Id;
@@ -145,6 +159,14 @@ namespace LordOfRanger.Setting {
 							for( var j = 0; j < this._toggleList.Count; j++ ) {
 								if( this._toggleList[j].Id == sequence ) {
 									this._toggleList.RemoveAt( j );
+									return true;
+								}
+							}
+							break;
+						case DataAb.InstanceType.MOUSE:
+							for( var j = 0; j < this._mouseList.Count; j++ ) {
+								if( this._mouseList[j].Id == sequence ) {
+									this._mouseList.RemoveAt( j );
 									return true;
 								}
 							}
@@ -214,6 +236,7 @@ namespace LordOfRanger.Setting {
 			this._commandList = new List<Command>();
 			this._barrageList = new List<Barrage>();
 			this._toggleList = new List<Toggle>();
+			this._mouseList = new List<Mouse>();
 		}
 
 		/// <summary>

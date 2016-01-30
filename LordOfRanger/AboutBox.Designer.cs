@@ -24,10 +24,10 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.llblSiteLink = new System.Windows.Forms.LinkLabel();
 			this.lblInfo = new System.Windows.Forms.Label();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.btnOK = new System.Windows.Forms.Button();
-			this.llblSiteLink = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -51,6 +51,17 @@
 			this.splitContainer1.SplitterDistance = 135;
 			this.splitContainer1.TabIndex = 0;
 			this.splitContainer1.TabStop = false;
+			// 
+			// llblSiteLink
+			// 
+			this.llblSiteLink.AutoSize = true;
+			this.llblSiteLink.Location = new System.Drawing.Point(97, 214);
+			this.llblSiteLink.Name = "llblSiteLink";
+			this.llblSiteLink.Size = new System.Drawing.Size(164, 18);
+			this.llblSiteLink.TabIndex = 1;
+			this.llblSiteLink.TabStop = true;
+			this.llblSiteLink.Text = "http://arad.test.jp.net/lor/";
+			this.llblSiteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblSiteLink_LinkClicked);
 			// 
 			// lblInfo
 			// 
@@ -89,17 +100,6 @@
 			this.btnOK.UseVisualStyleBackColor = true;
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
-			// llblSiteLink
-			// 
-			this.llblSiteLink.AutoSize = true;
-			this.llblSiteLink.Location = new System.Drawing.Point(97, 214);
-			this.llblSiteLink.Name = "llblSiteLink";
-			this.llblSiteLink.Size = new System.Drawing.Size(164, 18);
-			this.llblSiteLink.TabIndex = 1;
-			this.llblSiteLink.TabStop = true;
-			this.llblSiteLink.Text = "http://arad.test.jp.net/lor/";
-			this.llblSiteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblSiteLink_LinkClicked);
-			// 
 			// AboutBox
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -112,6 +112,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AboutBox";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Lord Of Rangerについて";
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.Panel2.PerformLayout();

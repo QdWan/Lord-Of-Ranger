@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LordOfRanger.Keyboard;
+using LordOfRanger.Mouse;
 using LordOfRanger.Setting;
 
 namespace LordOfRanger {
@@ -21,6 +23,9 @@ namespace LordOfRanger {
 		private static byte _directionKey = (byte)Keys.Left;
 		private static byte _reverseDirectionKey = (byte)Keys.Right;
 		private Task _commandTask;
+		private Task _mouseTask;
+		private CancellationTokenSource _mouseTaskCancelToken;
+
 		private const int ICON_SIZE = 30;
 		private Mass _mass;
 
@@ -66,12 +71,52 @@ namespace LordOfRanger {
 		/// <summary>
 		/// キーアップ時に呼ばれる
 		/// 該当するキーの押下フラグをfalseにする
+		/// また、マウス操作もキーアップをトリガーとして発動させるようにする
 		/// </summary>
 		/// <param name="e"> 離されたキー情報 </param>
 		internal void KeyupEvent( KeyboardHookedEventArgs e ) {
 			if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 				_enablekeyF[(byte)e.KeyCode] = false;
 				_enablekeyE[(byte)e.KeyCode] = false;
+				if( !MainForm.activeWindow || !this._barrageEnable ) {
+					return;
+				}
+				foreach( var m in this._mass.MouseList.Where( m => (byte)e.KeyCode == m.push ) ) {
+					if( this._mouseTask?.Status == TaskStatus.Running ) {
+						if( Options.Options.options.mouseReClick == 0 ) {
+							return;
+						} else {
+							this._mouseTaskCancelToken.Cancel();
+							while( this._mouseTask?.Status == TaskStatus.Running ) {
+							}
+						}
+					}
+					this._mouseTaskCancelToken = new CancellationTokenSource();
+					this._mouseTask = Task.Run( () => {
+						foreach( var send in m.sendList ) {
+							if( this._mouseTaskCancelToken.Token.IsCancellationRequested ) {
+								throw new TaskCanceledException();
+							}
+							switch( send.op ) {
+								case Set.Operation.LEFT:
+									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
+									Mouse.Click.Left( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
+									break;
+								case Set.Operation.RIGHT:
+									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
+									Mouse.Click.Right( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
+									break;
+								case Set.Operation.MOVE:
+									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
+									break;
+							}
+							if( this._mouseTaskCancelToken.Token.IsCancellationRequested ) {
+								throw new TaskCanceledException();
+							}
+							Thread.Sleep( send.sleepAfter );
+						}
+					}, this._mouseTaskCancelToken.Token );
+				}
 			} else {
 
 			}
@@ -128,7 +173,7 @@ namespace LordOfRanger {
 			var left = _reverseDirectionKey;
 			var right = _directionKey;
 
-			//command
+			//コマンド
 			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.push ) ) ) {
 				e.Cancel = true;
 				this._commandTask = Task.Run( () => {
@@ -150,7 +195,7 @@ namespace LordOfRanger {
 					break;
 			}
 
-			//toggle
+			//切替
 			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.push ) ) ) {
 				//not typo 
 				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
@@ -161,15 +206,6 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// コマンドを実行するスレッドから呼び出される関数
-		/// 
-		/// --オプション設定が有効の場合は
-		/// 始めに押下中の方向キーを放し、
-		/// sendList配列の中身のキーを順に押下していく
-		/// 終わり次第押下中だった方向キーを押下し直す
-		/// 
-		/// --オプション設定が無効の場合は
-		/// sendListの配列の中身のキーを順に押していく
-		/// 
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
 		/// <param name="o"></param>
@@ -204,12 +240,12 @@ namespace LordOfRanger {
 			if( this._commandTask?.Status == TaskStatus.Running ) {
 				return;
 			}
-			//barrage
+			//連打
 			foreach( var b in this._mass.BarrageList.Where( b => _enablekeyE[b.push] ) ) {
 				KeyPush( b.send );
 			}
 
-			//toggle
+			//切替
 			try {
 				foreach( var t in this._mass.ToggleList.Where( t => this._enableToggle[t.Id] ) ) {
 					KeyPush( t.send );
