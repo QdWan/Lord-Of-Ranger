@@ -12,8 +12,12 @@ namespace LordOfRanger.Setting {
 	/// </summary>
 	internal class Toggle :DataAb {
 
-		internal byte push = 0x00;
 		internal byte send = 0x00;
+
+		internal override byte[] Push {
+			get;
+			set;
+		}
 
 		internal override int Id {
 			get;

@@ -11,9 +11,13 @@ namespace LordOfRanger.Setting {
 	/// 細かい実装についてはJobクラスを参照
 	/// </summary>
 	internal class Command :DataAb {
-
-		internal byte push;
+		
 		internal byte[] sendList = new byte[0];
+
+		internal override byte[] Push {
+			get;
+			set;
+		}
 
 		internal override int Id {
 			get;

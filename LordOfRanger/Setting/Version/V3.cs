@@ -72,7 +72,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						c.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						c.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						c.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
@@ -86,7 +86,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						b.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						b.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						b.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
@@ -100,7 +100,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						t.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						t.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						t.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
@@ -114,7 +114,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						m.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						m.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						var msList = new List<LordOfRanger.Mouse.Set>();
 						var tmpOffset = offset;
@@ -220,7 +220,7 @@ namespace LordOfRanger.Setting.Version {
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
 						//push
-						data.Add( ( (Command)da ).push );
+						data.Add( ( (Command)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( ( ( (Command)da ).sendList.Length ) ) );
@@ -234,7 +234,7 @@ namespace LordOfRanger.Setting.Version {
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
 						//push
-						data.Add( ( (Barrage)da ).push );
+						data.Add( ( (Barrage)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
@@ -248,7 +248,7 @@ namespace LordOfRanger.Setting.Version {
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
 						//push
-						data.Add( ( (Toggle)da ).push );
+						data.Add( ( (Toggle)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
@@ -262,7 +262,7 @@ namespace LordOfRanger.Setting.Version {
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
 						//push
-						data.Add( ( (Mouse)da ).push );
+						data.Add( ( (Mouse)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).sendList.Length * 4 * 5 ) );

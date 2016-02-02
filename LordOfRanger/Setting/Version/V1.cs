@@ -88,7 +88,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						c.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						c.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						c.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
@@ -102,7 +102,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						b.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						b.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						b.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
@@ -116,7 +116,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.skillIconSize;
 						t.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
 						offset += ardHeader.disableSkillIconSize;
-						t.push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray()[0];
+						t.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
@@ -206,7 +206,7 @@ namespace LordOfRanger.Setting.Version {
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
-						data.Add( ( (Command)da ).push );
+						data.Add( ( (Command)da ).Push[0] );
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( ( ( (Command)da ).sendList.Length ) ) );
 						//sendList
@@ -216,7 +216,7 @@ namespace LordOfRanger.Setting.Version {
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
-						data.Add( ( (Barrage)da ).push );
+						data.Add( ( (Barrage)da ).Push[0] );
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//send
@@ -226,7 +226,7 @@ namespace LordOfRanger.Setting.Version {
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
-						data.Add( ( (Toggle)da ).push );
+						data.Add( ( (Toggle)da ).Push[0] );
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//send

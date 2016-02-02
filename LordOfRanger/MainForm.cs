@@ -235,22 +235,22 @@ namespace LordOfRanger {
 				string mode;
 				switch( da.Type ) {
 					case DataAb.InstanceType.COMMAND:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
 						mode = Mode.COMMAND;
 						break;
 					case DataAb.InstanceType.BARRAGE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
 						mode = Mode.BARRAGE;
 						break;
 					case DataAb.InstanceType.TOGGLE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
 						break;
 					case DataAb.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
 						mode = Mode.MOUSE;
 						break;
@@ -485,7 +485,7 @@ namespace LordOfRanger {
 												( (Command)( dataAb ) ).sendList = ksf.KeyData;
 												break;
 											case DgvCol.PUSH:
-												( (Command)( dataAb ) ).push = ksf.KeyData[0];
+												( (Command)( dataAb ) ).Push = ksf.KeyData;
 												break;
 										}
 									}
@@ -498,7 +498,7 @@ namespace LordOfRanger {
 												( (Barrage)dataAb ).send = ksf.KeyData[0];
 												break;
 											case DgvCol.PUSH:
-												( (Barrage)( dataAb ) ).push = ksf.KeyData[0];
+												( (Barrage)( dataAb ) ).Push = ksf.KeyData;
 												break;
 										}
 									}
@@ -511,7 +511,7 @@ namespace LordOfRanger {
 												( (Toggle)dataAb ).send = ksf.KeyData[0];
 												break;
 											case DgvCol.PUSH:
-												( (Toggle)( dataAb ) ).push = ksf.KeyData[0];
+												( (Toggle)( dataAb ) ).Push = ksf.KeyData;
 												break;
 										}
 									}
@@ -535,7 +535,7 @@ namespace LordOfRanger {
 										case DgvCol.PUSH:
 											ksf.ShowDialog();
 											if( ksf.result == KeySetForm.Result.OK ) {
-												( (Setting.Mouse)( dataAb ) ).push = ksf.KeyData[0];
+												( (Setting.Mouse)( dataAb ) ).Push = ksf.KeyData;
 											}
 											break;
 									}
