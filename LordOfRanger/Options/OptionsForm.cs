@@ -56,8 +56,13 @@ namespace LordOfRanger.Options {
 			if( System.IO.File.Exists( _fileName ) ) {
 				var serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
 				var sr = new System.IO.StreamReader( _fileName, new System.Text.UTF8Encoding( false ) );
-				Options.options = (Options)serializer2.Deserialize( sr );
-				sr.Close();
+				try {
+					Options.options = (Options)serializer2.Deserialize( sr );
+				} catch( InvalidOperationException ) {
+					MessageBox.Show("op.cnfが壊れていて設定を読み込めませんでした。初期設定で起動します。");
+				} finally {
+					sr.Close();
+				}
 			}
 		}
 
