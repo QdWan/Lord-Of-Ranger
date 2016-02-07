@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using LordOfRanger.Setting.Version;
@@ -252,8 +253,12 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="filename"> 読み込むファイル名 </param>
 		internal void Load( string filename ) {
-			var v = new V( this );
-			v.Load( filename );
+			try {
+				var v = new V( this );
+				v.Load( filename );
+			} catch( Exception ) {
+				MessageBox.Show(filename+"設定ファイルを読み込めませんでした。");
+			}
 		}
 
 		/// <summary>
@@ -262,7 +267,13 @@ namespace LordOfRanger.Setting {
 		/// <param name="filename"> 取得するファイル名 </param>
 		/// <returns> ホットキー </returns>
 		internal static byte GetHotKey( string filename ) {
-			return V.GetHotKey( filename );
+			try {
+				return V.GetHotKey( filename );
+			} catch( Exception ) {
+				MessageBox.Show( filename + "設定ファイルを読み込めませんでした。" );
+				return 0x00;
+			}
 		}
+
 	}
 }
