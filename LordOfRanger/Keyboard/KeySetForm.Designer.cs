@@ -75,7 +75,7 @@
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeySetForm_KeyUp);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.KeySetForm_FormClosed);
 			this.ResumeLayout(false);
 
 		}

@@ -11,6 +11,7 @@ namespace LordOfRanger.Keyboard {
 	internal partial class KeySetForm :Form {
 
 		private List<byte> _keyList = new List<byte>();
+		private KeyboardHook _keyboardHook;
 		internal Result result;
 		internal KeyType keyType;
 
@@ -19,6 +20,10 @@ namespace LordOfRanger.Keyboard {
 			this.keyType = KeyType.SINGLE;
 			KeyPreview = true;
 			InitializeComponent();
+
+
+			this._keyboardHook = new KeyboardHook();
+			this._keyboardHook.KeyboardHooked += KeyHookEvent;
 		}
 
 		internal enum Result {
@@ -40,7 +45,10 @@ namespace LordOfRanger.Keyboard {
 			}
 		}
 
-		private void KeySetForm_KeyUp( object sender, KeyEventArgs e ) {
+		private void KeyHookEvent( object sender, KeyboardHookedEventArgs e ) {
+			if( e.UpDown != KeyboardUpDown.UP ) {
+				return;
+			}
 			var keycode = (byte)e.KeyCode;
 			if( keycode == (byte)Keys.Return ) {
 				this.result = Result.OK;
@@ -50,11 +58,6 @@ namespace LordOfRanger.Keyboard {
 				this.result = Result.CANCEL;
 				Close();
 				return;
-			}
-			if( e.Shift ) {
-				if( (byte)Keys.F1 <= keycode && keycode <= (byte)Keys.F12 ) {
-					keycode += 12;
-				}
 			}
 			switch( this.keyType ) {
 				case KeyType.SINGLE:
@@ -98,6 +101,11 @@ namespace LordOfRanger.Keyboard {
 			public NotForcusButton() {
 				SetStyle( ControlStyles.Selectable, false );
 			}
+		}
+
+		private void KeySetForm_FormClosed( object sender, FormClosedEventArgs e ) {
+			this._keyboardHook.KeyboardHooked -= KeyHookEvent;
+			this._keyboardHook.Dispose();
 		}
 	}
 }
