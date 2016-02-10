@@ -235,22 +235,22 @@ namespace LordOfRanger {
 				string mode;
 				switch( da.Type ) {
 					case DataAb.InstanceType.COMMAND:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
 						mode = Mode.COMMAND;
 						break;
 					case DataAb.InstanceType.BARRAGE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
 						mode = Mode.BARRAGE;
 						break;
 					case DataAb.InstanceType.TOGGLE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
 						break;
 					case DataAb.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push ," + ");
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
 						mode = Mode.MOUSE;
 						break;
@@ -479,7 +479,7 @@ namespace LordOfRanger {
 						break;
 					}
 					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
-						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData );
+						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData, " + " );
 					}
 
 					ksf.Dispose();
@@ -697,12 +697,13 @@ namespace LordOfRanger {
 		/// byte[]で表されるキーの配列をテキストに変換
 		/// </summary>
 		/// <param name="keys"></param>
+		/// <param name="separator">仕切り文字</param>
 		/// <returns></returns>
-		private static string KeysToText( byte[] keys ) {
+		private static string KeysToText( byte[] keys ,string separator = "") {
 			var s = "";
 			for( var i = 0; i < keys.Length; i++ ) {
 				if( i != 0 ) {
-					//	s += " + ";
+					s += separator;
 				}
 				s += Key.KEY_TEXT[keys[i]];
 			}
