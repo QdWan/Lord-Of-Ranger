@@ -2,9 +2,13 @@
 
 namespace LordOfRanger.Setting {
 	internal class Mouse : DataAb {
-
-		internal byte push;
+		
 		internal LordOfRanger.Mouse.Set[] sendList = new LordOfRanger.Mouse.Set[0];
+
+		internal override byte[] Push {
+			get;
+			set;
+		}
 
 		internal override int Id {
 			get;

@@ -12,6 +12,11 @@ namespace LordOfRanger.Setting {
 			MOUSE
 		}
 
+		internal abstract byte[] Push {
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// 自動で振られる連番
 		/// これによって操作するインスタンスを識別する

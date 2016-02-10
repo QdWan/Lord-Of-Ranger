@@ -12,8 +12,12 @@ namespace LordOfRanger.Setting {
 	/// </summary>
 	internal class Barrage :DataAb {
 
-		internal byte push;
 		internal byte send;
+
+		internal override byte[] Push {
+			get;
+			set;
+		}
 
 		internal override int Id {
 			get;

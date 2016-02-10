@@ -235,22 +235,22 @@ namespace LordOfRanger {
 				string mode;
 				switch( da.Type ) {
 					case DataAb.InstanceType.COMMAND:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
 						mode = Mode.COMMAND;
 						break;
 					case DataAb.InstanceType.BARRAGE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
 						mode = Mode.BARRAGE;
 						break;
 					case DataAb.InstanceType.TOGGLE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
 						break;
 					case DataAb.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).push );
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push ," + ");
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
 						mode = Mode.MOUSE;
 						break;
@@ -467,82 +467,64 @@ namespace LordOfRanger {
 			this._otherWindowOpen = true;
 			var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-				case DgvCol.PUSH:
-				case DgvCol.SEND:
+				case DgvCol.PUSH: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in _mass.DataList ) {
-						if( dataAb.Id == sequence ) {
-							switch( dataAb.Type ) {
-								case DataAb.InstanceType.COMMAND:
-									if( this.dgv.SelectedCells[0].OwningColumn.Name == DgvCol.SEND ) {
-										ksf.keyType = KeySetForm.KeyType.MULTI;
-									}
-									ksf.ShowDialog();
-									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-											case DgvCol.SEND:
-												( (Command)( dataAb ) ).sendList = ksf.KeyData;
-												break;
-											case DgvCol.PUSH:
-												( (Command)( dataAb ) ).push = ksf.KeyData[0];
-												break;
-										}
-									}
-									break;
-								case DataAb.InstanceType.BARRAGE:
-									ksf.ShowDialog();
-									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-											case DgvCol.SEND:
-												( (Barrage)dataAb ).send = ksf.KeyData[0];
-												break;
-											case DgvCol.PUSH:
-												( (Barrage)( dataAb ) ).push = ksf.KeyData[0];
-												break;
-										}
-									}
-									break;
-								case DataAb.InstanceType.TOGGLE:
-									ksf.ShowDialog();
-									if( ksf.result == KeySetForm.Result.OK ) {
-										switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-											case DgvCol.SEND:
-												( (Toggle)dataAb ).send = ksf.KeyData[0];
-												break;
-											case DgvCol.PUSH:
-												( (Toggle)( dataAb ) ).push = ksf.KeyData[0];
-												break;
-										}
-									}
-									break;
-								case DataAb.InstanceType.MOUSE:
-									switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-										case DgvCol.SEND:
-											ksf.Dispose();
-											var msf = new MouseSetForm();
-											msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
-											msf.ShowDialog();
-											if( msf.result == MouseSetForm.Result.OK ) {
-												if( msf.editedFlag ) {
-													EditedFlag = true;
-												}
-												( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
-												this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
-											}
-											this._otherWindowOpen = false;
-											return;
-										case DgvCol.PUSH:
-											ksf.ShowDialog();
-											if( ksf.result == KeySetForm.Result.OK ) {
-												( (Setting.Mouse)( dataAb ) ).push = ksf.KeyData[0];
-											}
-											break;
-									}
-									break;
-							}
-							break;
+					foreach( var dataAb in _mass.DataList.Where( dataAb => dataAb.Id == sequence ) ) {
+						ksf.keyType = KeySetForm.KeyType.MULTI;
+						ksf.ShowDialog();
+						if( ksf.result == KeySetForm.Result.OK ) {
+							dataAb.Push = ksf.KeyData;
 						}
+						break;
+					}
+					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
+						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData, " + " );
+					}
+
+					ksf.Dispose();
+					break;
+				}
+				case DgvCol.SEND: {
+					//textbox
+					var ksf = new KeySetForm();
+					foreach( var dataAb in _mass.DataList.Where( dataAb => dataAb.Id == sequence ) ) {
+						switch( dataAb.Type ) {
+							case DataAb.InstanceType.COMMAND:
+								ksf.keyType = KeySetForm.KeyType.MULTI;
+								ksf.ShowDialog();
+								if( ksf.result == KeySetForm.Result.OK ) {
+									( (Command)( dataAb ) ).sendList = ksf.KeyData;
+								}
+								break;
+							case DataAb.InstanceType.BARRAGE:
+								ksf.ShowDialog();
+								if( ksf.result == KeySetForm.Result.OK ) {
+									( (Barrage)dataAb ).send = ksf.KeyData[0];
+								}
+								break;
+							case DataAb.InstanceType.TOGGLE:
+								ksf.ShowDialog();
+								if( ksf.result == KeySetForm.Result.OK ) {
+									( (Toggle)dataAb ).send = ksf.KeyData[0];
+								}
+								break;
+							case DataAb.InstanceType.MOUSE:
+								ksf.Dispose();
+								var msf = new MouseSetForm();
+								msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
+								msf.ShowDialog();
+								if( msf.result == MouseSetForm.Result.OK ) {
+									if( msf.editedFlag ) {
+										EditedFlag = true;
+									}
+									( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
+									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
+								}
+								this._otherWindowOpen = false;
+								return;
+						}
+						break;
 					}
 					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData );
@@ -550,8 +532,9 @@ namespace LordOfRanger {
 
 					ksf.Dispose();
 					break;
+				}
 				case DgvCol.ENABLE_SKILL_ICON:
-				case DgvCol.DISABLE_SKILL_ICON:
+				case DgvCol.DISABLE_SKILL_ICON: {
 					var ofd = new OpenFileDialog();
 					ofd.Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png";
 					ofd.Title = "スキルアイコン画像を選択";
@@ -573,6 +556,7 @@ namespace LordOfRanger {
 						}
 					}
 					break;
+				}
 			}
 			this._otherWindowOpen = false;
 		}
@@ -713,12 +697,13 @@ namespace LordOfRanger {
 		/// byte[]で表されるキーの配列をテキストに変換
 		/// </summary>
 		/// <param name="keys"></param>
+		/// <param name="separator">仕切り文字</param>
 		/// <returns></returns>
-		private static string KeysToText( byte[] keys ) {
+		private static string KeysToText( byte[] keys ,string separator = "") {
 			var s = "";
 			for( var i = 0; i < keys.Length; i++ ) {
 				if( i != 0 ) {
-					//	s += " + ";
+					s += separator;
 				}
 				s += Key.KEY_TEXT[keys[i]];
 			}
