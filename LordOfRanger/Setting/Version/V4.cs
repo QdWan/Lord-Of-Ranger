@@ -211,16 +211,16 @@ namespace LordOfRanger.Setting.Version {
 				//disableSkillIconSize
 				header.AddRange( BitConverter.GetBytes( disableSkillIcon.Length ) );
 
+				//pushDataSize
+				header.AddRange( BitConverter.GetBytes( da.Push.Length ) );
+
 				data.AddRange( skillIcon );
 				data.AddRange( disableSkillIcon );
+
+				//push
+				data.AddRange( da.Push );
 				switch( da.Type ) {
 					case DataAb.InstanceType.COMMAND:
-
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Command)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( ( ( (Command)da ).sendList.Length ) ) );
@@ -230,12 +230,6 @@ namespace LordOfRanger.Setting.Version {
 						break;
 					case DataAb.InstanceType.BARRAGE:
 
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Barrage)da ).Push[0] );
-
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
@@ -244,12 +238,6 @@ namespace LordOfRanger.Setting.Version {
 						break;
 					case DataAb.InstanceType.TOGGLE:
 
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Toggle)da ).Push[0] );
-
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 
@@ -257,12 +245,6 @@ namespace LordOfRanger.Setting.Version {
 						data.Add( ( (Toggle)da ).send );
 						break;
 					case DataAb.InstanceType.MOUSE:
-
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Mouse)da ).Push[0] );
 
 						//sendDataSize
 						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).sendList.Length * 4 * 5 ) );
