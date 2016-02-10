@@ -81,7 +81,7 @@ namespace LordOfRanger {
 				if( !MainForm.activeWindow || !this._barrageEnable ) {
 					return;
 				}
-				foreach( var m in this._mass.MouseList.Where( m => (byte)e.KeyCode == m.Push[0] ) ) {
+				foreach( var m in this._mass.MouseList.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
 					if( this._mouseTask?.Status == TaskStatus.Running ) {
 						if( Options.Options.options.mouseReClick == 0 ) {
 							return;
@@ -156,11 +156,11 @@ namespace LordOfRanger {
 						e.Cancel = true;
 						return;
 					}
-					if( this._mass.BarrageList.Any( b => b.Push[0] == key ) ) {
+					if( this._mass.BarrageList.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 						//連打キーだった場合コマンドの終了待機
 						await this._commandTask;
 					}
-					if( this._mass.CommandList.Any( c => c.Push[0] == key ) ) {
+					if( this._mass.CommandList.Any( c => CommandCheck( key, c.Push ) )) {
 						//コマンドキーだった場合キャンセル
 						e.Cancel = true;
 						return;
@@ -174,7 +174,7 @@ namespace LordOfRanger {
 			var right = _directionKey;
 
 			//コマンド
-			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.Push[0] ) ) ) {
+			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.Push ) ) ) {
 				e.Cancel = true;
 				this._commandTask = Task.Run( () => {
 					ThreadCommand( new object[] {
@@ -196,7 +196,7 @@ namespace LordOfRanger {
 			}
 
 			//切替
-			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.Push[0] ) ) ) {
+			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.Push ) ) ) {
 				//not typo 
 				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
 				IconUpdate();
@@ -241,7 +241,7 @@ namespace LordOfRanger {
 				return;
 			}
 			//連打
-			foreach( var b in this._mass.BarrageList.Where( b => _enablekeyE[b.Push[0]] ) ) {
+			foreach( var b in this._mass.BarrageList.Where( b => !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 				KeyPush( b.send );
 			}
 
@@ -270,6 +270,28 @@ namespace LordOfRanger {
 				2回目以降の場合、EnablekeyEがtrueになっているため、実行するべきではないと判定される。
 			*/
 			return key == key2 && !_enablekeyE[key2] && _enablekeyF[key2];
+		}
+
+		/// <summary>
+		/// コマンドを実行するべきかどうかのチェックを行う
+		/// </summary>
+		/// <param name="key"> 押下されたキー </param>
+		/// <param name="keyArr"> 判定するキー配列 </param>
+		/// <returns> 実行すべきかどうか </returns>
+		private bool CommandCheck( byte key, byte[] keyArr ) {
+			/*
+				押されたキーが判定するキーと一致しているかどうか
+				押しっぱなしの2回目以降ではないか
+				2回目以降の場合、EnablekeyEがtrueになっているため、実行するべきではないと判定される。
+			*/
+			if( !keyArr.Contains( key ) ) {
+				return false;
+			}
+			if( keyArr.Any( k => !_enablekeyF[k] ) ) {
+				return false;
+			}
+
+			return !_enablekeyE[key] && _enablekeyF[key];
 		}
 
 		/// <summary>
