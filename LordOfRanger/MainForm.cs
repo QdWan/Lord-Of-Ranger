@@ -16,6 +16,11 @@ using LordOfRanger.Setting;
 namespace LordOfRanger {
 	internal partial class MainForm :Form {
 
+#if DEBUG
+		Stopwatch _sw = new Stopwatch();
+#endif
+
+
 		private static Mass _mass;
 		private Job _job;
 		internal static bool activeWindow = false;
@@ -362,6 +367,9 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void KeyHookEvent( object sender, KeyboardHookedEventArgs e ) {
+#if DEBUG
+			this._sw.Start();
+#endif
 			if( this._otherWindowOpen ) {
 				return;
 			}
@@ -389,6 +397,13 @@ namespace LordOfRanger {
 					}
 				}
 			}
+#if DEBUG
+			this._sw.Stop();
+			if( this._sw.Elapsed.TotalMilliseconds > 0.05 ) {
+				Console.WriteLine( this._sw.Elapsed.TotalMilliseconds + ":" + KeysToText((byte)e.KeyCode) + "," + e.UpDown);
+			}
+			this._sw.Reset();
+#endif
 		}
 		/// <summary>
 		/// タイマーから呼び出され、アラド戦記がアクティブになっているかどうか定期的にチェックする。
