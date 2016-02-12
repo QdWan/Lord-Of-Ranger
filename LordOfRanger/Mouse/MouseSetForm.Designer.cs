@@ -29,6 +29,8 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.btnAdd = new System.Windows.Forms.Button();
 			this.dgv = new System.Windows.Forms.DataGridView();
+			this.btnOk = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
+			this.btnCancel = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
 			this.dgvColOp = new System.Windows.Forms.DataGridViewComboBoxColumn();
 			this.dgvColX = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvColY = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -36,8 +38,6 @@
 			this.dgvColSleepAfter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvColAutoInput = new System.Windows.Forms.DataGridViewButtonColumn();
 			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
-			this.btnOk = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
-			this.btnCancel = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -129,65 +129,6 @@
 			this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
 			this.dgv.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_EditingControlShowing);
 			// 
-			// dgvColOp
-			// 
-			this.dgvColOp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.dgvColOp.HeaderText = "オペレーション";
-			this.dgvColOp.Items.AddRange(new object[] {
-            "左クリック",
-            "右クリック",
-            "移動"});
-			this.dgvColOp.Name = "dgvColOp";
-			// 
-			// dgvColX
-			// 
-			this.dgvColX.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			this.dgvColX.HeaderText = "X座標";
-			this.dgvColX.Name = "dgvColX";
-			this.dgvColX.Width = 57;
-			// 
-			// dgvColY
-			// 
-			this.dgvColY.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			this.dgvColY.HeaderText = "Y座標";
-			this.dgvColY.Name = "dgvColY";
-			this.dgvColY.Width = 46;
-			// 
-			// dgvColSleepBetween
-			// 
-			this.dgvColSleepBetween.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			this.dgvColSleepBetween.HeaderText = "マウスクリックから離すまでの時間";
-			this.dgvColSleepBetween.Name = "dgvColSleepBetween";
-			this.dgvColSleepBetween.Width = 96;
-			// 
-			// dgvColSleepAfter
-			// 
-			this.dgvColSleepAfter.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			this.dgvColSleepAfter.HeaderText = "次の操作までの待機時間";
-			this.dgvColSleepAfter.Name = "dgvColSleepAfter";
-			this.dgvColSleepAfter.Width = 79;
-			// 
-			// dgvColAutoInput
-			// 
-			this.dgvColAutoInput.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle1.NullValue = "自動入力";
-			this.dgvColAutoInput.DefaultCellStyle = dataGridViewCellStyle1;
-			this.dgvColAutoInput.HeaderText = "自動入力";
-			this.dgvColAutoInput.Name = "dgvColAutoInput";
-			this.dgvColAutoInput.Text = "自動入力";
-			// 
-			// dgvColDelete
-			// 
-			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle2.NullValue = "削除";
-			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle2;
-			this.dgvColDelete.FillWeight = 92.4663F;
-			this.dgvColDelete.HeaderText = "削除";
-			this.dgvColDelete.Name = "dgvColDelete";
-			this.dgvColDelete.Text = "削除";
-			// 
 			// btnOk
 			// 
 			this.btnOk.Location = new System.Drawing.Point(372, 7);
@@ -209,6 +150,69 @@
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
+			// dgvColOp
+			// 
+			this.dgvColOp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.dgvColOp.HeaderText = "オペレーション";
+			this.dgvColOp.Items.AddRange(new object[] {
+            "左クリック",
+            "右クリック",
+            "移動"});
+			this.dgvColOp.Name = "dgvColOp";
+			// 
+			// dgvColX
+			// 
+			this.dgvColX.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColX.HeaderText = "X座標";
+			this.dgvColX.Name = "dgvColX";
+			this.dgvColX.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			this.dgvColX.Width = 42;
+			// 
+			// dgvColY
+			// 
+			this.dgvColY.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColY.HeaderText = "Y座標";
+			this.dgvColY.Name = "dgvColY";
+			this.dgvColY.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			this.dgvColY.Width = 42;
+			// 
+			// dgvColSleepBetween
+			// 
+			this.dgvColSleepBetween.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColSleepBetween.HeaderText = "マウスクリックから離すまでの時間";
+			this.dgvColSleepBetween.Name = "dgvColSleepBetween";
+			this.dgvColSleepBetween.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			this.dgvColSleepBetween.Width = 88;
+			// 
+			// dgvColSleepAfter
+			// 
+			this.dgvColSleepAfter.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+			this.dgvColSleepAfter.HeaderText = "次の操作までの待機時間";
+			this.dgvColSleepAfter.Name = "dgvColSleepAfter";
+			this.dgvColSleepAfter.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			this.dgvColSleepAfter.Width = 77;
+			// 
+			// dgvColAutoInput
+			// 
+			this.dgvColAutoInput.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle1.NullValue = "自動入力";
+			this.dgvColAutoInput.DefaultCellStyle = dataGridViewCellStyle1;
+			this.dgvColAutoInput.HeaderText = "自動入力";
+			this.dgvColAutoInput.Name = "dgvColAutoInput";
+			this.dgvColAutoInput.Text = "自動入力";
+			// 
+			// dgvColDelete
+			// 
+			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle2.NullValue = "削除";
+			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle2;
+			this.dgvColDelete.FillWeight = 92.4663F;
+			this.dgvColDelete.HeaderText = "削除";
+			this.dgvColDelete.Name = "dgvColDelete";
+			this.dgvColDelete.Text = "削除";
 			// 
 			// MouseSetForm
 			// 
