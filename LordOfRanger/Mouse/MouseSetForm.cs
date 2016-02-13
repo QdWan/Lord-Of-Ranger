@@ -237,5 +237,26 @@ namespace LordOfRanger.Mouse {
 			e.Handled = true;
 		}
 
+		private void btnUp_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex >= 1 ) {
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex - 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex - 1].Selected = true;
+			}
+		}
+
+		private void btnDown_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex < this.dgv.Rows.Count - 1 ) {
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex + 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex + 1].Selected = true;
+			}
+		}
 	}
 }

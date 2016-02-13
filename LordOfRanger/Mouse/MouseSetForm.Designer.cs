@@ -27,10 +27,10 @@
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.btnDown = new System.Windows.Forms.Button();
+			this.btnUp = new System.Windows.Forms.Button();
 			this.btnAdd = new System.Windows.Forms.Button();
 			this.dgv = new System.Windows.Forms.DataGridView();
-			this.btnOk = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
-			this.btnCancel = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
 			this.dgvColOp = new System.Windows.Forms.DataGridViewComboBoxColumn();
 			this.dgvColX = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvColY = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -38,6 +38,8 @@
 			this.dgvColSleepAfter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvColAutoInput = new System.Windows.Forms.DataGridViewButtonColumn();
 			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
+			this.btnOk = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
+			this.btnCancel = new LordOfRanger.Mouse.MouseSetForm.NotForcusButton();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -81,6 +83,8 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.btnDown);
+			this.splitContainer2.Panel1.Controls.Add(this.btnUp);
 			this.splitContainer2.Panel1.Controls.Add(this.btnAdd);
 			// 
 			// splitContainer2.Panel2
@@ -89,6 +93,26 @@
 			this.splitContainer2.Size = new System.Drawing.Size(561, 492);
 			this.splitContainer2.SplitterDistance = 34;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// btnDown
+			// 
+			this.btnDown.Location = new System.Drawing.Point(533, 6);
+			this.btnDown.Name = "btnDown";
+			this.btnDown.Size = new System.Drawing.Size(22, 23);
+			this.btnDown.TabIndex = 2;
+			this.btnDown.Text = "下";
+			this.btnDown.UseVisualStyleBackColor = true;
+			this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+			// 
+			// btnUp
+			// 
+			this.btnUp.Location = new System.Drawing.Point(507, 6);
+			this.btnUp.Name = "btnUp";
+			this.btnUp.Size = new System.Drawing.Size(22, 23);
+			this.btnUp.TabIndex = 1;
+			this.btnUp.Text = "上";
+			this.btnUp.UseVisualStyleBackColor = true;
+			this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
 			// 
 			// btnAdd
 			// 
@@ -129,28 +153,6 @@
 			this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
 			this.dgv.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgv_EditingControlShowing);
 			// 
-			// btnOk
-			// 
-			this.btnOk.Location = new System.Drawing.Point(372, 7);
-			this.btnOk.Name = "btnOk";
-			this.btnOk.Size = new System.Drawing.Size(75, 23);
-			this.btnOk.TabIndex = 0;
-			this.btnOk.TabStop = false;
-			this.btnOk.Text = "OK";
-			this.btnOk.UseVisualStyleBackColor = true;
-			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Location = new System.Drawing.Point(466, 7);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.TabStop = false;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-			// 
 			// dgvColOp
 			// 
 			this.dgvColOp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -167,7 +169,7 @@
 			this.dgvColX.HeaderText = "X座標";
 			this.dgvColX.Name = "dgvColX";
 			this.dgvColX.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			this.dgvColX.Width = 42;
+			this.dgvColX.Width = 38;
 			// 
 			// dgvColY
 			// 
@@ -175,7 +177,7 @@
 			this.dgvColY.HeaderText = "Y座標";
 			this.dgvColY.Name = "dgvColY";
 			this.dgvColY.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			this.dgvColY.Width = 42;
+			this.dgvColY.Width = 38;
 			// 
 			// dgvColSleepBetween
 			// 
@@ -213,6 +215,28 @@
 			this.dgvColDelete.HeaderText = "削除";
 			this.dgvColDelete.Name = "dgvColDelete";
 			this.dgvColDelete.Text = "削除";
+			// 
+			// btnOk
+			// 
+			this.btnOk.Location = new System.Drawing.Point(372, 7);
+			this.btnOk.Name = "btnOk";
+			this.btnOk.Size = new System.Drawing.Size(75, 23);
+			this.btnOk.TabIndex = 0;
+			this.btnOk.TabStop = false;
+			this.btnOk.Text = "OK";
+			this.btnOk.UseVisualStyleBackColor = true;
+			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Location = new System.Drawing.Point(466, 7);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 1;
+			this.btnCancel.TabStop = false;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.UseVisualStyleBackColor = true;
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// MouseSetForm
 			// 
@@ -257,5 +281,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColSleepAfter;
 		private System.Windows.Forms.DataGridViewButtonColumn dgvColAutoInput;
 		private System.Windows.Forms.DataGridViewButtonColumn dgvColDelete;
+		private System.Windows.Forms.Button btnDown;
+		private System.Windows.Forms.Button btnUp;
 	}
 }
