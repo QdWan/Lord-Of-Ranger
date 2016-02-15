@@ -235,7 +235,7 @@ namespace LordOfRanger {
 		/// </summary>
 		private void SettingView() {
 			this.dgv.Rows.Clear();
-			foreach( var da in _mass.DataList ) {
+			foreach( var da in _mass.Value ) {
 				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
@@ -485,7 +485,7 @@ namespace LordOfRanger {
 				case DgvCol.PUSH: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in _mass.DataList.Where( dataAb => dataAb.Id == sequence ) ) {
+					foreach( var dataAb in _mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
 						ksf.keyType = KeySetForm.KeyType.MULTI;
 						ksf.ShowDialog();
 						if( ksf.result == KeySetForm.Result.OK ) {
@@ -503,7 +503,7 @@ namespace LordOfRanger {
 				case DgvCol.SEND: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in _mass.DataList.Where( dataAb => dataAb.Id == sequence ) ) {
+					foreach( var dataAb in _mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
 						switch( dataAb.Type ) {
 							case DataAb.InstanceType.COMMAND:
 								ksf.keyType = KeySetForm.KeyType.MULTI;
@@ -557,7 +557,7 @@ namespace LordOfRanger {
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( var dataAb in _mass.DataList ) {
+						foreach( var dataAb in _mass.Value ) {
 							if( dataAb.Id == sequence ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:

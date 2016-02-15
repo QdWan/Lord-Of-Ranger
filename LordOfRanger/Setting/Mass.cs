@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using LordOfRanger.Setting.Version;
@@ -16,60 +17,94 @@ namespace LordOfRanger.Setting {
 		internal string name;
 		internal byte hotKey = 0x00;
 		internal const string EXTENSION = ".ard";
-
-		private List<DataAb> _dataList;
-		private List<Command> _commandList;
-		private List<Barrage> _barrageList;
-		private List<Toggle> _toggleList;
-		private List<Mouse> _mouseList; 
-
-
-		/// <summary>
-		/// このクラスの要
-		/// 全設定行をまとめた配列
-		/// </summary>
-		internal DataAb[] DataList {
+		private List<DataAb> _value = new List<DataAb>();
+		internal IEnumerable<DataAb> Value {
 			get {
-				return this._dataList.ToArray();
+				return this._value;
 			}
 		}
+		internal BarrageList barrageList;
+		internal CommandList commandList;
+		internal ToggleList toggleList;
+		internal MouseList mouseList;
 
-		/// <summary>
-		/// コマンド行のみをまとめた配列
-		/// </summary>
-		internal Command[] CommandList {
-			get {
-				return this._commandList.ToArray();
+		internal class CommandList {
+			internal List<Command> Value {
+				get;
+			} = new List<Command>();
+
+			internal void Add( Command instance ) {
+				if( instance.Type == DataAb.InstanceType.COMMAND ) {
+					Value.Add( instance );
+				}
+			}
+			internal void RemoveAt( int sequence ) {
+				for( var j = 0; j < Value.Count; j++ ) {
+					if( Value[j].Id == sequence ) {
+						Value.RemoveAt( j );
+						return;
+					}
+				}
 			}
 		}
+		internal class BarrageList {
+			internal List<Barrage> Value {
+				get;
+			} = new List<Barrage>();
 
-		/// <summary>
-		/// 連打行のみをまとめた配列
-		/// </summary>
-		internal Barrage[] BarrageList {
-			get {
-				return this._barrageList.ToArray();
+			internal void Add( Barrage instance ) {
+				if( instance.Type == DataAb.InstanceType.BARRAGE ) {
+					Value.Add( instance );
+				}
+			}
+			internal void RemoveAt( int sequence ) {
+				for( var j = 0; j < Value.Count; j++ ) {
+					if( Value[j].Id == sequence ) {
+						Value.RemoveAt( j );
+						return;
+					}
+				}
 			}
 		}
+		internal class ToggleList {
+			internal List<Toggle> Value {
+				get;
+			} = new List<Toggle>();
 
-		/// <summary>
-		/// トグル行のみをまとめた配列
-		/// </summary>
-		internal Toggle[] ToggleList {
-			get {
-				return this._toggleList.ToArray();
+			internal void Add( Toggle instance ) {
+				if( instance.Type == DataAb.InstanceType.TOGGLE ) {
+					Value.Add( instance );
+				}
+			}
+			internal void RemoveAt( int sequence ) {
+				for( var j = 0; j < Value.Count; j++ ) {
+					if( Value[j].Id == sequence ) {
+						Value.RemoveAt( j );
+						return;
+					}
+				}
 			}
 		}
+		internal class MouseList {
+			internal List<Mouse> Value {
+				get;
+			} = new List<Mouse>();
 
-		/// <summary>
-		/// トグル行のみをまとめた配列
-		/// </summary>
-		internal Mouse[] MouseList{
-			get{
-				return this._mouseList.ToArray();
+			internal void Add( Mouse instance ) {
+				if( instance.Type == DataAb.InstanceType.MOUSE ) {
+					Value.Add( instance );
+				}
+			}
+			internal void RemoveAt( int sequence ) {
+				for( var j = 0; j < Value.Count; j++ ) {
+					if( Value[j].Id == sequence ) {
+						Value.RemoveAt( j );
+						return;
+					}
+				}
 			}
 		}
-
+		
 		internal int Sequence {
 			get;
 			set;
@@ -81,22 +116,9 @@ namespace LordOfRanger.Setting {
 		/// 各変数に初期値を代入する
 		/// </summary>
 		internal Mass() {
-			var i = 8;
-			if( true ) {
-				if( true ) {
-					i++;
-				}
-			}
-			if( i == 0 ) {
-				return;
-			}
 			this.name = "new";
 			Sequence = 0;
-			this._dataList = new List<DataAb>();
-			this._commandList = new List<Command>();
-			this._barrageList = new List<Barrage>();
-			this._toggleList = new List<Toggle>();
-			this._mouseList = new List<Mouse>();
+			Init();
 		}
 
 		#region Data Interface
@@ -110,19 +132,20 @@ namespace LordOfRanger.Setting {
 			if( instance.Id == 0 ) {
 				instance.Id = ++Sequence;
 			}
-			this._dataList.Add( instance );
+			this._value.Add( instance );
+
 			switch( instance.Type ) {
 				case DataAb.InstanceType.BARRAGE:
-					this._barrageList.Add( (Barrage)instance );
+					this.barrageList.Add( (Barrage)instance );
 					break;
 				case DataAb.InstanceType.COMMAND:
-					this._commandList.Add( (Command)instance );
+					this.commandList.Add( (Command)instance );
 					break;
 				case DataAb.InstanceType.TOGGLE:
-					this._toggleList.Add( (Toggle)instance );
+					this.toggleList.Add( (Toggle)instance );
 					break;
 				case DataAb.InstanceType.MOUSE:
-					this._mouseList.Add((Mouse)instance );
+					this.mouseList.Add( (Mouse)instance );
 					break;
 			}
 			return instance.Id;
@@ -133,50 +156,29 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="sequence"> 削除するインスタンスのid </param>
 		/// <returns> 削除が成功したかどうか </returns>
-		internal bool RemoveAt( int sequence ) {
-			for( var i = 0; i < this._dataList.Count; i++ ) {
-				if( this._dataList[i].Id == sequence ) {
-					var instanceType = this._dataList[i].Type;
-					this._dataList.RemoveAt( i );
+		internal void RemoveAt( int sequence ) {
+			for( var i = 0; i < this._value.Count; i++ ) {
+				if( this._value[i].Id == sequence ) {
+					var instanceType = this._value[i].Type;
 
 					switch( instanceType ) {
 						case DataAb.InstanceType.BARRAGE:
-							for( var j = 0; j < this._barrageList.Count; j++ ) {
-								if( this._barrageList[j].Id == sequence ) {
-									this._barrageList.RemoveAt( j );
-									return true;
-								}
-							}
+							this.barrageList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.COMMAND:
-							for( var j = 0; j < this._commandList.Count; j++ ) {
-								if( this._commandList[j].Id == sequence ) {
-									this._commandList.RemoveAt( j );
-									return true;
-								}
-							}
+							this.commandList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.TOGGLE:
-							for( var j = 0; j < this._toggleList.Count; j++ ) {
-								if( this._toggleList[j].Id == sequence ) {
-									this._toggleList.RemoveAt( j );
-									return true;
-								}
-							}
+							this.toggleList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.MOUSE:
-							for( var j = 0; j < this._mouseList.Count; j++ ) {
-								if( this._mouseList[j].Id == sequence ) {
-									this._mouseList.RemoveAt( j );
-									return true;
-								}
-							}
+							this.mouseList.RemoveAt( sequence );
 							break;
 					}
-					return true;
+					this._value.RemoveAt( i );
+					break;
 				}
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -185,11 +187,11 @@ namespace LordOfRanger.Setting {
 		/// <param name="sequence"> 移動するインスタンスのid </param>
 		/// <returns> 移動が成功したかどうか </returns>
 		internal bool UpAt( int sequence ) {
-			for( var i = 0; i < this._dataList.Count; i++ ) {
-				if( this._dataList[i].Id == sequence ) {
-					var da = DataList[i];
-					this._dataList.RemoveAt( i );
-					this._dataList.Insert( i - 1, da );
+			for( var i = 0; i < this._value.Count; i++ ) {
+				if( this._value[i].Id == sequence ) {
+					var da = this._value[i];
+					this._value.RemoveAt( i );
+					this._value.Insert( i - 1, da );
 					return true;
 				}
 			}
@@ -202,11 +204,11 @@ namespace LordOfRanger.Setting {
 		/// <param name="sequence"> 移動するインスタンスのid </param>
 		/// <returns> 移動が成功したかどうか </returns>
 		internal bool DownAt( int sequence ) {
-			for( var i = 0; i < this._dataList.Count; i++ ) {
-				if( this._dataList[i].Id == sequence ) {
-					var da = DataList[i];
-					this._dataList.RemoveAt( i );
-					this._dataList.Insert( i + 1, da );
+			for( var i = 0; i < this._value.Count; i++ ) {
+				if( this._value[i].Id == sequence ) {
+					var da = this._value[i];
+					this._value.RemoveAt( i );
+					this._value.Insert( i + 1, da );
 					return true;
 				}
 			}
@@ -220,7 +222,7 @@ namespace LordOfRanger.Setting {
 		/// <param name="enable"> 有効無効どちらに切り替えるか </param>
 		/// <returns> 切り替えが成功したかどうか </returns>
 		internal bool ChangeEnable( int sequence, bool enable ) {
-			foreach( var t in this._dataList.Where( t => t.Id == sequence ) ) {
+			foreach( var t in this._value.Where( t => t.Id == sequence ) ) {
 				t.Enable = enable;
 				return true;
 			}
@@ -233,11 +235,11 @@ namespace LordOfRanger.Setting {
 		/// データ配列の初期化
 		/// </summary>
 		internal void Init() {
-			this._dataList = new List<DataAb>();
-			this._commandList = new List<Command>();
-			this._barrageList = new List<Barrage>();
-			this._toggleList = new List<Toggle>();
-			this._mouseList = new List<Mouse>();
+			this._value = new List<DataAb>();
+			this.barrageList = new BarrageList();
+			this.commandList = new CommandList();
+			this.toggleList = new ToggleList();
+			this.mouseList = new MouseList();
 		}
 
 		/// <summary>

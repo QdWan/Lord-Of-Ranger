@@ -191,7 +191,7 @@ namespace LordOfRanger.Setting.Version {
 				(sendList variable || send 8bit)
 			*/
 			var data = new List<byte>();
-			foreach( var da in this._mass.DataList ) {
+			foreach( var da in this._mass.Value ) {
 				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
 
 				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];

@@ -47,7 +47,7 @@ namespace LordOfRanger {
 				}
 			}
 			this._enableToggle = new Dictionary<int, bool>();
-			foreach( var t in mass.ToggleList ) {
+			foreach( var t in mass.toggleList.Value ) {
 				this._enableToggle.Add( t.Id, false );
 			}
 			IconUpdate();
@@ -81,7 +81,7 @@ namespace LordOfRanger {
 				if( !MainForm.activeWindow || !this._barrageEnable ) {
 					return;
 				}
-				foreach( var m in this._mass.MouseList.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
+				foreach( var m in this._mass.mouseList.Value.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
 					if( this._mouseTask?.Status == TaskStatus.Running ) {
 						if( Options.Options.options.mouseReClick == 0 ) {
 							return;
@@ -156,11 +156,11 @@ namespace LordOfRanger {
 						e.Cancel = true;
 						return;
 					}
-					if( this._mass.BarrageList.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
+					if( this._mass.barrageList.Value.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 						//連打キーだった場合コマンドの終了待機
 						await this._commandTask;
 					}
-					if( this._mass.CommandList.Any( c => CommandCheck( key, c.Push ) )) {
+					if( this._mass.commandList.Value.Any( c => CommandCheck( key, c.Push ) )) {
 						//コマンドキーだった場合キャンセル
 						e.Cancel = true;
 						return;
@@ -174,7 +174,7 @@ namespace LordOfRanger {
 			var right = _directionKey;
 
 			//コマンド
-			foreach( var c in this._mass.CommandList.Where( c => CommandCheck( key, c.Push ) ) ) {
+			foreach( var c in this._mass.commandList.Value.Where( c => CommandCheck( key, c.Push ) ) ) {
 				e.Cancel = true;
 				this._commandTask = Task.Run( () => {
 					ThreadCommand( new object[] {
@@ -196,7 +196,7 @@ namespace LordOfRanger {
 			}
 
 			//切替
-			foreach( var t in this._mass.ToggleList.Where( t => CommandCheck( key, t.Push ) ) ) {
+			foreach( var t in this._mass.toggleList.Value.Where( t => CommandCheck( key, t.Push ) ) ) {
 				//not typo 
 				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
 				IconUpdate();
@@ -241,13 +241,13 @@ namespace LordOfRanger {
 				return;
 			}
 			//連打
-			foreach( var b in this._mass.BarrageList.Where( b => !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
+			foreach( var b in this._mass.barrageList.Value.Where( b => !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 				KeyPush( b.send );
 			}
 
 			//切替
 			try {
-				foreach( var t in this._mass.ToggleList.Where( t => this._enableToggle[t.Id] ) ) {
+				foreach( var t in this._mass.toggleList.Value.Where( t => this._enableToggle[t.Id] ) ) {
 					KeyPush( t.send );
 				}
 			} catch( KeyNotFoundException ) {
@@ -304,7 +304,7 @@ namespace LordOfRanger {
 				goto gotoLabelDraw;
 			}
 			var bmpList = new List<Bitmap>();
-			foreach( var da in this._mass.DataList ) {
+			foreach( var da in this._mass.Value ) {
 				if( da.Enable && this._barrageEnable) {
 					bmpList.Add( da.SkillIcon );
 				} else {
