@@ -22,6 +22,12 @@
 		public int commandUpDownInterval = 30;
 		public int timerInterval = 30;
 
+		/* KeyBoard */
+		public bool keyboardCancelBarrage = true;
+		public bool keyboardCancelCommand = true;
+		public bool keyboardCancelToggle = true;
+		public bool keyboardCancelMouse = true;
+
 		/*Mouse*/
 		public int mouseReClick = 0;
 

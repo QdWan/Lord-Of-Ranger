@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using LordOfRanger.Setting.Version;
@@ -27,84 +26,179 @@ namespace LordOfRanger.Setting {
 		internal CommandList commandList;
 		internal ToggleList toggleList;
 		internal MouseList mouseList;
+		private byte[] _cancelList = {};
+		internal IEnumerable<byte> CancelList {
+			get {
+				return this._cancelList;
+			}
+		}
 
 		internal class CommandList {
-			internal List<Command> Value {
-				get;
-			} = new List<Command>();
+			private List<Command> _value = new List<Command>();
+			internal IEnumerable<Command> Value {
+				get {
+					return this._value;
+				}
+			}
+			private byte[] _cancelList = {};
+			internal IEnumerable<byte> CancelList {
+				get {
+					return this._cancelList;
+				}
+			}
 
 			internal void Add( Command instance ) {
 				if( instance.Type == DataAb.InstanceType.COMMAND ) {
-					Value.Add( instance );
+					this._value.Add( instance );
+					CancelListReBuild();
 				}
 			}
 			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < Value.Count; j++ ) {
-					if( Value[j].Id == sequence ) {
-						Value.RemoveAt( j );
+				for( var j = 0; j < this._value.Count; j++ ) {
+					if( this._value[j].Id == sequence ) {
+						this._value.RemoveAt( j );
+						CancelListReBuild();
 						return;
 					}
 				}
+			}
+			private void CancelListReBuild() {
+				if( !Options.Options.options.keyboardCancelCommand ) {
+					this._cancelList = new byte[0];
+					return;
+				}
+				var tmp = new List<byte>();
+				foreach( var val in Value ) {
+					tmp.AddRange( val.Push );
+				}
+				this._cancelList = tmp.Distinct().ToArray();
 			}
 		}
 		internal class BarrageList {
-			internal List<Barrage> Value {
-				get;
-			} = new List<Barrage>();
+			private List<Barrage> _value = new List<Barrage>();
+			internal IEnumerable<Barrage> Value {
+				get {
+					return this._value;
+				}
+			}
+			private byte[] _cancelList = {};
+			internal IEnumerable<byte> CancelList {
+				get {
+					return this._cancelList;
+				}
+			}
 
 			internal void Add( Barrage instance ) {
 				if( instance.Type == DataAb.InstanceType.BARRAGE ) {
-					Value.Add( instance );
+					this._value.Add( instance );
+					CancelListReBuild();
 				}
 			}
 			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < Value.Count; j++ ) {
-					if( Value[j].Id == sequence ) {
-						Value.RemoveAt( j );
+				for( var j = 0; j < this._value.Count; j++ ) {
+					if( this._value[j].Id == sequence ) {
+						this._value.RemoveAt( j );
+						CancelListReBuild();
 						return;
 					}
 				}
+			}
+			private void CancelListReBuild() {
+				if( !Options.Options.options.keyboardCancelCommand ) {
+					this._cancelList = new byte[0];
+					return;
+				}
+				var tmp = new List<byte>();
+				foreach( var val in Value ) {
+					tmp.AddRange( val.Push );
+				}
+				this._cancelList = tmp.Distinct().ToArray();
 			}
 		}
 		internal class ToggleList {
-			internal List<Toggle> Value {
-				get;
-			} = new List<Toggle>();
+			private List<Toggle> _value = new List<Toggle>();
+			internal IEnumerable<Toggle> Value {
+				get {
+					return this._value;
+				}
+			}
+			private byte[] _cancelList = {};
+			internal IEnumerable<byte> CancelList {
+				get {
+					return this._cancelList;
+				}
+			}
 
 			internal void Add( Toggle instance ) {
 				if( instance.Type == DataAb.InstanceType.TOGGLE ) {
-					Value.Add( instance );
+					this._value.Add( instance );
+					CancelListReBuild();
 				}
 			}
 			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < Value.Count; j++ ) {
-					if( Value[j].Id == sequence ) {
-						Value.RemoveAt( j );
+				for( var j = 0; j < this._value.Count; j++ ) {
+					if( this._value[j].Id == sequence ) {
+						this._value.RemoveAt( j );
+						CancelListReBuild();
 						return;
 					}
 				}
+			}
+			private void CancelListReBuild() {
+				if( !Options.Options.options.keyboardCancelToggle ) {
+					this._cancelList = new byte[0];
+					return;
+				}
+				var tmp = new List<byte>();
+				foreach( var val in Value ) {
+					tmp.AddRange( val.Push );
+				}
+				this._cancelList = tmp.Distinct().ToArray();
 			}
 		}
 		internal class MouseList {
-			internal List<Mouse> Value {
-				get;
-			} = new List<Mouse>();
+			private List<Mouse> _value = new List<Mouse>();
+			internal IEnumerable<Mouse> Value {
+				get {
+					return this._value;
+				}
+			}
+			private byte[] _cancelList = {};
+			internal IEnumerable<byte> CancelList {
+				get {
+					return this._cancelList;
+				}
+			}
 
 			internal void Add( Mouse instance ) {
 				if( instance.Type == DataAb.InstanceType.MOUSE ) {
-					Value.Add( instance );
+					this._value.Add( instance );
+					CancelListReBuild();
 				}
 			}
 			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < Value.Count; j++ ) {
-					if( Value[j].Id == sequence ) {
-						Value.RemoveAt( j );
+				for( var j = 0; j < this._value.Count; j++ ) {
+					if( this._value[j].Id == sequence ) {
+						this._value.RemoveAt( j );
+						CancelListReBuild();
 						return;
 					}
 				}
 			}
+			private void CancelListReBuild() {
+				if( !Options.Options.options.keyboardCancelMouse ) {
+					this._cancelList = new byte[0];
+					return;
+				}
+				var tmp = new List<byte>();
+				foreach( var val in Value ) {
+					tmp.AddRange( val.Push );
+				}
+				this._cancelList = tmp.Distinct().ToArray();
+			}
 		}
-		
+
+
 		internal int Sequence {
 			get;
 			set;
@@ -148,6 +242,7 @@ namespace LordOfRanger.Setting {
 					this.mouseList.Add( (Mouse)instance );
 					break;
 			}
+			CancelListReBuild();
 			return instance.Id;
 		}
 
@@ -179,6 +274,7 @@ namespace LordOfRanger.Setting {
 					break;
 				}
 			}
+			CancelListReBuild();
 		}
 
 		/// <summary>
@@ -276,6 +372,8 @@ namespace LordOfRanger.Setting {
 				return 0x00;
 			}
 		}
-
+		private void CancelListReBuild() {
+			this._cancelList = this.barrageList.CancelList.Concat(this.commandList.CancelList).Concat(this.toggleList.CancelList).Concat(this.mouseList.CancelList ).Distinct().ToArray();
+		}
 	}
 }

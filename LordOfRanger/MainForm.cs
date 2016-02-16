@@ -373,6 +373,9 @@ namespace LordOfRanger {
 			if( this._otherWindowOpen ) {
 				return;
 			}
+			foreach( var key in _mass.CancelList.Where( key => key == (byte)e.KeyCode ) ) {
+				e.Cancel = true;
+			}
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
 				this._job.KeydownEvent( e );
