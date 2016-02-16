@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 using LordOfRanger.Keyboard;
 using LordOfRanger.Mouse;
 using LordOfRanger.Setting;
@@ -378,11 +379,14 @@ namespace LordOfRanger {
 			}
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
 				//キーダウンイベント
-				this._job.KeydownEvent( e );
+				Task.Run( () => {
+					this._job.KeydownEvent( e );
+				});
 			} else if( e.UpDown == KeyboardUpDown.UP ) {
 				//キーアップイベント
-				this._job.KeyupEvent( e );
-
+				Task.Run( () => {
+					this._job.KeyupEvent( e );
+				} );
 				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 					//setting change hot key
 					if( _hotKeys.ContainsKey( (byte)e.KeyCode ) ) {

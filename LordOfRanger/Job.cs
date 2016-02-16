@@ -151,9 +151,9 @@ namespace LordOfRanger {
 			} else {
 				// キーボードから
 				if( this._commandTask?.Status == TaskStatus.Running ) {
+					//コマンド実行中で、
 					if( (byte)Keys.Left <= key && key <= (byte)Keys.Down ) {
-						//コマンド中のキー入力で、且つ入力されたキーが方向キーだった場合キャンセル
-						e.Cancel = true;
+						//入力されたキーが方向キーだった場合
 						return;
 					}
 					if( this._mass.barrageList.Value.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
@@ -161,8 +161,7 @@ namespace LordOfRanger {
 						await this._commandTask;
 					}
 					if( this._mass.commandList.Value.Any( c => CommandCheck( key, c.Push ) )) {
-						//コマンドキーだった場合キャンセル
-						e.Cancel = true;
+						//コマンドキーだった場合
 						return;
 					}
 				}
@@ -175,7 +174,6 @@ namespace LordOfRanger {
 
 			//コマンド
 			foreach( var c in this._mass.commandList.Value.Where( c => CommandCheck( key, c.Push ) ) ) {
-				e.Cancel = true;
 				this._commandTask = Task.Run( () => {
 					ThreadCommand( new object[] {
 						c.sendList, left, right
