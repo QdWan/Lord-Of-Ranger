@@ -63,6 +63,7 @@ namespace LordOfRanger {
 			set {
 				this._barrageEnable = value;
 				IconUpdate();
+				KeyAllUp();
 			}
 		}
 
@@ -78,9 +79,6 @@ namespace LordOfRanger {
 			if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 				_enablekeyF[(byte)e.KeyCode] = false;
 				_enablekeyE[(byte)e.KeyCode] = false;
-				if( !MainForm.activeWindow || !this._barrageEnable ) {
-					return;
-				}
 				foreach( var m in this._mass.mouseList.Value.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
 					if( this._mouseTask?.Status == TaskStatus.Running ) {
 						if( Options.Options.options.mouseReClick == 0 ) {
@@ -134,9 +132,6 @@ namespace LordOfRanger {
 		/// <param name="e"> 押されたキー情報 </param>
 		internal async void KeydownEvent( KeyboardHookedEventArgs e ) {
 			var key = (byte)e.KeyCode;
-			if( !MainForm.activeWindow || !this._barrageEnable ) {
-				return;
-			}
 			//このキー入力がどこから発行されたものか判定
 			if( e.ExtraInfo == (int)Key.EXTRA_INFO ) {
 				//LORから
@@ -290,6 +285,19 @@ namespace LordOfRanger {
 			}
 
 			return !_enablekeyE[key] && _enablekeyF[key];
+		}
+
+		/// <summary>
+		/// 全てのキーを押していない状態にする。
+		/// </summary>
+		internal void KeyAllUp() {
+			for( byte key = 0x00; key <= 0xff; key++ ) {
+				_enablekeyF[key] = false;
+				_enablekeyE[key] = false;
+				if( key == 0xff ) {
+					break;
+				}
+			}
 		}
 
 		/// <summary>
