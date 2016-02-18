@@ -24,8 +24,6 @@ namespace LordOfRanger {
 
 		private static Mass _mass;
 		private Job _job;
-		internal static bool activeWindow = false;
-		private static bool _alive = false;
 		internal static SkillLayer skillLayer;
 		private static string _currentSettingFile;
 		private static Dictionary<byte, string> _hotKeys;
@@ -375,20 +373,20 @@ namespace LordOfRanger {
 				return;
 			}
 
-			if( activeWindow && this._job.BarrageEnable ) {
+			if( this._job.ActiveWindow && this._job.BarrageEnable ) {
 				foreach( var key in _mass.CancelList.Where( key => key == (byte)e.KeyCode ) ) {
 					e.Cancel = true;
 				}
 			}
 			if( e.UpDown == KeyboardUpDown.DOWN ) {
-				if( activeWindow && this._job.BarrageEnable ) {
+				if( this._job.ActiveWindow && this._job.BarrageEnable ) {
 					//キーダウンイベント
 					Task.Run( () => {
 						this._job.KeydownEvent( e );
 					} );
 				}
 			} else if( e.UpDown == KeyboardUpDown.UP ) {
-				if( activeWindow && this._job.BarrageEnable ) {
+				if( this._job.ActiveWindow && this._job.BarrageEnable ) {
 					//キーアップイベント
 					Task.Run( () => {
 						this._job.KeyupEvent( e );
@@ -424,30 +422,9 @@ namespace LordOfRanger {
 		/// </summary>
 		private void ActiveWindowCheck() {
 			try {
-				if( Arad.IsAlive ) {
-					if( !_alive ) {
-						_alive = true;
-						this._job.IconUpdate();
-					}
-					if( Arad.IsActiveWindow ) {
-						if( !activeWindow ) {
-							activeWindow = true;
-							this._job.IconUpdate();
-						}
-					} else {
-						if( activeWindow ) {
-							activeWindow = false;
-							this._job.KeyAllUp();
-							this._job.IconUpdate();
-						}
-					}
-				} else {
-					if( _alive ) {
-						_alive = false;
-						activeWindow = false;
-						this._job.KeyAllUp();
-						this._job.IconUpdate();
-					}
+				this._job.Alive = Arad.IsAlive;
+				if( this._job.Alive ) {
+					this._job.ActiveWindow = Arad.IsActiveWindow;
 				}
 			} catch( Exception ) {
 				// ignored

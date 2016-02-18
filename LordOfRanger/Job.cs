@@ -30,6 +30,35 @@ namespace LordOfRanger {
 		private Mass _mass;
 
 		private bool _barrageEnable = true;
+		private bool _alive = true;
+		internal bool Alive {
+			get {
+				return this._alive;
+			}
+			set {
+				if( this._alive != value ) {
+					this._alive = value;
+					if( !value ) {
+						ActiveWindow = false;
+					}
+				}
+			}
+		}
+		private bool _activeWindow = true;
+		internal bool ActiveWindow {
+			get {
+				return this._activeWindow;
+			}
+			set {
+				if( this._activeWindow != value ) {
+					this._activeWindow = value;
+					IconUpdate();
+					if( !value ) {
+						KeyAllUp();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Massファイルを読み込み、各変数に初期値を代入
@@ -227,7 +256,7 @@ namespace LordOfRanger {
 		/// ここで連打、トグルの処理を行う
 		/// </summary>
 		internal void TimerEvent() {
-			if( !MainForm.activeWindow || !this._barrageEnable ) {
+			if( !ActiveWindow || !this._barrageEnable ) {
 				return;
 			}
 			if( this._commandTask?.Status == TaskStatus.Running ) {
@@ -290,7 +319,7 @@ namespace LordOfRanger {
 		/// <summary>
 		/// 全てのキーを押していない状態にする。
 		/// </summary>
-		internal void KeyAllUp() {
+		private void KeyAllUp() {
 			for( byte key = 0x00; key <= 0xff; key++ ) {
 				_enablekeyF[key] = false;
 				_enablekeyE[key] = false;
@@ -303,7 +332,7 @@ namespace LordOfRanger {
 		/// <summary>
 		/// レイヤーウィンドウの更新
 		/// </summary>
-		internal void IconUpdate() {
+		private void IconUpdate() {
 			Bitmap bmp;
 			if( !Options.Options.options.iconViewFlag ) {
 				bmp = new Bitmap( 1, 1 );
@@ -319,7 +348,7 @@ namespace LordOfRanger {
 			}
 			if( bmpList.Count != 0 ) {
 				var iconList = bmpList.ToArray();
-				if( !Arad.IsAlive || !MainForm.activeWindow ) {
+				if( !Arad.IsAlive || !ActiveWindow ) {
 					bmp = new Bitmap( 1, 1 );
 					goto gotoLabelDraw;
 				}
