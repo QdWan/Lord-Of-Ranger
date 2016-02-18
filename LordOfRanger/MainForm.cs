@@ -371,7 +371,11 @@ namespace LordOfRanger {
 			this._sw.Start();
 #endif
 			if( this._otherWindowOpen ) {
+#if DEBUG
+				goto echo;
+#else
 				return;
+#endif
 			}
 
 			if( this._job.ActiveWindow && this._job.BarrageEnable && e.ExtraInfo != (int)Key.EXTRA_INFO ) {
@@ -401,7 +405,11 @@ namespace LordOfRanger {
 						}
 						CurrentSettingChange( _hotKeys[(byte)e.KeyCode] );
 						SettingUpdate();
+#if DEBUG
+						goto echo;
+#else
 						return;
+#endif
 					}
 
 
@@ -411,6 +419,7 @@ namespace LordOfRanger {
 				}
 			}
 #if DEBUG
+			echo:
 			this._sw.Stop();
 			if( this._sw.Elapsed.TotalMilliseconds > 0.05 ) {
 				Console.WriteLine( this._sw.Elapsed.TotalMilliseconds + ":" + KeysToText((byte)e.KeyCode) + "," + e.UpDown);
