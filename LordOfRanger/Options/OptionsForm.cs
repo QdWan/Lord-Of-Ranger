@@ -79,14 +79,20 @@ namespace LordOfRanger.Options {
 			this.cmbGeneralStartupState.SelectedIndex = Options.options.startupState;
 			this.txtGeneralProcessName.Text = Options.options.processName;
 
-			/* job */
-			this.nudIntervalCommandKeys.Value = Options.options.commandInterval;
-			this.nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
+			/* barrage/toggle */
 			this.nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
 			this.nudIntervalToggleTimer.Value = Options.options.timerInterval;
+			this.chkBarrageKeyboardCancel.Checked = Options.options.keyboardCancelBarrage;
+			this.chkToggleKeyboardCancel.Checked = Options.options.keyboardCancelToggle;
+
+			/* command */
+			this.nudIntervalCommandKeys.Value = Options.options.commandInterval;
+			this.nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
+			this.chkCommandKeyboardCancel.Checked = Options.options.keyboardCancelCommand;
 
 			/* mouse */
 			this.cmbMouseReClick.SelectedIndex = Options.options.mouseReClick;
+			this.chkMouseKeyboardCancel.Checked = Options.options.keyboardCancelMouse;
 
 			/* icon */
 			this.chkSkillIconEnable.Checked = Options.options.iconViewFlag;
@@ -110,14 +116,20 @@ namespace LordOfRanger.Options {
 			Options.options.startupState = this.cmbGeneralStartupState.SelectedIndex;
 			Options.options.processName = this.txtGeneralProcessName.Text;
 
-			/* job */
-			Options.options.commandInterval = (int)this.nudIntervalCommandKeys.Value;
-			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
+			/* barrage/toggle */
 			Options.options.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
 			Options.options.timerInterval = (int)this.nudIntervalToggleTimer.Value;
+			Options.options.keyboardCancelBarrage = this.chkBarrageKeyboardCancel.Checked;
+			Options.options.keyboardCancelToggle = this.chkToggleKeyboardCancel.Checked;
+
+			/* command */
+			Options.options.commandInterval = (int)this.nudIntervalCommandKeys.Value;
+			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
+			Options.options.keyboardCancelCommand = this.chkCommandKeyboardCancel.Checked;
 
 			/* mouse */
 			Options.options.mouseReClick = this.cmbMouseReClick.SelectedIndex;
+			Options.options.keyboardCancelMouse = this.chkMouseKeyboardCancel.Checked;
 
 			/* icon */
 			Options.options.iconViewFlag = this.chkSkillIconEnable.Checked;
