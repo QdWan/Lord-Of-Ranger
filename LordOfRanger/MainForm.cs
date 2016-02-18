@@ -373,8 +373,8 @@ namespace LordOfRanger {
 				return;
 			}
 
-			if( this._job.ActiveWindow && this._job.BarrageEnable ) {
-				foreach( var key in _mass.CancelList.Where( key => key == (byte)e.KeyCode ) ) {
+			if( this._job.ActiveWindow && this._job.BarrageEnable && e.ExtraInfo != (int)Key.EXTRA_INFO ) {
+				if(_mass.CancelList.Contains( (byte)e.KeyCode ) ) {
 					e.Cancel = true;
 				}
 			}
