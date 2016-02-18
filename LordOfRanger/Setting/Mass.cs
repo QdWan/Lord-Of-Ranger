@@ -104,7 +104,7 @@ namespace LordOfRanger.Setting {
 				}
 			}
 			private void CancelListReBuild() {
-				if( !Options.Options.options.keyboardCancelCommand ) {
+				if( !Options.Options.options.keyboardCancelBarrage ) {
 					this._cancelList = new byte[0];
 					return;
 				}
