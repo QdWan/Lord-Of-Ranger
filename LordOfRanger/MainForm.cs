@@ -164,6 +164,7 @@ namespace LordOfRanger {
 			Options.OptionsForm.SaveCnf();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
+			_mass.Reload();
 			this._otherWindowOpen = false;
 		}
 

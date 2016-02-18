@@ -215,6 +215,10 @@ namespace LordOfRanger.Setting {
 			Init();
 		}
 
+		internal void Reload() {
+			Load(this.name);
+		}
+
 		#region Data Interface
 
 		/// <summary>
