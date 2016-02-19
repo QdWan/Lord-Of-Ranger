@@ -24,7 +24,6 @@ namespace LordOfRanger {
 
 		private Mass _mass;
 		private Job _job;
-		internal static SkillLayer skillLayer;
 		private string _currentSettingFile;
 		private Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen = false;
@@ -72,7 +71,6 @@ namespace LordOfRanger {
 		internal MainForm() {
 			InitializeComponent();
 			this._hotKeys = new Dictionary<byte, string>();
-			skillLayer = new SkillLayer();
 
 			this._mass = new Mass();
 			LoadSettingList();
@@ -81,7 +79,6 @@ namespace LordOfRanger {
 
 			this._job = new Job( this._mass );
 
-			skillLayer.Show();
 			if( Options.Options.options.activeWindowMonitoring ) {
 				this.timerActiveWindowCheck.Interval = Options.Options.options.activeWindowMonitoringinterval;
 				this.timerActiveWindowCheck.Start();
@@ -140,7 +137,6 @@ namespace LordOfRanger {
 		}
 
 		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
-			skillLayer.Close();
 			Application.Exit();
 		}
 		
@@ -151,7 +147,6 @@ namespace LordOfRanger {
 		}
 
 		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
-			skillLayer.Close();
 			Application.Exit();
 		}
 

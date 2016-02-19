@@ -25,6 +25,7 @@ namespace LordOfRanger {
 		private Task _commandTask;
 		private Task _mouseTask;
 		private CancellationTokenSource _mouseTaskCancelToken;
+		private static SkillLayer _skillLayer;
 
 		private const int ICON_SIZE = 30;
 		private Mass _mass;
@@ -78,6 +79,10 @@ namespace LordOfRanger {
 			this._enableToggle = new Dictionary<int, bool>();
 			foreach( var t in mass.Toggles ) {
 				this._enableToggle.Add( t.Id, false );
+			}
+			if( _skillLayer == null ) {
+				_skillLayer = new SkillLayer();
+				_skillLayer.Show();
 			}
 			IconUpdate();
 		}
@@ -360,35 +365,35 @@ namespace LordOfRanger {
 			} else {
 				bmp = new Bitmap( 1, 1 );
 			}
-			MainForm.skillLayer.Visible = true;
-			MainForm.skillLayer.Size = new Size( bmp.Width, bmp.Height );
+			_skillLayer.Visible = true;
+			_skillLayer.Size = new Size( bmp.Width, bmp.Height );
 			switch( (Options.Options.IconDisplayPosition)Options.Options.options.iconDisplayPosition ) {
 				case Options.Options.IconDisplayPosition.TOP_LEFT:
-					MainForm.skillLayer.Top = Arad.y - bmp.Height;
-					MainForm.skillLayer.Left = Arad.x;
+					_skillLayer.Top = Arad.y - bmp.Height;
+					_skillLayer.Left = Arad.x;
 					break;
 				case Options.Options.IconDisplayPosition.TOP_RIGHT:
-					MainForm.skillLayer.Top = Arad.y - bmp.Height;
-					MainForm.skillLayer.Left = Arad.x + Arad.w - bmp.Width;
+					_skillLayer.Top = Arad.y - bmp.Height;
+					_skillLayer.Left = Arad.x + Arad.w - bmp.Width;
 					break;
 				case Options.Options.IconDisplayPosition.BOTTOM_LEFT:
-					MainForm.skillLayer.Top = Arad.y + Arad.h;
-					MainForm.skillLayer.Left = Arad.x;
+					_skillLayer.Top = Arad.y + Arad.h;
+					_skillLayer.Left = Arad.x;
 					break;
 				case Options.Options.IconDisplayPosition.BOTTOM_RIGHT:
-					MainForm.skillLayer.Top = Arad.y + Arad.h;
-					MainForm.skillLayer.Left = Arad.x + Arad.w - bmp.Width;
+					_skillLayer.Top = Arad.y + Arad.h;
+					_skillLayer.Left = Arad.x + Arad.w - bmp.Width;
 					break;
 				default:
-					MainForm.skillLayer.Top = Arad.y - bmp.Height;
-					MainForm.skillLayer.Left = Arad.x;
+					_skillLayer.Top = Arad.y - bmp.Height;
+					_skillLayer.Left = Arad.x;
 					break;
 
 			}
 			gotoLabelDraw:
-			MainForm.skillLayer.DrawImage( bmp );
-			MainForm.skillLayer.UpdateLayeredWindow();
-			MainForm.skillLayer.ToTop();
+			_skillLayer.DrawImage( bmp );
+			_skillLayer.UpdateLayeredWindow();
+			_skillLayer.ToTop();
 		}
 
 		private void Sleep( int sleeptime ) {
