@@ -20,8 +20,8 @@ namespace LordOfRanger {
 		private static Dictionary<byte, bool> _enablekeyF;
 		private static Dictionary<byte, bool> _enablekeyE;
 		private Dictionary<int, bool> _enableToggle;
-		private static byte _directionKey = (byte)Keys.Left;
-		private static byte _reverseDirectionKey = (byte)Keys.Right;
+		private static byte _frontDirection = (byte)Keys.Left;
+		private static byte _backDirection = (byte)Keys.Right;
 		private Task _commandTask;
 		private Task _mouseTask;
 		private CancellationTokenSource _mouseTaskCancelToken;
@@ -165,11 +165,11 @@ namespace LordOfRanger {
 			if( e.ExtraInfo == (int)Key.EXTRA_INFO ) {
 				//LORから
 				if( key == (byte)Keys.Left ) {
-					_directionKey = (byte)Keys.Left;
-					_reverseDirectionKey = (byte)Keys.Right;
+					_frontDirection = (byte)Keys.Left;
+					_backDirection = (byte)Keys.Right;
 				} else if( key == (byte)Keys.Right ) {
-					_directionKey = (byte)Keys.Right;
-					_reverseDirectionKey = (byte)Keys.Left;
+					_frontDirection = (byte)Keys.Right;
+					_backDirection = (byte)Keys.Left;
 				}
 				return;
 			} else {
@@ -193,8 +193,8 @@ namespace LordOfRanger {
 
 			_enablekeyF[key] = true;
 
-			var left = _reverseDirectionKey;
-			var right = _directionKey;
+			var left = _backDirection;
+			var right = _frontDirection;
 
 			//コマンド
 			foreach( var c in this._mass.Commands.Where( c => CommandCheck( key, c.Push ) ) ) {
@@ -206,12 +206,12 @@ namespace LordOfRanger {
 
 			switch( key ) {
 				case (byte)Keys.Left:
-					_directionKey = (byte)Keys.Left;
-					_reverseDirectionKey = (byte)Keys.Right;
+					_frontDirection = (byte)Keys.Left;
+					_backDirection = (byte)Keys.Right;
 					break;
 				case (byte)Keys.Right:
-					_directionKey = (byte)Keys.Right;
-					_reverseDirectionKey = (byte)Keys.Left;
+					_frontDirection = (byte)Keys.Right;
+					_backDirection = (byte)Keys.Left;
 					break;
 			}
 
@@ -229,17 +229,17 @@ namespace LordOfRanger {
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
 		/// <param name="sendList">送信するキー</param>
-		/// <param name="left">キャラクターの向いている方向</param>
-		/// <param name="right">キャラクターの背中側の方向</param>
-		private void ThreadCommand( IEnumerable<byte> sendList, byte left, byte right ) {
+		/// <param name="front">キャラクターの向いている方向</param>
+		/// <param name="back">キャラクターの背中側の方向</param>
+		private void ThreadCommand( IEnumerable<byte> sendList, byte front, byte back ) {
 			foreach( var sendKey in sendList ) {
 				var tmpSendKey = sendKey;
 				switch( tmpSendKey ) {
 					case (byte)Keys.Right:
-						tmpSendKey = right;
+						tmpSendKey = back;
 						break;
 					case (byte)Keys.Left:
-						tmpSendKey = left;
+						tmpSendKey = front;
 						break;
 				}
 				KeyPush( tmpSendKey, Options.Options.options.commandUpDownInterval );
