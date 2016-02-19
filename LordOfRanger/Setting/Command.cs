@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-
-
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace LordOfRanger.Setting {
 	/// <summary>
@@ -50,5 +50,47 @@ namespace LordOfRanger.Setting {
 			set;
 		} = true;
 
+	}
+
+	internal class CommandList {
+		private List<Command> _value = new List<Command>();
+		internal IEnumerable<Command> Value {
+			get {
+				return this._value;
+			}
+		}
+		private byte[] _cancelList = { };
+		internal IEnumerable<byte> CancelList {
+			get {
+				return this._cancelList;
+			}
+		}
+
+		internal void Add( Command instance ) {
+			if( instance.Type == DataAb.InstanceType.COMMAND ) {
+				this._value.Add( instance );
+				CancelListReBuild();
+			}
+		}
+		internal void RemoveAt( int sequence ) {
+			for( var j = 0; j < this._value.Count; j++ ) {
+				if( this._value[j].Id == sequence ) {
+					this._value.RemoveAt( j );
+					CancelListReBuild();
+					return;
+				}
+			}
+		}
+		private void CancelListReBuild() {
+			if( !Options.Options.options.keyboardCancelCommand ) {
+				this._cancelList = new byte[0];
+				return;
+			}
+			var tmp = new List<byte>();
+			foreach( var val in Value ) {
+				tmp.AddRange( val.Push );
+			}
+			this._cancelList = tmp.Distinct().ToArray();
+		}
 	}
 }

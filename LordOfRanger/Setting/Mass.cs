@@ -22,182 +22,37 @@ namespace LordOfRanger.Setting {
 				return this._value;
 			}
 		}
-		internal BarrageList barrageList;
-		internal CommandList commandList;
-		internal ToggleList toggleList;
-		internal MouseList mouseList;
+		private BarrageList _barrageList;
+		internal IEnumerable<Barrage> Barrages {
+			get {
+				return this._barrageList.Value;
+			}
+		}
+		private CommandList _commandList;
+		internal IEnumerable<Command> Commands {
+			get {
+				return this._commandList.Value;
+			}
+		}
+		private ToggleList _toggleList;
+		internal IEnumerable<Toggle> Toggles {
+			get {
+				return this._toggleList.Value;
+			}
+		}
+		private MouseList _mouseList;
+		internal IEnumerable<Mouse> Mice {
+			get {
+				return this._mouseList.Value;
+			}
+		}
 		private byte[] _cancelList = {};
 		internal IEnumerable<byte> CancelList {
 			get {
 				return this._cancelList;
 			}
 		}
-
-		internal class CommandList {
-			private List<Command> _value = new List<Command>();
-			internal IEnumerable<Command> Value {
-				get {
-					return this._value;
-				}
-			}
-			private byte[] _cancelList = {};
-			internal IEnumerable<byte> CancelList {
-				get {
-					return this._cancelList;
-				}
-			}
-
-			internal void Add( Command instance ) {
-				if( instance.Type == DataAb.InstanceType.COMMAND ) {
-					this._value.Add( instance );
-					CancelListReBuild();
-				}
-			}
-			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < this._value.Count; j++ ) {
-					if( this._value[j].Id == sequence ) {
-						this._value.RemoveAt( j );
-						CancelListReBuild();
-						return;
-					}
-				}
-			}
-			private void CancelListReBuild() {
-				if( !Options.Options.options.keyboardCancelCommand ) {
-					this._cancelList = new byte[0];
-					return;
-				}
-				var tmp = new List<byte>();
-				foreach( var val in Value ) {
-					tmp.AddRange( val.Push );
-				}
-				this._cancelList = tmp.Distinct().ToArray();
-			}
-		}
-		internal class BarrageList {
-			private List<Barrage> _value = new List<Barrage>();
-			internal IEnumerable<Barrage> Value {
-				get {
-					return this._value;
-				}
-			}
-			private byte[] _cancelList = {};
-			internal IEnumerable<byte> CancelList {
-				get {
-					return this._cancelList;
-				}
-			}
-
-			internal void Add( Barrage instance ) {
-				if( instance.Type == DataAb.InstanceType.BARRAGE ) {
-					this._value.Add( instance );
-					CancelListReBuild();
-				}
-			}
-			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < this._value.Count; j++ ) {
-					if( this._value[j].Id == sequence ) {
-						this._value.RemoveAt( j );
-						CancelListReBuild();
-						return;
-					}
-				}
-			}
-			private void CancelListReBuild() {
-				if( !Options.Options.options.keyboardCancelBarrage ) {
-					this._cancelList = new byte[0];
-					return;
-				}
-				var tmp = new List<byte>();
-				foreach( var val in Value ) {
-					tmp.AddRange( val.Push );
-				}
-				this._cancelList = tmp.Distinct().ToArray();
-			}
-		}
-		internal class ToggleList {
-			private List<Toggle> _value = new List<Toggle>();
-			internal IEnumerable<Toggle> Value {
-				get {
-					return this._value;
-				}
-			}
-			private byte[] _cancelList = {};
-			internal IEnumerable<byte> CancelList {
-				get {
-					return this._cancelList;
-				}
-			}
-
-			internal void Add( Toggle instance ) {
-				if( instance.Type == DataAb.InstanceType.TOGGLE ) {
-					this._value.Add( instance );
-					CancelListReBuild();
-				}
-			}
-			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < this._value.Count; j++ ) {
-					if( this._value[j].Id == sequence ) {
-						this._value.RemoveAt( j );
-						CancelListReBuild();
-						return;
-					}
-				}
-			}
-			private void CancelListReBuild() {
-				if( !Options.Options.options.keyboardCancelToggle ) {
-					this._cancelList = new byte[0];
-					return;
-				}
-				var tmp = new List<byte>();
-				foreach( var val in Value ) {
-					tmp.AddRange( val.Push );
-				}
-				this._cancelList = tmp.Distinct().ToArray();
-			}
-		}
-		internal class MouseList {
-			private List<Mouse> _value = new List<Mouse>();
-			internal IEnumerable<Mouse> Value {
-				get {
-					return this._value;
-				}
-			}
-			private byte[] _cancelList = {};
-			internal IEnumerable<byte> CancelList {
-				get {
-					return this._cancelList;
-				}
-			}
-
-			internal void Add( Mouse instance ) {
-				if( instance.Type == DataAb.InstanceType.MOUSE ) {
-					this._value.Add( instance );
-					CancelListReBuild();
-				}
-			}
-			internal void RemoveAt( int sequence ) {
-				for( var j = 0; j < this._value.Count; j++ ) {
-					if( this._value[j].Id == sequence ) {
-						this._value.RemoveAt( j );
-						CancelListReBuild();
-						return;
-					}
-				}
-			}
-			private void CancelListReBuild() {
-				if( !Options.Options.options.keyboardCancelMouse ) {
-					this._cancelList = new byte[0];
-					return;
-				}
-				var tmp = new List<byte>();
-				foreach( var val in Value ) {
-					tmp.AddRange( val.Push );
-				}
-				this._cancelList = tmp.Distinct().ToArray();
-			}
-		}
-
+		
 
 		internal int Sequence {
 			get;
@@ -234,16 +89,16 @@ namespace LordOfRanger.Setting {
 
 			switch( instance.Type ) {
 				case DataAb.InstanceType.BARRAGE:
-					this.barrageList.Add( (Barrage)instance );
+					this._barrageList.Add( (Barrage)instance );
 					break;
 				case DataAb.InstanceType.COMMAND:
-					this.commandList.Add( (Command)instance );
+					this._commandList.Add( (Command)instance );
 					break;
 				case DataAb.InstanceType.TOGGLE:
-					this.toggleList.Add( (Toggle)instance );
+					this._toggleList.Add( (Toggle)instance );
 					break;
 				case DataAb.InstanceType.MOUSE:
-					this.mouseList.Add( (Mouse)instance );
+					this._mouseList.Add( (Mouse)instance );
 					break;
 			}
 			CancelListReBuild();
@@ -262,16 +117,16 @@ namespace LordOfRanger.Setting {
 
 					switch( instanceType ) {
 						case DataAb.InstanceType.BARRAGE:
-							this.barrageList.RemoveAt( sequence );
+							this._barrageList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.COMMAND:
-							this.commandList.RemoveAt( sequence );
+							this._commandList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.TOGGLE:
-							this.toggleList.RemoveAt( sequence );
+							this._toggleList.RemoveAt( sequence );
 							break;
 						case DataAb.InstanceType.MOUSE:
-							this.mouseList.RemoveAt( sequence );
+							this._mouseList.RemoveAt( sequence );
 							break;
 					}
 					this._value.RemoveAt( i );
@@ -336,10 +191,10 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		internal void Init() {
 			this._value = new List<DataAb>();
-			this.barrageList = new BarrageList();
-			this.commandList = new CommandList();
-			this.toggleList = new ToggleList();
-			this.mouseList = new MouseList();
+			this._barrageList = new BarrageList();
+			this._commandList = new CommandList();
+			this._toggleList = new ToggleList();
+			this._mouseList = new MouseList();
 		}
 
 		/// <summary>
@@ -377,7 +232,7 @@ namespace LordOfRanger.Setting {
 			}
 		}
 		private void CancelListReBuild() {
-			this._cancelList = this.barrageList.CancelList.Concat(this.commandList.CancelList).Concat(this.toggleList.CancelList).Concat(this.mouseList.CancelList ).Distinct().ToArray();
+			this._cancelList = this._barrageList.CancelList.Concat(this._commandList.CancelList).Concat(this._toggleList.CancelList).Concat(this._mouseList.CancelList ).Distinct().ToArray();
 		}
 	}
 }
