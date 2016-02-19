@@ -22,11 +22,11 @@ namespace LordOfRanger {
 #endif
 
 
-		private static Mass _mass;
+		private Mass _mass;
 		private Job _job;
 		internal static SkillLayer skillLayer;
-		private static string _currentSettingFile;
-		private static Dictionary<byte, string> _hotKeys;
+		private string _currentSettingFile;
+		private Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen = false;
 
 		private bool _editedFlag;
@@ -71,15 +71,15 @@ namespace LordOfRanger {
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
-			_hotKeys = new Dictionary<byte, string>();
+			this._hotKeys = new Dictionary<byte, string>();
 			skillLayer = new SkillLayer();
 
-			_mass = new Mass();
+			this._mass = new Mass();
 			LoadSettingList();
 			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
 			SettingUpdate( true );
 
-			this._job = new Job( _mass );
+			this._job = new Job( this._mass );
 
 			skillLayer.Show();
 			if( Options.Options.options.activeWindowMonitoring ) {
@@ -106,7 +106,7 @@ namespace LordOfRanger {
 				switch( result ) {
 					case DialogResult.Yes:
 						EditedFlag = false;
-						_mass.Save();
+						this._mass.Save();
 						break;
 					case DialogResult.No:
 						EditedFlag = false;
@@ -164,7 +164,7 @@ namespace LordOfRanger {
 			Options.OptionsForm.SaveCnf();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
-			_mass.Reload();
+			this._mass.Reload();
 			this._otherWindowOpen = false;
 		}
 
@@ -216,7 +216,7 @@ namespace LordOfRanger {
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
 			if( ksf.result == KeySetForm.Result.OK ) {
-				_mass.hotKey = ksf.KeyData[0];
+				this._mass.hotKey = ksf.KeyData[0];
 				this.txtHotKey.Text = KeysToText( ksf.KeyData );
 			}
 			this._otherWindowOpen = false;
@@ -235,7 +235,7 @@ namespace LordOfRanger {
 		/// </summary>
 		private void SettingView() {
 			this.dgv.Rows.Clear();
-			foreach( var da in _mass.Value ) {
+			foreach( var da in this._mass.Value ) {
 				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
@@ -281,10 +281,10 @@ namespace LordOfRanger {
 
 			var files = Directory.GetFiles( Mass.SETTING_PATH );
 			if( files.Length == 0 ) {
-				_mass = new Mass();
+				this._mass = new Mass();
 				CurrentSettingChange( "new" );
-				_mass.name = _currentSettingFile;
-				_mass.Save();
+				this._mass.name = this._currentSettingFile;
+				this._mass.Save();
 				LoadSettingList();
 				return;
 			}
@@ -307,7 +307,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
 		private void LoadHotKeys( bool firstFlag = false ) {
-			_hotKeys.Clear();
+			this._hotKeys.Clear();
 			var files = Directory.GetFiles( Mass.SETTING_PATH );
 			foreach( var file in files ) {
 				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
@@ -315,8 +315,8 @@ namespace LordOfRanger {
 					var hotkey = Mass.GetHotKey( filename );
 					if( hotkey != 0x00 ) {
 						string file2;
-						if( !_hotKeys.TryGetValue( hotkey, out file2 ) ) {
-							_hotKeys.Add( hotkey, filename );
+						if( !this._hotKeys.TryGetValue( hotkey, out file2 ) ) {
+							this._hotKeys.Add( hotkey, filename );
 						} else {
 							if( firstFlag ) {
 								MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
@@ -333,17 +333,17 @@ namespace LordOfRanger {
 		/// <param name="firstFlag"></param>
 		private void SettingUpdate( bool firstFlag = false ) {
 			LoadSettingList();
-			if( this.lbSettingList.FindStringExact( _currentSettingFile ) == -1 ) {
+			if( this.lbSettingList.FindStringExact( this._currentSettingFile ) == -1 ) {
 				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
 			}
 			LoadHotKeys( firstFlag );
-			_mass.Load( _currentSettingFile );
+			this._mass.Load( this._currentSettingFile );
 			SettingView();
-			this._job = new Job( _mass );
+			this._job = new Job( this._mass );
 
-			this.lblSettingName.Text = _currentSettingFile;
-			this.lbSettingList.SelectedItem = _currentSettingFile;
-			this.txtHotKey.Text = KeysToText( _mass.hotKey );
+			this.lblSettingName.Text = this._currentSettingFile;
+			this.lbSettingList.SelectedItem = this._currentSettingFile;
+			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
 			EditedFlag = false;
 		}
 
@@ -352,7 +352,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="name">設定ファイルの名前</param>
 		private void CurrentSettingChange( string name ) {
-			_currentSettingFile = name;
+			this._currentSettingFile = name;
 			Options.Options.options.currentSettingName = name;
 		}
 
@@ -379,7 +379,7 @@ namespace LordOfRanger {
 			}
 
 			if( this._job.ActiveWindow && this._job.BarrageEnable && e.ExtraInfo != (int)Key.EXTRA_INFO ) {
-				if(_mass.CancelList.Contains( (byte)e.KeyCode ) ) {
+				if( this._mass.CancelList.Contains( (byte)e.KeyCode ) ) {
 					e.Cancel = true;
 				}
 			}
@@ -399,11 +399,11 @@ namespace LordOfRanger {
 				}
 				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 					//setting change hot key
-					if( _hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+					if( this._hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
 						if( ConfirmSettingChange() ) {
 							e.Cancel = true;
 						}
-						CurrentSettingChange( _hotKeys[(byte)e.KeyCode] );
+						CurrentSettingChange( this._hotKeys[(byte)e.KeyCode] );
 						SettingUpdate();
 #if DEBUG
 						goto echo;
@@ -488,7 +488,7 @@ namespace LordOfRanger {
 				case DgvCol.PUSH: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in _mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
+					foreach( var dataAb in this._mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
 						ksf.keyType = KeySetForm.KeyType.MULTI;
 						ksf.ShowDialog();
 						if( ksf.result == KeySetForm.Result.OK ) {
@@ -506,7 +506,7 @@ namespace LordOfRanger {
 				case DgvCol.SEND: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in _mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
+					foreach( var dataAb in this._mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
 						switch( dataAb.Type ) {
 							case DataAb.InstanceType.COMMAND:
 								ksf.keyType = KeySetForm.KeyType.MULTI;
@@ -560,7 +560,7 @@ namespace LordOfRanger {
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( var dataAb in _mass.Value ) {
+						foreach( var dataAb in this._mass.Value ) {
 							if( dataAb.Id == sequence ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:
@@ -593,7 +593,7 @@ namespace LordOfRanger {
 				case DgvCol.DELETE:
 					if( MessageBox.Show( "この行を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						_mass.RemoveAt( sequence );
+						this._mass.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 						EditedFlag = true;
 					}
@@ -602,7 +602,7 @@ namespace LordOfRanger {
 					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 					if( rowIndex >= 1 ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						_mass.UpAt( sequence );
+						this._mass.UpAt( sequence );
 						var row = this.dgv.Rows[rowIndex];
 						this.dgv.Rows.RemoveAt( rowIndex );
 						this.dgv.Rows.Insert( rowIndex - 1, row );
@@ -613,7 +613,7 @@ namespace LordOfRanger {
 					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 					if( rowIndex < this.dgv.Rows.Count - 1 ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						_mass.DownAt( sequence );
+						this._mass.DownAt( sequence );
 						var row = this.dgv.Rows[rowIndex];
 						this.dgv.Rows.RemoveAt( rowIndex );
 						this.dgv.Rows.Insert( rowIndex + 1, row );
@@ -655,19 +655,19 @@ namespace LordOfRanger {
 				int sequence;
 				switch( acf.type ) {
 					case AddCommandForm.Type.COMMAND:
-						sequence = _mass.Add( new Command() );
+						sequence = this._mass.Add( new Command() );
 						mode = Mode.COMMAND;
 						break;
 					case AddCommandForm.Type.BARRAGE:
-						sequence = _mass.Add( new Barrage() );
+						sequence = this._mass.Add( new Barrage() );
 						mode = Mode.BARRAGE;
 						break;
 					case AddCommandForm.Type.TOGGLE:
-						sequence = _mass.Add( new Toggle() );
+						sequence = this._mass.Add( new Toggle() );
 						mode = Mode.TOGGLE;
 						break;
 					case AddCommandForm.Type.MOUSE:
-						sequence = _mass.Add( new Setting.Mouse() );
+						sequence = this._mass.Add( new Setting.Mouse() );
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -687,7 +687,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			_mass.Save();
+			this._mass.Save();
 			SettingUpdate();
 		}
 
@@ -698,7 +698,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			_mass.Load( _mass.name );
+			this._mass.Load( this._mass.name );
 			SettingUpdate();
 		}
 
