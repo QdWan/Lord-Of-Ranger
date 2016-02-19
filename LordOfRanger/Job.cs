@@ -199,9 +199,7 @@ namespace LordOfRanger {
 			//コマンド
 			foreach( var c in this._mass.Commands.Where( c => CommandCheck( key, c.Push ) ) ) {
 				this._commandTask = Task.Run( () => {
-					ThreadCommand( new object[] {
-						c.sendList, left, right
-					} );
+					ThreadCommand( c.sendList, left, right );
 				} );
 				break;
 			}
@@ -230,12 +228,10 @@ namespace LordOfRanger {
 		/// コマンドを実行するスレッドから呼び出される関数
 		/// また、左右の方向キーについては、右キー、左キーのうちどちらを最後に押したかによって、コマンドで使われるキーが変更される。
 		/// </summary>
-		/// <param name="o"></param>
-		private void ThreadCommand( object o ) {
-			var obj = (object[])o;
-			var sendList = (byte[])obj[0];
-			var left = (byte)obj[1];
-			var right = (byte)obj[2];
+		/// <param name="sendList">送信するキー</param>
+		/// <param name="left">キャラクターの向いている方向</param>
+		/// <param name="right">キャラクターの背中側の方向</param>
+		private void ThreadCommand( IEnumerable<byte> sendList, byte left, byte right ) {
 			foreach( var sendKey in sendList ) {
 				var tmpSendKey = sendKey;
 				switch( tmpSendKey ) {
