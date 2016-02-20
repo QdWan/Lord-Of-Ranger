@@ -23,10 +23,10 @@
 		public int timerInterval = 30;
 
 		/* KeyBoard */
-		public bool keyboardCancelBarrage = true;
-		public bool keyboardCancelCommand = true;
-		public bool keyboardCancelToggle = true;
-		public bool keyboardCancelMouse = true;
+		public bool keyboardCancelBarrage = false;
+		public bool keyboardCancelCommand = false;
+		public bool keyboardCancelToggle = false;
+		public bool keyboardCancelMouse = false;
 
 		/*Mouse*/
 		public int mouseReClick = 0;
