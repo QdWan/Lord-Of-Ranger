@@ -31,12 +31,25 @@
 			this.cmbGeneralStartupState = new System.Windows.Forms.ComboBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.tabBarrage = new System.Windows.Forms.TabPage();
+			this.groupBox8 = new System.Windows.Forms.GroupBox();
+			this.chkToggleKeyboardCancel = new System.Windows.Forms.CheckBox();
+			this.chkBarrageKeyboardCancel = new System.Windows.Forms.CheckBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.nudIntervalToggleTimer = new System.Windows.Forms.NumericUpDown();
 			this.nudIntervalToggleUpDown = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
+			this.tabCommand = new System.Windows.Forms.TabPage();
+			this.groupBox9 = new System.Windows.Forms.GroupBox();
+			this.chkCommandKeyboardCancel = new System.Windows.Forms.CheckBox();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.nudIntervalCommandUpDown = new System.Windows.Forms.NumericUpDown();
+			this.nudIntervalCommandKeys = new System.Windows.Forms.NumericUpDown();
+			this.label1 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
 			this.tabMouse = new System.Windows.Forms.TabPage();
+			this.groupBox10 = new System.Windows.Forms.GroupBox();
+			this.chkMouseKeyboardCancel = new System.Windows.Forms.CheckBox();
 			this.groupBox7 = new System.Windows.Forms.GroupBox();
 			this.cmbMouseReClick = new System.Windows.Forms.ComboBox();
 			this.label13 = new System.Windows.Forms.Label();
@@ -62,27 +75,21 @@
 			this.btnApply = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
-			this.tabCommand = new System.Windows.Forms.TabPage();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.nudIntervalCommandUpDown = new System.Windows.Forms.NumericUpDown();
-			this.nudIntervalCommandKeys = new System.Windows.Forms.NumericUpDown();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.groupBox8 = new System.Windows.Forms.GroupBox();
-			this.chkBarrageKeyboardCancel = new System.Windows.Forms.CheckBox();
-			this.groupBox9 = new System.Windows.Forms.GroupBox();
-			this.chkCommandKeyboardCancel = new System.Windows.Forms.CheckBox();
-			this.groupBox10 = new System.Windows.Forms.GroupBox();
-			this.chkMouseKeyboardCancel = new System.Windows.Forms.CheckBox();
-			this.chkToggleKeyboardCancel = new System.Windows.Forms.CheckBox();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox6.SuspendLayout();
 			this.tabBarrage.SuspendLayout();
+			this.groupBox8.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalToggleTimer)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalToggleUpDown)).BeginInit();
+			this.tabCommand.SuspendLayout();
+			this.groupBox9.SuspendLayout();
+			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).BeginInit();
 			this.tabMouse.SuspendLayout();
+			this.groupBox10.SuspendLayout();
 			this.groupBox7.SuspendLayout();
 			this.tabSkillIcon.SuspendLayout();
 			this.groupBox5.SuspendLayout();
@@ -97,13 +104,6 @@
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
-			this.tabCommand.SuspendLayout();
-			this.groupBox1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).BeginInit();
-			this.groupBox8.SuspendLayout();
-			this.groupBox9.SuspendLayout();
-			this.groupBox10.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -201,6 +201,40 @@
 			this.tabBarrage.Text = "連打/連打切替";
 			this.tabBarrage.UseVisualStyleBackColor = true;
 			// 
+			// groupBox8
+			// 
+			this.groupBox8.Controls.Add(this.chkToggleKeyboardCancel);
+			this.groupBox8.Controls.Add(this.chkBarrageKeyboardCancel);
+			this.groupBox8.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox8.Location = new System.Drawing.Point(8, 114);
+			this.groupBox8.Name = "groupBox8";
+			this.groupBox8.Size = new System.Drawing.Size(396, 134);
+			this.groupBox8.TabIndex = 10;
+			this.groupBox8.TabStop = false;
+			this.groupBox8.Text = "入力キャンセル";
+			// 
+			// chkToggleKeyboardCancel
+			// 
+			this.chkToggleKeyboardCancel.AutoSize = true;
+			this.chkToggleKeyboardCancel.Location = new System.Drawing.Point(9, 71);
+			this.chkToggleKeyboardCancel.Name = "chkToggleKeyboardCancel";
+			this.chkToggleKeyboardCancel.Size = new System.Drawing.Size(279, 40);
+			this.chkToggleKeyboardCancel.TabIndex = 1;
+			this.chkToggleKeyboardCancel.Text = "連打切替用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
+			this.chkToggleKeyboardCancel.UseVisualStyleBackColor = true;
+			this.chkToggleKeyboardCancel.CheckedChanged += new System.EventHandler(this.keyboardCancel_CheckedChanged);
+			// 
+			// chkBarrageKeyboardCancel
+			// 
+			this.chkBarrageKeyboardCancel.AutoSize = true;
+			this.chkBarrageKeyboardCancel.Location = new System.Drawing.Point(9, 25);
+			this.chkBarrageKeyboardCancel.Name = "chkBarrageKeyboardCancel";
+			this.chkBarrageKeyboardCancel.Size = new System.Drawing.Size(255, 40);
+			this.chkBarrageKeyboardCancel.TabIndex = 0;
+			this.chkBarrageKeyboardCancel.Text = "連打用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
+			this.chkBarrageKeyboardCancel.UseVisualStyleBackColor = true;
+			this.chkBarrageKeyboardCancel.CheckedChanged += new System.EventHandler(this.keyboardCancel_CheckedChanged);
+			// 
 			// groupBox2
 			// 
 			this.groupBox2.Controls.Add(this.nudIntervalToggleTimer);
@@ -282,6 +316,120 @@
 			this.label2.TabIndex = 3;
 			this.label2.Text = "キーを押してから離すまでの時間:";
 			// 
+			// tabCommand
+			// 
+			this.tabCommand.Controls.Add(this.groupBox9);
+			this.tabCommand.Controls.Add(this.groupBox1);
+			this.tabCommand.Location = new System.Drawing.Point(4, 27);
+			this.tabCommand.Name = "tabCommand";
+			this.tabCommand.Padding = new System.Windows.Forms.Padding(3);
+			this.tabCommand.Size = new System.Drawing.Size(412, 338);
+			this.tabCommand.TabIndex = 5;
+			this.tabCommand.Text = "コマンド";
+			this.tabCommand.UseVisualStyleBackColor = true;
+			// 
+			// groupBox9
+			// 
+			this.groupBox9.Controls.Add(this.chkCommandKeyboardCancel);
+			this.groupBox9.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox9.Location = new System.Drawing.Point(8, 112);
+			this.groupBox9.Name = "groupBox9";
+			this.groupBox9.Size = new System.Drawing.Size(396, 80);
+			this.groupBox9.TabIndex = 11;
+			this.groupBox9.TabStop = false;
+			this.groupBox9.Text = "入力キャンセル";
+			// 
+			// chkCommandKeyboardCancel
+			// 
+			this.chkCommandKeyboardCancel.AutoSize = true;
+			this.chkCommandKeyboardCancel.Location = new System.Drawing.Point(9, 25);
+			this.chkCommandKeyboardCancel.Name = "chkCommandKeyboardCancel";
+			this.chkCommandKeyboardCancel.Size = new System.Drawing.Size(279, 40);
+			this.chkCommandKeyboardCancel.TabIndex = 0;
+			this.chkCommandKeyboardCancel.Text = "コマンド用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
+			this.chkCommandKeyboardCancel.UseVisualStyleBackColor = true;
+			this.chkCommandKeyboardCancel.CheckedChanged += new System.EventHandler(this.keyboardCancel_CheckedChanged);
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.nudIntervalCommandUpDown);
+			this.groupBox1.Controls.Add(this.nudIntervalCommandKeys);
+			this.groupBox1.Controls.Add(this.label1);
+			this.groupBox1.Controls.Add(this.label4);
+			this.groupBox1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox1.Location = new System.Drawing.Point(8, 7);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(396, 99);
+			this.groupBox1.TabIndex = 9;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "間隔";
+			// 
+			// nudIntervalCommandUpDown
+			// 
+			this.nudIntervalCommandUpDown.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.nudIntervalCommandUpDown.Location = new System.Drawing.Point(244, 65);
+			this.nudIntervalCommandUpDown.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+			this.nudIntervalCommandUpDown.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			this.nudIntervalCommandUpDown.Name = "nudIntervalCommandUpDown";
+			this.nudIntervalCommandUpDown.Size = new System.Drawing.Size(73, 25);
+			this.nudIntervalCommandUpDown.TabIndex = 9;
+			this.nudIntervalCommandUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.nudIntervalCommandUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			// 
+			// nudIntervalCommandKeys
+			// 
+			this.nudIntervalCommandKeys.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.nudIntervalCommandKeys.Location = new System.Drawing.Point(244, 27);
+			this.nudIntervalCommandKeys.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+			this.nudIntervalCommandKeys.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			this.nudIntervalCommandKeys.Name = "nudIntervalCommandKeys";
+			this.nudIntervalCommandKeys.Size = new System.Drawing.Size(73, 25);
+			this.nudIntervalCommandKeys.TabIndex = 8;
+			this.nudIntervalCommandKeys.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.nudIntervalCommandKeys.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			// 
+			// label1
+			// 
+			this.label1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.label1.Location = new System.Drawing.Point(6, 29);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(194, 29);
+			this.label1.TabIndex = 1;
+			this.label1.Text = "キー入力後の待機時間 :";
+			// 
+			// label4
+			// 
+			this.label4.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.label4.Location = new System.Drawing.Point(6, 58);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(194, 31);
+			this.label4.TabIndex = 7;
+			this.label4.Text = "キーを押してから離すまでの時間:";
+			// 
 			// tabMouse
 			// 
 			this.tabMouse.Controls.Add(this.groupBox10);
@@ -292,6 +440,28 @@
 			this.tabMouse.TabIndex = 4;
 			this.tabMouse.Text = "マウス操作";
 			this.tabMouse.UseVisualStyleBackColor = true;
+			// 
+			// groupBox10
+			// 
+			this.groupBox10.Controls.Add(this.chkMouseKeyboardCancel);
+			this.groupBox10.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.groupBox10.Location = new System.Drawing.Point(8, 100);
+			this.groupBox10.Name = "groupBox10";
+			this.groupBox10.Size = new System.Drawing.Size(396, 80);
+			this.groupBox10.TabIndex = 11;
+			this.groupBox10.TabStop = false;
+			this.groupBox10.Text = "入力キャンセル";
+			// 
+			// chkMouseKeyboardCancel
+			// 
+			this.chkMouseKeyboardCancel.AutoSize = true;
+			this.chkMouseKeyboardCancel.Location = new System.Drawing.Point(9, 25);
+			this.chkMouseKeyboardCancel.Name = "chkMouseKeyboardCancel";
+			this.chkMouseKeyboardCancel.Size = new System.Drawing.Size(291, 40);
+			this.chkMouseKeyboardCancel.TabIndex = 0;
+			this.chkMouseKeyboardCancel.Text = "マウス操作用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
+			this.chkMouseKeyboardCancel.UseVisualStyleBackColor = true;
+			this.chkMouseKeyboardCancel.CheckedChanged += new System.EventHandler(this.keyboardCancel_CheckedChanged);
 			// 
 			// groupBox7
 			// 
@@ -603,172 +773,6 @@
 			this.btnOk.UseVisualStyleBackColor = true;
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
 			// 
-			// tabCommand
-			// 
-			this.tabCommand.Controls.Add(this.groupBox9);
-			this.tabCommand.Controls.Add(this.groupBox1);
-			this.tabCommand.Location = new System.Drawing.Point(4, 27);
-			this.tabCommand.Name = "tabCommand";
-			this.tabCommand.Padding = new System.Windows.Forms.Padding(3);
-			this.tabCommand.Size = new System.Drawing.Size(412, 338);
-			this.tabCommand.TabIndex = 5;
-			this.tabCommand.Text = "コマンド";
-			this.tabCommand.UseVisualStyleBackColor = true;
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Controls.Add(this.nudIntervalCommandUpDown);
-			this.groupBox1.Controls.Add(this.nudIntervalCommandKeys);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox1.Location = new System.Drawing.Point(8, 7);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(396, 99);
-			this.groupBox1.TabIndex = 9;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "間隔";
-			// 
-			// nudIntervalCommandUpDown
-			// 
-			this.nudIntervalCommandUpDown.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalCommandUpDown.Location = new System.Drawing.Point(244, 65);
-			this.nudIntervalCommandUpDown.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-			this.nudIntervalCommandUpDown.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.nudIntervalCommandUpDown.Name = "nudIntervalCommandUpDown";
-			this.nudIntervalCommandUpDown.Size = new System.Drawing.Size(73, 25);
-			this.nudIntervalCommandUpDown.TabIndex = 9;
-			this.nudIntervalCommandUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.nudIntervalCommandUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			// 
-			// nudIntervalCommandKeys
-			// 
-			this.nudIntervalCommandKeys.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalCommandKeys.Location = new System.Drawing.Point(244, 27);
-			this.nudIntervalCommandKeys.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-			this.nudIntervalCommandKeys.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.nudIntervalCommandKeys.Name = "nudIntervalCommandKeys";
-			this.nudIntervalCommandKeys.Size = new System.Drawing.Size(73, 25);
-			this.nudIntervalCommandKeys.TabIndex = 8;
-			this.nudIntervalCommandKeys.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.nudIntervalCommandKeys.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			// 
-			// label1
-			// 
-			this.label1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label1.Location = new System.Drawing.Point(6, 29);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(194, 29);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "キー入力後の待機時間 :";
-			// 
-			// label4
-			// 
-			this.label4.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label4.Location = new System.Drawing.Point(6, 58);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(194, 31);
-			this.label4.TabIndex = 7;
-			this.label4.Text = "キーを押してから離すまでの時間:";
-			// 
-			// groupBox8
-			// 
-			this.groupBox8.Controls.Add(this.chkToggleKeyboardCancel);
-			this.groupBox8.Controls.Add(this.chkBarrageKeyboardCancel);
-			this.groupBox8.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox8.Location = new System.Drawing.Point(8, 114);
-			this.groupBox8.Name = "groupBox8";
-			this.groupBox8.Size = new System.Drawing.Size(396, 134);
-			this.groupBox8.TabIndex = 10;
-			this.groupBox8.TabStop = false;
-			this.groupBox8.Text = "入力キャンセル";
-			// 
-			// chkBarrageKeyboardCancel
-			// 
-			this.chkBarrageKeyboardCancel.AutoSize = true;
-			this.chkBarrageKeyboardCancel.Location = new System.Drawing.Point(9, 25);
-			this.chkBarrageKeyboardCancel.Name = "chkBarrageKeyboardCancel";
-			this.chkBarrageKeyboardCancel.Size = new System.Drawing.Size(255, 40);
-			this.chkBarrageKeyboardCancel.TabIndex = 0;
-			this.chkBarrageKeyboardCancel.Text = "連打用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
-			this.chkBarrageKeyboardCancel.UseVisualStyleBackColor = true;
-			// 
-			// groupBox9
-			// 
-			this.groupBox9.Controls.Add(this.chkCommandKeyboardCancel);
-			this.groupBox9.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox9.Location = new System.Drawing.Point(8, 112);
-			this.groupBox9.Name = "groupBox9";
-			this.groupBox9.Size = new System.Drawing.Size(396, 80);
-			this.groupBox9.TabIndex = 11;
-			this.groupBox9.TabStop = false;
-			this.groupBox9.Text = "入力キャンセル";
-			// 
-			// chkCommandKeyboardCancel
-			// 
-			this.chkCommandKeyboardCancel.AutoSize = true;
-			this.chkCommandKeyboardCancel.Location = new System.Drawing.Point(9, 25);
-			this.chkCommandKeyboardCancel.Name = "chkCommandKeyboardCancel";
-			this.chkCommandKeyboardCancel.Size = new System.Drawing.Size(279, 40);
-			this.chkCommandKeyboardCancel.TabIndex = 0;
-			this.chkCommandKeyboardCancel.Text = "コマンド用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
-			this.chkCommandKeyboardCancel.UseVisualStyleBackColor = true;
-			// 
-			// groupBox10
-			// 
-			this.groupBox10.Controls.Add(this.chkMouseKeyboardCancel);
-			this.groupBox10.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox10.Location = new System.Drawing.Point(8, 100);
-			this.groupBox10.Name = "groupBox10";
-			this.groupBox10.Size = new System.Drawing.Size(396, 80);
-			this.groupBox10.TabIndex = 11;
-			this.groupBox10.TabStop = false;
-			this.groupBox10.Text = "入力キャンセル";
-			// 
-			// chkMouseKeyboardCancel
-			// 
-			this.chkMouseKeyboardCancel.AutoSize = true;
-			this.chkMouseKeyboardCancel.Location = new System.Drawing.Point(9, 25);
-			this.chkMouseKeyboardCancel.Name = "chkMouseKeyboardCancel";
-			this.chkMouseKeyboardCancel.Size = new System.Drawing.Size(291, 40);
-			this.chkMouseKeyboardCancel.TabIndex = 0;
-			this.chkMouseKeyboardCancel.Text = "マウス操作用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
-			this.chkMouseKeyboardCancel.UseVisualStyleBackColor = true;
-			// 
-			// chkToggleKeyboardCancel
-			// 
-			this.chkToggleKeyboardCancel.AutoSize = true;
-			this.chkToggleKeyboardCancel.Location = new System.Drawing.Point(9, 71);
-			this.chkToggleKeyboardCancel.Name = "chkToggleKeyboardCancel";
-			this.chkToggleKeyboardCancel.Size = new System.Drawing.Size(279, 40);
-			this.chkToggleKeyboardCancel.TabIndex = 1;
-			this.chkToggleKeyboardCancel.Text = "連打切替用にキーボードから入力されたキーを\r\nアラド戦記に伝播しない";
-			this.chkToggleKeyboardCancel.UseVisualStyleBackColor = true;
-			// 
 			// OptionsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -789,11 +793,21 @@
 			this.groupBox6.ResumeLayout(false);
 			this.groupBox6.PerformLayout();
 			this.tabBarrage.ResumeLayout(false);
+			this.groupBox8.ResumeLayout(false);
+			this.groupBox8.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalToggleTimer)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalToggleUpDown)).EndInit();
+			this.tabCommand.ResumeLayout(false);
+			this.groupBox9.ResumeLayout(false);
+			this.groupBox9.PerformLayout();
+			this.groupBox1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).EndInit();
 			this.tabMouse.ResumeLayout(false);
+			this.groupBox10.ResumeLayout(false);
+			this.groupBox10.PerformLayout();
 			this.groupBox7.ResumeLayout(false);
 			this.groupBox7.PerformLayout();
 			this.tabSkillIcon.ResumeLayout(false);
@@ -814,16 +828,6 @@
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
-			this.tabCommand.ResumeLayout(false);
-			this.groupBox1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).EndInit();
-			this.groupBox8.ResumeLayout(false);
-			this.groupBox8.PerformLayout();
-			this.groupBox9.ResumeLayout(false);
-			this.groupBox9.PerformLayout();
-			this.groupBox10.ResumeLayout(false);
-			this.groupBox10.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
