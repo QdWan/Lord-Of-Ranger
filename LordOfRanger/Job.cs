@@ -224,7 +224,7 @@ namespace LordOfRanger {
 			foreach( var t in this._mass.Toggles.Where( t => CommandCheck( key, t.Push ) ) ) {
 				//not typo 
 				this._mass.ChangeEnable( t.Id, t.Enable = this._enableToggle[t.Id] = !this._enableToggle[t.Id] );
-				IconUpdate();
+				DIconUpdate();
 			}
 			_enablekeyE[key] = true;
 		}
@@ -394,6 +394,11 @@ namespace LordOfRanger {
 			_skillLayer.DrawImage( bmp );
 			_skillLayer.UpdateLayeredWindow();
 			_skillLayer.ToTop();
+		}
+		private delegate void DelegateIconUpdate();
+		private void DIconUpdate() {
+			DelegateIconUpdate dlg = IconUpdate;
+			_skillLayer.Invoke( dlg );
 		}
 
 		private void Sleep( int sleeptime ) {
