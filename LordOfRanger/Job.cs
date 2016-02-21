@@ -181,10 +181,6 @@ namespace LordOfRanger {
 				// キーボードから
 				if( this._commandTask?.Status == TaskStatus.Running ) {
 					//コマンド実行中で、
-					if( (byte)Keys.Left <= key && key <= (byte)Keys.Down ) {
-						//入力されたキーが方向キーだった場合
-						return;
-					}
 					if( this._mass.Barrages.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 						//連打キーだった場合コマンドの終了待機
 						await this._commandTask;
