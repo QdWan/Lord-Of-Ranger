@@ -58,8 +58,6 @@ namespace LordOfRanger {
 			internal const string SEQUENCE = "dgvColSequence";
 			internal const string SEND = "dgvColSend";
 			internal const string PUSH = "dgvColPush";
-			internal const string UP = "dgvColUp";
-			internal const string DOWN = "dgvColDown";
 			internal const string DELETE = "dgvColDelete";
 
 		}
@@ -593,28 +591,6 @@ namespace LordOfRanger {
 						EditedFlag = true;
 					}
 					break;
-				case DgvCol.UP: {
-					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-					if( rowIndex >= 1 ) {
-						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						this._mass.UpAt( sequence );
-						var row = this.dgv.Rows[rowIndex];
-						this.dgv.Rows.RemoveAt( rowIndex );
-						this.dgv.Rows.Insert( rowIndex - 1, row );
-					}
-				}
-					break;
-				case DgvCol.DOWN: {
-					var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-					if( rowIndex < this.dgv.Rows.Count - 1 ) {
-						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						this._mass.DownAt( sequence );
-						var row = this.dgv.Rows[rowIndex];
-						this.dgv.Rows.RemoveAt( rowIndex );
-						this.dgv.Rows.Insert( rowIndex + 1, row );
-					}
-				}
-					break;
 			}
 		}
 		
@@ -725,5 +701,32 @@ namespace LordOfRanger {
 
 		#endregion
 
+		private void btnUpRow_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex >= 1 ) {
+				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+				this._mass.UpAt( sequence );
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex - 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex - 1].Selected = true;
+				EditedFlag = true;
+			}
+		}
+
+		private void btnDownRow_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex < this.dgv.Rows.Count - 1 ) {
+				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+				this._mass.DownAt( sequence );
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex + 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex + 1].Selected = true;
+				EditedFlag = true;
+			}
+		}
 	}
 }
