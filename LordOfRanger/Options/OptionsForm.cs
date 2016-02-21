@@ -5,8 +5,7 @@ using LordOfRanger.Keyboard;
 namespace LordOfRanger.Options {
 	internal partial class OptionsForm : Form {
 		private static string _fileName = "./op.cnf";
-
-		private bool _loadedFlag;
+		
 		private byte _tmpHotKey;
 
 		internal OptionsForm() {
@@ -25,12 +24,6 @@ namespace LordOfRanger.Options {
 
 		private void btnApply_Click(object sender, EventArgs e) {
 			SaveOptions();
-		}
-
-		private void keyboardCancel_CheckedChanged(object sender, EventArgs e) {
-			if( ( (CheckBox)sender ).Checked && this._loadedFlag ) {
-				MessageBox.Show( "この機能を使用してXキーを無効にした場合、コンティニューコインの使用が出来なくなります。" ,"キーボード入力の無効化",MessageBoxButtons.OK,MessageBoxIcon.Information);
-			}
 		}
 
 		private void chkSkillIconEnable_CheckedChanged(object sender, EventArgs e) {
@@ -113,7 +106,6 @@ namespace LordOfRanger.Options {
 			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
 			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 
-			this._loadedFlag = true;
 		}
 
 		private void SaveOptions() {
