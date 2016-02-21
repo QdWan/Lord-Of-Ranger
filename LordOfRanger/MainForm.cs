@@ -727,8 +727,6 @@ namespace LordOfRanger {
 			return s;
 		}
 
-		#endregion
-
 		private void btnUpRow_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex >= 1 ) {
@@ -756,5 +754,7 @@ namespace LordOfRanger {
 				EditedFlag = true;
 			}
 		}
+
+		#endregion
 	}
 }
