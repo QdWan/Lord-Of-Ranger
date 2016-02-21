@@ -42,6 +42,7 @@
 			this.dgvColPriority = new System.Windows.Forms.DataGridViewComboBoxColumn();
 			this.dgvColPush = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvColSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvColKeyboardCancel = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.dgvColDelete = new System.Windows.Forms.DataGridViewButtonColumn();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
@@ -208,6 +209,7 @@
             this.dgvColPriority,
             this.dgvColPush,
             this.dgvColSend,
+            this.dgvColKeyboardCancel,
             this.dgvColDelete});
 			this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dgv.Location = new System.Drawing.Point(0, 0);
@@ -216,6 +218,7 @@
 			this.dgv.RowTemplate.Height = 21;
 			this.dgv.Size = new System.Drawing.Size(694, 567);
 			this.dgv.TabIndex = 7;
+			this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellClick);
 			this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
 			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
 			this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
@@ -310,6 +313,17 @@
 			this.dgvColSend.ReadOnly = true;
 			this.dgvColSend.Resizable = System.Windows.Forms.DataGridViewTriState.False;
 			this.dgvColSend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// dgvColKeyboardCancel
+			// 
+			this.dgvColKeyboardCancel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+			this.dgvColKeyboardCancel.FalseValue = false;
+			this.dgvColKeyboardCancel.HeaderText = "キー入力キャンセル";
+			this.dgvColKeyboardCancel.Name = "dgvColKeyboardCancel";
+			this.dgvColKeyboardCancel.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.dgvColKeyboardCancel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.dgvColKeyboardCancel.TrueValue = true;
+			this.dgvColKeyboardCancel.Width = 130;
 			// 
 			// dgvColDelete
 			// 
@@ -614,6 +628,7 @@
 		private System.Windows.Forms.DataGridViewComboBoxColumn dgvColPriority;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColPush;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColSend;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn dgvColKeyboardCancel;
 		private System.Windows.Forms.DataGridViewButtonColumn dgvColDelete;
 	}
 }

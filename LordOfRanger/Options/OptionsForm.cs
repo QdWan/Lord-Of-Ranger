@@ -89,17 +89,13 @@ namespace LordOfRanger.Options {
 			/* barrage/toggle */
 			this.nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
 			this.nudIntervalToggleTimer.Value = Options.options.timerInterval;
-			this.chkBarrageKeyboardCancel.Checked = Options.options.keyboardCancelBarrage;
-			this.chkToggleKeyboardCancel.Checked = Options.options.keyboardCancelToggle;
 
 			/* command */
 			this.nudIntervalCommandKeys.Value = Options.options.commandInterval;
 			this.nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
-			this.chkCommandKeyboardCancel.Checked = Options.options.keyboardCancelCommand;
 
 			/* mouse */
 			this.cmbMouseReClick.SelectedIndex = Options.options.mouseReClick;
-			this.chkMouseKeyboardCancel.Checked = Options.options.keyboardCancelMouse;
 
 			/* icon */
 			this.chkSkillIconEnable.Checked = Options.options.iconViewFlag;
@@ -128,17 +124,13 @@ namespace LordOfRanger.Options {
 			/* barrage/toggle */
 			Options.options.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
 			Options.options.timerInterval = (int)this.nudIntervalToggleTimer.Value;
-			Options.options.keyboardCancelBarrage = this.chkBarrageKeyboardCancel.Checked;
-			Options.options.keyboardCancelToggle = this.chkToggleKeyboardCancel.Checked;
 
 			/* command */
 			Options.options.commandInterval = (int)this.nudIntervalCommandKeys.Value;
 			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
-			Options.options.keyboardCancelCommand = this.chkCommandKeyboardCancel.Checked;
 
 			/* mouse */
 			Options.options.mouseReClick = this.cmbMouseReClick.SelectedIndex;
-			Options.options.keyboardCancelMouse = this.chkMouseKeyboardCancel.Checked;
 
 			/* icon */
 			Options.options.iconViewFlag = this.chkSkillIconEnable.Checked;

@@ -184,6 +184,20 @@ namespace LordOfRanger.Setting {
 			return false;
 		}
 
+		/// <summary>
+		/// キーボードキャンセル有効無効の切り替え
+		/// </summary>
+		/// <param name="sequence"> 有効無効を切り替えるインスタンスのid </param>
+		/// <param name="enable"> 有効無効どちらに切り替えるか </param>
+		/// <returns></returns>
+		internal void ChangeKeyboardCancel( int sequence, bool enable) {
+			foreach( var x in this._value.Where( x => x.Id == sequence ) ) {
+				x.KeyboardCancel = enable;
+				break;
+			}
+			CancelListReBuild();
+		}
+
 		#endregion
 
 		/// <summary>
@@ -231,6 +245,7 @@ namespace LordOfRanger.Setting {
 				return 0x00;
 			}
 		}
+
 		private void CancelListReBuild() {
 			this._cancelList = this._barrageList.CancelList.Concat(this._commandList.CancelList).Concat(this._toggleList.CancelList).Concat(this._mouseList.CancelList ).Distinct().ToArray();
 		}

@@ -66,5 +66,10 @@ namespace LordOfRanger.Setting {
 			get;
 			set;
 		}
+
+		internal abstract bool KeyboardCancel {
+			get;
+			set;
+		}
 	}
 }

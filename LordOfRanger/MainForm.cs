@@ -58,6 +58,7 @@ namespace LordOfRanger {
 			internal const string SEQUENCE = "dgvColSequence";
 			internal const string SEND = "dgvColSend";
 			internal const string PUSH = "dgvColPush";
+			internal const string KEYBOARD_CANCEL = "dgvColKeyboardCancel";
 			internal const string DELETE = "dgvColDelete";
 
 		}
@@ -260,6 +261,7 @@ namespace LordOfRanger {
 				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = da.Priority.ToString();
 				this.dgv.Rows[row].Cells[DgvCol.ENABLE_SKILL_ICON].Value = da.SkillIcon;
 				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
+				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
 			}
 		}
 
@@ -591,9 +593,35 @@ namespace LordOfRanger {
 						EditedFlag = true;
 					}
 					break;
+				case DgvCol.KEYBOARD_CANCEL: {
+					this.dgv.RefreshEdit();
+					break;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// データグリッドビューのセルのクリック時に呼ばれる
+		/// チェックボックスが小さくて押しづらいためこのイベントで代用する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void dgv_CellClick( object sender, DataGridViewCellEventArgs e ) {
+			if( this.dgv.SelectedCells.Count != 1 ) {
+				return;
+			}
+			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+				case DgvCol.KEYBOARD_CANCEL:
+					var dgvcbc = (DataGridViewCheckBoxCell)this.dgv.SelectedCells[0];
+					dgvcbc.Value = dgvcbc.Value == dgvcbc.TrueValue ? dgvcbc.FalseValue : dgvcbc.TrueValue;
+					var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+					this._mass.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
+					this.dgv.RefreshEdit();
+					break;
+			}
+
+		}
+
 		/// <summary>
 		/// セルの変更を検知し、変更フラグをたてる。
 		/// </summary>
