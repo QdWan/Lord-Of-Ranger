@@ -8,7 +8,7 @@ using System.Threading;
 namespace LordOfRanger.Setting.Version {
 	internal class V4 : IF {
 
-		private const int VERSION = 3;
+		private const int VERSION = 4;
 		private Mass _mass;
 
 		public V4( Mass instance ) {
