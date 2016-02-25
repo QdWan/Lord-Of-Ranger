@@ -19,7 +19,7 @@ namespace LordOfRanger.Setting.Version {
 
 		private struct ArdHeader {
 			internal int id;
-			internal DataAb.InstanceType instanceType;
+			internal Act.InstanceType instanceType;
 			internal int priority;
 			internal int skillIconSize;
 			internal int disableSkillIconSize;
@@ -63,7 +63,7 @@ namespace LordOfRanger.Setting.Version {
 				var ardHeader = new ArdHeader();
 				ardHeader.id = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				ardHeader.instanceType = (DataAb.InstanceType)BitConverter.ToInt32( array, offset );
+				ardHeader.instanceType = (Act.InstanceType)BitConverter.ToInt32( array, offset );
 				offset += 4;
 				ardHeader.priority = BitConverter.ToInt32( array, offset );
 				offset += 4;
@@ -80,7 +80,7 @@ namespace LordOfRanger.Setting.Version {
 
 			foreach( var ardHeader in headers ) {
 				switch( ardHeader.instanceType ) {
-					case DataAb.InstanceType.COMMAND:
+					case Act.InstanceType.COMMAND:
 						var c = new Command();
 						c.Id = ardHeader.id;
 						c.Priority = ardHeader.priority;
@@ -94,7 +94,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						this._mass.Add( c );
 						break;
-					case DataAb.InstanceType.BARRAGE:
+					case Act.InstanceType.BARRAGE:
 						var b = new Barrage();
 						b.Id = ardHeader.id;
 						b.Priority = ardHeader.priority;
@@ -108,7 +108,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						this._mass.Add( b );
 						break;
-					case DataAb.InstanceType.TOGGLE:
+					case Act.InstanceType.TOGGLE:
 						var t = new Toggle();
 						t.Id = ardHeader.id;
 						t.Priority = ardHeader.priority;
@@ -202,7 +202,7 @@ namespace LordOfRanger.Setting.Version {
 				data.AddRange( skillIcon );
 				data.AddRange( disableSkillIcon );
 				switch( da.Type ) {
-					case DataAb.InstanceType.COMMAND:
+					case Act.InstanceType.COMMAND:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -212,7 +212,7 @@ namespace LordOfRanger.Setting.Version {
 						//sendList
 						data.AddRange( ( (Command)da ).sendList );
 						break;
-					case DataAb.InstanceType.BARRAGE:
+					case Act.InstanceType.BARRAGE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -222,7 +222,7 @@ namespace LordOfRanger.Setting.Version {
 						//send
 						data.Add( ( (Barrage)da ).send );
 						break;
-					case DataAb.InstanceType.TOGGLE:
+					case Act.InstanceType.TOGGLE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push

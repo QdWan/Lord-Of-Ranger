@@ -9,38 +9,38 @@ using LordOfRanger.Setting.Version;
 namespace LordOfRanger.Setting {
 	/// <summary>
 	/// ユーザーが作成した設定ファイル1つ分を纏めるクラス
-	/// 中身はDataAbを継承したCommand,Toggle,Barrage,Mouseクラスのインスタンスの配列
+	/// 中身はActを継承したCommand,Toggle,Barrage,Mouseクラスのインスタンスの配列
 	/// </summary>
 	internal class Mass {
 		internal static readonly string SETTING_PATH = Application.StartupPath + "/setting/";
 		internal string name;
 		internal byte hotKey = 0x00;
 		internal const string EXTENSION = ".ard";
-		private List<DataAb> _value = new List<DataAb>();
-		internal IEnumerable<DataAb> Value {
+		private List<Act> _value = new List<Act>();
+		internal IEnumerable<Act> Value {
 			get {
 				return this._value;
 			}
 		}
-		private DataAbList<Barrage> _barrageList;
+		private ActList<Barrage> _barrageList;
 		internal IEnumerable<Barrage> Barrages {
 			get {
 				return this._barrageList.Value;
 			}
 		}
-		private DataAbList<Command> _commandList;
+		private ActList<Command> _commandList;
 		internal IEnumerable<Command> Commands {
 			get {
 				return this._commandList.Value;
 			}
 		}
-		private DataAbList<Toggle> _toggleList;
+		private ActList<Toggle> _toggleList;
 		internal IEnumerable<Toggle> Toggles {
 			get {
 				return this._toggleList.Value;
 			}
 		}
-		private DataAbList<Mouse> _mouseList;
+		private ActList<Mouse> _mouseList;
 		internal IEnumerable<Mouse> Mice {
 			get {
 				return this._mouseList.Value;
@@ -81,23 +81,23 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="instance"> 追加するインスタンス </param>
 		/// <returns> 追加されたインスタンスのid </returns>
-		internal int Add( DataAb instance ) {
+		internal int Add( Act instance ) {
 			if( instance.Id == 0 ) {
 				instance.Id = ++Sequence;
 			}
 			this._value.Add( instance );
 
 			switch( instance.Type ) {
-				case DataAb.InstanceType.BARRAGE:
+				case Act.InstanceType.BARRAGE:
 					this._barrageList.Add( (Barrage)instance );
 					break;
-				case DataAb.InstanceType.COMMAND:
+				case Act.InstanceType.COMMAND:
 					this._commandList.Add( (Command)instance );
 					break;
-				case DataAb.InstanceType.TOGGLE:
+				case Act.InstanceType.TOGGLE:
 					this._toggleList.Add( (Toggle)instance );
 					break;
-				case DataAb.InstanceType.MOUSE:
+				case Act.InstanceType.MOUSE:
 					this._mouseList.Add( (Mouse)instance );
 					break;
 			}
@@ -116,16 +116,16 @@ namespace LordOfRanger.Setting {
 					var instanceType = this._value[i].Type;
 
 					switch( instanceType ) {
-						case DataAb.InstanceType.BARRAGE:
+						case Act.InstanceType.BARRAGE:
 							this._barrageList.RemoveAt( sequence );
 							break;
-						case DataAb.InstanceType.COMMAND:
+						case Act.InstanceType.COMMAND:
 							this._commandList.RemoveAt( sequence );
 							break;
-						case DataAb.InstanceType.TOGGLE:
+						case Act.InstanceType.TOGGLE:
 							this._toggleList.RemoveAt( sequence );
 							break;
-						case DataAb.InstanceType.MOUSE:
+						case Act.InstanceType.MOUSE:
 							this._mouseList.RemoveAt( sequence );
 							break;
 					}
@@ -204,11 +204,11 @@ namespace LordOfRanger.Setting {
 		/// データ配列の初期化
 		/// </summary>
 		internal void Init() {
-			this._value = new List<DataAb>();
-			this._barrageList = new DataAbList<Barrage>();
-			this._commandList = new DataAbList<Command>();
-			this._toggleList = new DataAbList<Toggle>();
-			this._mouseList = new DataAbList<Mouse>();
+			this._value = new List<Act>();
+			this._barrageList = new ActList<Barrage>();
+			this._commandList = new ActList<Command>();
+			this._toggleList = new ActList<Toggle>();
+			this._mouseList = new ActList<Mouse>();
 		}
 
 		/// <summary>

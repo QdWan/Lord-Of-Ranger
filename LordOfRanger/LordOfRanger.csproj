@@ -167,7 +167,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting\Barrage.cs" />
     <Compile Include="Setting\Command.cs" />
-    <Compile Include="Setting\DataAb.cs" />
+    <Compile Include="Setting\Act.cs" />
     <Compile Include="Setting\Mass.cs" />
     <Compile Include="Setting\Mouse.cs" />
     <Compile Include="Setting\Toggle.cs" />

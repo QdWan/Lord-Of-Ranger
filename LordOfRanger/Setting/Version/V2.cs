@@ -18,7 +18,7 @@ namespace LordOfRanger.Setting.Version {
 
 		struct ArdHeader {
 			internal int id;
-			internal DataAb.InstanceType instanceType;
+			internal Act.InstanceType instanceType;
 			internal int priority;
 			internal int skillIconSize;
 			internal int disableSkillIconSize;
@@ -58,7 +58,7 @@ namespace LordOfRanger.Setting.Version {
 				ArdHeader ardHeader = new ArdHeader();
 				ardHeader.id = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				ardHeader.instanceType = (DataAb.InstanceType)BitConverter.ToInt32( array, offset );
+				ardHeader.instanceType = (Act.InstanceType)BitConverter.ToInt32( array, offset );
 				offset += 4;
 				ardHeader.priority = BitConverter.ToInt32( array, offset );
 				offset += 4;
@@ -76,7 +76,7 @@ namespace LordOfRanger.Setting.Version {
 
 			foreach( ArdHeader ardHeader in headers ) {
 				switch( ardHeader.instanceType ) {
-					case DataAb.InstanceType.COMMAND:
+					case Act.InstanceType.COMMAND:
 						Command c = new Command();
 						c.Id = ardHeader.id;
 						c.Priority = ardHeader.priority;
@@ -90,7 +90,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						this._mass.Add( c );
 						break;
-					case DataAb.InstanceType.BARRAGE:
+					case Act.InstanceType.BARRAGE:
 						Barrage b = new Barrage();
 						b.Id = ardHeader.id;
 						b.Priority = ardHeader.priority;
@@ -104,7 +104,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						this._mass.Add( b );
 						break;
-					case DataAb.InstanceType.TOGGLE:
+					case Act.InstanceType.TOGGLE:
 						Toggle t = new Toggle();
 						t.Id = ardHeader.id;
 						t.Priority = ardHeader.priority;
@@ -173,7 +173,7 @@ namespace LordOfRanger.Setting.Version {
 				(sendList variable || send 8bit)
 			*/
 			List<byte> data = new List<byte>();
-			foreach( DataAb da in this._mass.Value ) {
+			foreach( Act da in this._mass.Value ) {
 				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
 
 				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];
@@ -192,7 +192,7 @@ namespace LordOfRanger.Setting.Version {
 				data.AddRange( skillIcon );
 				data.AddRange( disableSkillIcon );
 				switch( da.Type ) {
-					case DataAb.InstanceType.COMMAND:
+					case Act.InstanceType.COMMAND:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -202,7 +202,7 @@ namespace LordOfRanger.Setting.Version {
 						//sendList
 						data.AddRange( ( (Command)da ).sendList );
 						break;
-					case DataAb.InstanceType.BARRAGE:
+					case Act.InstanceType.BARRAGE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push
@@ -212,7 +212,7 @@ namespace LordOfRanger.Setting.Version {
 						//send
 						data.Add( ( (Barrage)da ).send );
 						break;
-					case DataAb.InstanceType.TOGGLE:
+					case Act.InstanceType.TOGGLE:
 						//pushDataSize
 						header.AddRange( BitConverter.GetBytes( 1 ) );
 						//push

@@ -3,8 +3,9 @@ using System.Drawing;
 using System.Linq;
 
 namespace LordOfRanger.Setting {
-	internal abstract class DataAb {
+	internal class Act {
 
+		protected InstanceType type;
 		internal enum InstanceType {
 			COMMAND,
 			BARRAGE,
@@ -12,7 +13,7 @@ namespace LordOfRanger.Setting {
 			MOUSE
 		}
 
-		internal abstract byte[] Push {
+		internal byte[] Push {
 			get;
 			set;
 		}
@@ -21,7 +22,7 @@ namespace LordOfRanger.Setting {
 		/// 自動で振られる連番
 		/// これによって操作するインスタンスを識別する
 		/// </summary>
-		internal abstract int Id {
+		internal int Id {
 			get;
 			set;
 		}
@@ -30,15 +31,17 @@ namespace LordOfRanger.Setting {
 		/// インスタンスのタイプ
 		/// COMMAND,BARRAGE,TOGGLE,MOUSEの4パターンある
 		/// </summary>
-		internal abstract InstanceType Type {
-			get;
+		internal InstanceType Type {
+			get {
+				return this.type;
+			}
 		}
 
 		/// <summary>
 		/// 優先度
 		/// (未実装)
 		/// </summary>
-		internal abstract int Priority {
+		internal int Priority {
 			get;
 			set;
 		}
@@ -46,7 +49,7 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// レイヤウィンドウに表示するためのスキルアイコン
 		/// </summary>
-		internal abstract Bitmap SkillIcon {
+		internal Bitmap SkillIcon {
 			get;
 			set;
 		}
@@ -54,7 +57,7 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// レイヤウィンドウに表示するためのスキルアイコン(無効用)
 		/// </summary>
-		internal abstract Bitmap DisableSkillIcon {
+		internal Bitmap DisableSkillIcon {
 			get;
 			set;
 		}
@@ -62,21 +65,21 @@ namespace LordOfRanger.Setting {
 		/// <summary>
 		/// このインスタンスの設定が現在有効か無効かのフラグ
 		/// </summary>
-		internal abstract bool Enable {
+		internal bool Enable {
 			get;
 			set;
-		}
+		} = true;
 
-		internal abstract bool KeyboardCancel {
+		internal bool KeyboardCancel {
 			get;
 			set;
 		}
 	}
 
 
-	internal class DataAbList<TDataAb> where TDataAb : DataAb {
-		private List<TDataAb> _value = new List<TDataAb>();
-		internal IEnumerable<TDataAb> Value {
+	internal class ActList<TAct> where TAct : Act {
+		private List<TAct> _value = new List<TAct>();
+		internal IEnumerable<TAct> Value {
 			get {
 				return this._value;
 			}
@@ -89,8 +92,8 @@ namespace LordOfRanger.Setting {
 			}
 		}
 
-		internal void Add( TDataAb instance ) {
-			if( instance.GetType() == typeof(TDataAb) ) {
+		internal void Add( TAct instance ) {
+			if( instance.GetType() == typeof(TAct) ) {
 				this._value.Add( instance );
 			}
 		}

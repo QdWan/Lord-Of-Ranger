@@ -5,52 +5,14 @@ namespace LordOfRanger.Setting {
 	/// このクラスのインスタンス1つがユーザーがメインウィンドウのDataGridViewで設定したファイルの1行分にあたる。
 	/// ロードオブレンジャーやバルムンクでの使用を想定
 	/// キーボードでpushキーを押下すると、sendListのキーが順に送信されていく。
-	/// パラメータの詳細はDataAb参照
+	/// パラメータの詳細はAct参照
 	/// 細かい実装についてはJobクラスを参照
 	/// </summary>
-	internal class Command :DataAb {
+	internal class Command :Act {
 		
 		internal byte[] sendList = new byte[0];
-
-		internal override byte[] Push {
-			get;
-			set;
-		}
-
-		internal override int Id {
-			get;
-			set;
-		}
-
-		internal override InstanceType Type {
-			get {
-				return InstanceType.COMMAND;
-			}
-		}
-
-		internal override int Priority {
-			get;
-			set;
-		}
-
-		internal override Bitmap SkillIcon {
-			get;
-			set;
-		}
-
-		internal override Bitmap DisableSkillIcon {
-			get;
-			set;
-		}
-
-		internal override bool Enable {
-			get;
-			set;
-		} = true;
-
-		internal override bool KeyboardCancel {
-			get;
-			set;
+		internal Command() {
+			this.type = InstanceType.COMMAND;
 		}
 	}
 }

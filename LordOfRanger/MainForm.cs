@@ -233,22 +233,22 @@ namespace LordOfRanger {
 				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
-					case DataAb.InstanceType.COMMAND:
+					case Act.InstanceType.COMMAND:
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
 						mode = Mode.COMMAND;
 						break;
-					case DataAb.InstanceType.BARRAGE:
+					case Act.InstanceType.BARRAGE:
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
 						mode = Mode.BARRAGE;
 						break;
-					case DataAb.InstanceType.TOGGLE:
+					case Act.InstanceType.TOGGLE:
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push, " + " );
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
 						mode = Mode.TOGGLE;
 						break;
-					case DataAb.InstanceType.MOUSE:
+					case Act.InstanceType.MOUSE:
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push ," + ");
 						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
 						mode = Mode.MOUSE;
@@ -483,11 +483,11 @@ namespace LordOfRanger {
 				case DgvCol.PUSH: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in this._mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
+					foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
 						ksf.keyType = KeySetForm.KeyType.MULTI;
 						ksf.ShowDialog();
 						if( ksf.result == KeySetForm.Result.OK ) {
-							dataAb.Push = ksf.KeyData;
+							act.Push = ksf.KeyData;
 						}
 						break;
 					}
@@ -501,37 +501,37 @@ namespace LordOfRanger {
 				case DgvCol.SEND: {
 					//textbox
 					var ksf = new KeySetForm();
-					foreach( var dataAb in this._mass.Value.Where( dataAb => dataAb.Id == sequence ) ) {
-						switch( dataAb.Type ) {
-							case DataAb.InstanceType.COMMAND:
+					foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+						switch( act.Type ) {
+							case Act.InstanceType.COMMAND:
 								ksf.keyType = KeySetForm.KeyType.MULTI;
 								ksf.ShowDialog();
 								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Command)( dataAb ) ).sendList = ksf.KeyData;
+									( (Command)( act ) ).sendList = ksf.KeyData;
 								}
 								break;
-							case DataAb.InstanceType.BARRAGE:
+							case Act.InstanceType.BARRAGE:
 								ksf.ShowDialog();
 								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Barrage)dataAb ).send = ksf.KeyData[0];
+									( (Barrage)act ).send = ksf.KeyData[0];
 								}
 								break;
-							case DataAb.InstanceType.TOGGLE:
+							case Act.InstanceType.TOGGLE:
 								ksf.ShowDialog();
 								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Toggle)dataAb ).send = ksf.KeyData[0];
+									( (Toggle)act ).send = ksf.KeyData[0];
 								}
 								break;
-							case DataAb.InstanceType.MOUSE:
+							case Act.InstanceType.MOUSE:
 								ksf.Dispose();
 								var msf = new MouseSetForm();
-								msf.MouseData = ((Setting.Mouse)dataAb ).sendList;
+								msf.MouseData = ((Setting.Mouse)act ).sendList;
 								msf.ShowDialog();
 								if( msf.result == MouseSetForm.Result.OK ) {
 									if( msf.editedFlag ) {
 										EditedFlag = true;
 									}
-									( (Setting.Mouse)dataAb ).sendList = msf.MouseData;
+									( (Setting.Mouse)act ).sendList = msf.MouseData;
 									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
 								}
 								this._otherWindowOpen = false;
@@ -555,14 +555,14 @@ namespace LordOfRanger {
 					ofd.RestoreDirectory = true;
 					if( ofd.ShowDialog() == DialogResult.OK ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( var dataAb in this._mass.Value ) {
-							if( dataAb.Id == sequence ) {
+						foreach( var act in this._mass.Value ) {
+							if( act.Id == sequence ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:
-										dataAb.SkillIcon = new Bitmap( ofd.FileName );
+										act.SkillIcon = new Bitmap( ofd.FileName );
 										break;
 									case DgvCol.DISABLE_SKILL_ICON:
-										dataAb.DisableSkillIcon = new Bitmap( ofd.FileName );
+										act.DisableSkillIcon = new Bitmap( ofd.FileName );
 										break;
 								}
 							}
