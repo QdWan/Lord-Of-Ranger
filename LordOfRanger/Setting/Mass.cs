@@ -22,25 +22,25 @@ namespace LordOfRanger.Setting {
 				return this._value;
 			}
 		}
-		private BarrageList _barrageList;
+		private DataAbList<Barrage> _barrageList;
 		internal IEnumerable<Barrage> Barrages {
 			get {
 				return this._barrageList.Value;
 			}
 		}
-		private CommandList _commandList;
+		private DataAbList<Command> _commandList;
 		internal IEnumerable<Command> Commands {
 			get {
 				return this._commandList.Value;
 			}
 		}
-		private ToggleList _toggleList;
+		private DataAbList<Toggle> _toggleList;
 		internal IEnumerable<Toggle> Toggles {
 			get {
 				return this._toggleList.Value;
 			}
 		}
-		private MouseList _mouseList;
+		private DataAbList<Mouse> _mouseList;
 		internal IEnumerable<Mouse> Mice {
 			get {
 				return this._mouseList.Value;
@@ -205,10 +205,10 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		internal void Init() {
 			this._value = new List<DataAb>();
-			this._barrageList = new BarrageList();
-			this._commandList = new CommandList();
-			this._toggleList = new ToggleList();
-			this._mouseList = new MouseList();
+			this._barrageList = new DataAbList<Barrage>();
+			this._commandList = new DataAbList<Command>();
+			this._toggleList = new DataAbList<Toggle>();
+			this._mouseList = new DataAbList<Mouse>();
 		}
 
 		/// <summary>
