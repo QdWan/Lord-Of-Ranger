@@ -109,7 +109,7 @@ namespace LordOfRanger.Setting {
 		/// 行削除
 		/// </summary>
 		/// <param name="sequence"> 削除するインスタンスのid </param>
-		/// <returns> 削除が成功したかどうか </returns>
+		/// <returns></returns>
 		internal void RemoveAt( int sequence ) {
 			for( var i = 0; i < this._value.Count; i++ ) {
 				if( this._value[i].Id == sequence ) {
@@ -140,34 +140,32 @@ namespace LordOfRanger.Setting {
 		/// 行を1行上へ移動
 		/// </summary>
 		/// <param name="sequence"> 移動するインスタンスのid </param>
-		/// <returns> 移動が成功したかどうか </returns>
-		internal bool UpAt( int sequence ) {
+		/// <returns></returns>
+		internal void UpAt( int sequence ) {
 			for( var i = 0; i < this._value.Count; i++ ) {
 				if( this._value[i].Id == sequence ) {
 					var da = this._value[i];
 					this._value.RemoveAt( i );
 					this._value.Insert( i - 1, da );
-					return true;
+					return;
 				}
 			}
-			return false;
 		}
 
 		/// <summary>
 		/// 行を1行下へ移動
 		/// </summary>
 		/// <param name="sequence"> 移動するインスタンスのid </param>
-		/// <returns> 移動が成功したかどうか </returns>
-		internal bool DownAt( int sequence ) {
+		/// <returns></returns>
+		internal void DownAt( int sequence ) {
 			for( var i = 0; i < this._value.Count; i++ ) {
 				if( this._value[i].Id == sequence ) {
 					var da = this._value[i];
 					this._value.RemoveAt( i );
 					this._value.Insert( i + 1, da );
-					return true;
+					return;
 				}
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -175,13 +173,12 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="sequence"> 有効無効を切り替えるインスタンスのid </param>
 		/// <param name="enable"> 有効無効どちらに切り替えるか </param>
-		/// <returns> 切り替えが成功したかどうか </returns>
-		internal bool ChangeEnable( int sequence, bool enable ) {
+		/// <returns></returns>
+		internal void ChangeEnable( int sequence, bool enable ) {
 			foreach( var t in this._value.Where( t => t.Id == sequence ) ) {
 				t.Enable = enable;
-				return true;
+				return;
 			}
-			return false;
 		}
 
 		/// <summary>
