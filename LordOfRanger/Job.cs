@@ -391,10 +391,9 @@ namespace LordOfRanger {
 			_skillLayer.UpdateLayeredWindow();
 			_skillLayer.ToTop();
 		}
-		private delegate void DelegateIconUpdate();
 		private void DIconUpdate() {
-			DelegateIconUpdate dlg = IconUpdate;
-			_skillLayer.Invoke( dlg );
+			Action dlg = IconUpdate;
+			dlg();
 		}
 
 		private void Sleep( int sleeptime ) {
