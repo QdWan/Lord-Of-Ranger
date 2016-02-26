@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+
 namespace LordOfRanger.Mouse {
 	///<summary>マウスが入力されたときに実行されるメソッドを表すイベントハンドラ。</summary>
 	public delegate void MouseHookedEventHandler( object sender, MouseHookedEventArgs e );

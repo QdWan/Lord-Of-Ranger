@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace LordOfRanger.Setting {
+﻿namespace LordOfRanger.Setting {
 	/// <summary>
 	/// このクラスのインスタンス1つがユーザーがメインウィンドウのDataGridViewで設定したファイルの1行分にあたる。
 	/// 通常攻撃の連打などに使う。
