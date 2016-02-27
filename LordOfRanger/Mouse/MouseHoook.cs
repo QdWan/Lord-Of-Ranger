@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
+// ReSharper disable All
 
 namespace LordOfRanger.Mouse {
 	///<summary>マウスが入力されたときに実行されるメソッドを表すイベントハンドラ。</summary>

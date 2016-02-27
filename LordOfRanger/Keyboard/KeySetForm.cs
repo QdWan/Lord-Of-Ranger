@@ -10,8 +10,8 @@ namespace LordOfRanger.Keyboard {
 	/// </summary>
 	internal partial class KeySetForm :Form {
 
-		private List<byte> _keyList = new List<byte>();
-		private KeyboardHook _keyboardHook;
+		private readonly List<byte> _keyList = new List<byte>();
+		private readonly KeyboardHook _keyboardHook;
 		internal Result result;
 		internal KeyType keyType;
 
@@ -50,14 +50,19 @@ namespace LordOfRanger.Keyboard {
 				return;
 			}
 			var keycode = (byte)e.KeyCode;
-			if( keycode == (byte)Keys.Return ) {
-				this.result = Result.OK;
-				Close();
-				return;
-			} else if( keycode == (byte)Keys.Escape && this._keyList.Count == 0 ) {
-				this.result = Result.CANCEL;
-				Close();
-				return;
+			// ReSharper disable once SwitchStatementMissingSomeCases
+			switch( keycode ) {
+				case (byte)Keys.Return:
+					this.result = Result.OK;
+					Close();
+					return;
+				case (byte)Keys.Escape:
+					if( this._keyList.Count == 0 ) {
+						this.result = Result.CANCEL;
+						Close();
+						return;
+					}
+					break;
 			}
 			switch( this.keyType ) {
 				case KeyType.SINGLE:
@@ -83,6 +88,8 @@ namespace LordOfRanger.Keyboard {
 						this.lblInputKey.Text = this.lblInputKey.Text + " + " + Key.KEY_TEXT[keycode];
 					}
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
@@ -97,15 +104,18 @@ namespace LordOfRanger.Keyboard {
 			Close();
 		}
 
-		class NotForcusButton :Button {
+		private class NotForcusButton : Button {
+
 			public NotForcusButton() {
 				SetStyle( ControlStyles.Selectable, false );
 			}
+
 		}
 
 		private void KeySetForm_FormClosed( object sender, FormClosedEventArgs e ) {
 			this._keyboardHook.KeyboardHooked -= KeyHookEvent;
 			this._keyboardHook.Dispose();
 		}
+
 	}
 }

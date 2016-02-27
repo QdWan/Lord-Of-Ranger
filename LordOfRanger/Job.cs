@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using LordOfRanger.Keyboard;
 using LordOfRanger.Mouse;
 using LordOfRanger.Setting;
+// ReSharper disable RedundantIfElseBlock
 
 namespace LordOfRanger {
 
@@ -15,10 +16,9 @@ namespace LordOfRanger {
 	/// Setting.Massを読み込み、それを実行するクラス
 	/// </summary>
 	class Job {
-		private static readonly byte[] ARROW_KEY_LIST = new byte[] { (byte)Keys.Left, (byte)Keys.Right, (byte)Keys.Up, (byte)Keys.Down };
 		private static Dictionary<byte, bool> _enablekeyF;
 		private static Dictionary<byte, bool> _enablekeyE;
-		private Dictionary<int, bool> _enableToggle;
+		private readonly Dictionary<int, bool> _enableToggle;
 		private static byte _frontDirection = (byte)Keys.Left;
 		private static byte _backDirection = (byte)Keys.Right;
 		private Task _commandTask;
@@ -27,7 +27,7 @@ namespace LordOfRanger {
 		private static SkillLayer _skillLayer;
 
 		private const int ICON_SIZE = 30;
-		private Mass _mass;
+		private readonly Mass _mass;
 
 		private bool _barrageEnable = true;
 		private bool _alive = true;
@@ -131,15 +131,17 @@ namespace LordOfRanger {
 							switch( send.op ) {
 								case Set.Operation.LEFT:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
-									Mouse.Click.Left( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
+									Click.Left( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
 									break;
 								case Set.Operation.RIGHT:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
-									Mouse.Click.Right( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
+									Click.Right( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
 									break;
 								case Set.Operation.MOVE:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
 									break;
+								default:
+									throw new ArgumentOutOfRangeException();
 							}
 							if( this._mouseTaskCancelToken.Token.IsCancellationRequested ) {
 								throw new TaskCanceledException();
@@ -148,8 +150,6 @@ namespace LordOfRanger {
 						}
 					}, this._mouseTaskCancelToken.Token );
 				}
-			} else {
-
 			}
 		}
 
@@ -165,26 +165,31 @@ namespace LordOfRanger {
 		/// <param name="e"> 押されたキー情報 </param>
 		internal async void KeydownEvent( KeyboardHookedEventArgs e ) {
 			var key = (byte)e.KeyCode;
+
 			//このキー入力がどこから発行されたものか判定
 			if( e.ExtraInfo == (int)Key.EXTRA_INFO ) {
 				//LORから
-				if( key == (byte)Keys.Left ) {
-					_frontDirection = (byte)Keys.Left;
-					_backDirection = (byte)Keys.Right;
-				} else if( key == (byte)Keys.Right ) {
-					_frontDirection = (byte)Keys.Right;
-					_backDirection = (byte)Keys.Left;
+				switch( key ) {
+					case (byte)Keys.Left:
+						_frontDirection = (byte)Keys.Left;
+						_backDirection = (byte)Keys.Right;
+						break;
+					case (byte)Keys.Right:
+						_frontDirection = (byte)Keys.Right;
+						_backDirection = (byte)Keys.Left;
+						break;
+					default:
+						return;
 				}
-				return;
 			} else {
 				// キーボードから
 				if( this._commandTask?.Status == TaskStatus.Running ) {
 					//コマンド実行中で、
-					if( this._mass.Barrages.Any( b => b.Push.Contains(key) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
+					if( this._mass.Barrages.Any( b => b.Push.Contains( key ) && !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 						//連打キーだった場合コマンドの終了待機
 						await this._commandTask;
 					}
-					if( this._mass.Commands.Any( c => CommandCheck( key, c.Push ) )) {
+					if( this._mass.Commands.Any( c => CommandCheck( key, c.Push ) ) ) {
 						//コマンドキーだった場合
 						return;
 					}
@@ -198,12 +203,11 @@ namespace LordOfRanger {
 
 			//コマンド
 			foreach( var c in this._mass.Commands.Where( c => CommandCheck( key, c.Push ) ) ) {
-				this._commandTask = Task.Run( () => {
-					ThreadCommand( c.sendList, left, right );
-				} );
+				this._commandTask = Task.Run( () => ThreadCommand( c.sendList, left, right ) );
 				break;
 			}
 
+			// ReSharper disable once SwitchStatementMissingSomeCases
 			switch( key ) {
 				case (byte)Keys.Left:
 					_frontDirection = (byte)Keys.Left;
@@ -231,9 +235,10 @@ namespace LordOfRanger {
 		/// <param name="sendList">送信するキー</param>
 		/// <param name="front">キャラクターの向いている方向</param>
 		/// <param name="back">キャラクターの背中側の方向</param>
-		private void ThreadCommand( IEnumerable<byte> sendList, byte front, byte back ) {
+		private static void ThreadCommand( IEnumerable<byte> sendList, byte front, byte back ) {
 			foreach( var sendKey in sendList ) {
 				var tmpSendKey = sendKey;
+				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( tmpSendKey ) {
 					case (byte)Keys.Right:
 						tmpSendKey = back;
@@ -258,6 +263,7 @@ namespace LordOfRanger {
 			if( this._commandTask?.Status == TaskStatus.Running ) {
 				return;
 			}
+
 			//連打
 			foreach( var b in this._mass.Barrages.Where( b => !b.Push.Any( k => !_enablekeyE[k] ) ) ) {
 				KeyPush( b.send );
@@ -275,20 +281,7 @@ namespace LordOfRanger {
 
 		#endregion
 
-		/// <summary>
-		/// コマンドを実行するべきかどうかのチェックを行う
-		/// </summary>
-		/// <param name="key"> 押下されたキー </param>
-		/// <param name="key2"> 判定するキー </param>
-		/// <returns> 実行すべきかどうか </returns>
-		private bool CommandCheck( byte key, byte key2 ) {
-			/*
-				押されたキーが判定するキーと一致しているかどうか
-				押しっぱなしの2回目以降ではないか
-				2回目以降の場合、EnablekeyEがtrueになっているため、実行するべきではないと判定される。
-			*/
-			return key == key2 && !_enablekeyE[key2] && _enablekeyF[key2];
-		}
+
 
 		/// <summary>
 		/// コマンドを実行するべきかどうかのチェックを行う
@@ -296,7 +289,7 @@ namespace LordOfRanger {
 		/// <param name="key"> 押下されたキー </param>
 		/// <param name="keyArr"> 判定するキー配列 </param>
 		/// <returns> 実行すべきかどうか </returns>
-		private bool CommandCheck( byte key, byte[] keyArr ) {
+		private static bool CommandCheck( byte key, byte[] keyArr ) {
 			/*
 				押されたキーが判定するキーと一致しているかどうか
 				押しっぱなしの2回目以降ではないか
@@ -315,7 +308,7 @@ namespace LordOfRanger {
 		/// <summary>
 		/// 全てのキーを押していない状態にする。
 		/// </summary>
-		private void KeyAllUp() {
+		private static void KeyAllUp() {
 			for( byte key = 0x00; key <= 0xff; key++ ) {
 				_enablekeyF[key] = false;
 				_enablekeyE[key] = false;
@@ -336,7 +329,7 @@ namespace LordOfRanger {
 			}
 			var bmpList = new List<Bitmap>();
 			foreach( var da in this._mass.Value ) {
-				if( da.Enable && this._barrageEnable) {
+				if( da.Enable && this._barrageEnable ) {
 					bmpList.Add( da.SkillIcon );
 				} else {
 					bmpList.Add( da.DisableSkillIcon );
@@ -383,19 +376,19 @@ namespace LordOfRanger {
 					_skillLayer.Top = Arad.y - bmp.Height;
 					_skillLayer.Left = Arad.x;
 					break;
-
 			}
 			gotoLabelDraw:
 			_skillLayer.DrawImage( bmp );
 			_skillLayer.UpdateLayeredWindow();
 			_skillLayer.ToTop();
 		}
+
 		private void DIconUpdate() {
 			Action dlg = IconUpdate;
 			dlg();
 		}
 
-		private void Sleep( int sleeptime ) {
+		private static void Sleep( int sleeptime ) {
 			Thread.Sleep( sleeptime );
 		}
 
@@ -403,7 +396,7 @@ namespace LordOfRanger {
 		/// キー送信
 		/// </summary>
 		/// <param name="key"> 送信するキー </param>
-		private void KeyPush( byte key ) {
+		private static void KeyPush( byte key ) {
 			Key.Down( key );
 			Sleep( Options.Options.options.upDownInterval );
 			Key.Up( key );
@@ -414,7 +407,7 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <param name="key"> 送信するキー </param>
 		/// <param name="sl"> キーダウンとキーアップの間の待ち時間(ms) </param>
-		private void KeyPush( byte key, int sl ) {
+		private static void KeyPush( byte key, int sl ) {
 			try {
 				Key.Down( key );
 				Sleep( sl );
@@ -424,5 +417,6 @@ namespace LordOfRanger {
 				throw;
 			}
 		}
+
 	}
 }

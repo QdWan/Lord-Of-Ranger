@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+// ReSharper disable JoinDeclarationAndInitializer
 
 
 
@@ -281,8 +282,8 @@ namespace LordOfRanger.Setting.Version {
 				return 0x00;
 			}
 		}
-		private Bitmap BinaryToBitmap( byte[] binary ) {
-			if( binary.Length == 0 ) {
+		private static Bitmap BinaryToBitmap( IReadOnlyCollection<byte> binary ) {
+			if( binary.Count == 0 ) {
 				return null;
 			}
 			return (Bitmap)new ImageConverter().ConvertFrom( binary );

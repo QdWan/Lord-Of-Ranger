@@ -4,8 +4,8 @@ using System.Windows.Forms;
 
 namespace LordOfRanger.Keyboard {
 	static class Key {
-		private static Random _rnd = new Random();
-		public static readonly UIntPtr EXTRA_INFO = (UIntPtr)_rnd.Next();
+		private static readonly Random RND = new Random();
+		public static readonly UIntPtr EXTRA_INFO = (UIntPtr)RND.Next();
 		/// <summary>
 		/// キー押下
 		/// </summary>
@@ -34,7 +34,7 @@ namespace LordOfRanger.Keyboard {
 			}
 		}
 
-		internal static readonly Dictionary<byte, string> KEY_TEXT = new Dictionary<byte, string>(){
+		internal static readonly Dictionary<byte, string> KEY_TEXT = new Dictionary<byte, string> {
 			{0x00,"" },
 			{0x01,"LBUTTON"},
 			{0x02,"RBUTTON"},

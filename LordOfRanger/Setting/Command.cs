@@ -7,7 +7,7 @@
 	/// 細かい実装についてはJobクラスを参照
 	/// </summary>
 	internal class Command :Act {
-		
+
 		internal byte[] sendList = new byte[0];
 		internal Command() {
 			this.type = InstanceType.COMMAND;

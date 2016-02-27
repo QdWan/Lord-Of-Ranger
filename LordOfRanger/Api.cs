@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Drawing;
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 namespace LordOfRanger {
 
@@ -22,7 +26,7 @@ namespace LordOfRanger {
 		[DllImport( "USER32.DLL", CharSet = CharSet.Auto )]
 		internal static extern bool SetForegroundWindow( IntPtr hWnd );
 		internal const int SW_NORMAL = 1;
-		
+
 		//構造体
 		[StructLayout( LayoutKind.Sequential, Pack = 4 )]
 		internal struct Rect {
@@ -111,15 +115,15 @@ namespace LordOfRanger {
 		internal static extern int UpdateLayeredWindow(
 			IntPtr hwnd,
 			IntPtr hdcDst,
-			[In()]
+			[In]
 			ref Point pptDst,
-			[In()]
+			[In]
 			ref Size psize,
 			IntPtr hdcSrc,
-			[In()]
+			[In]
 			ref Point pptSrc,
 			int crKey,
-			[In()]
+			[In]
 			ref Blendfunction pblend,
 			int dwFlags);
 
@@ -133,9 +137,6 @@ namespace LordOfRanger {
 		[DllImport( "user32.dll" )]
 		public static extern void mouse_event( int e, int dx, int dy, uint data, UIntPtr extraInfo );
 
-		[DllImport( "User32.dll" )]
-		public static extern bool GetCursorPos( out Win32Point pt );
-
 		[StructLayout( LayoutKind.Sequential )]
 		public struct Win32Point {
 
@@ -145,7 +146,7 @@ namespace LordOfRanger {
 		}
 
 		#endregion
-		
+
 		#region キーボード操作
 
 		[DllImport( "user32.dll" )]

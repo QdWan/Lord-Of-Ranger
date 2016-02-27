@@ -7,8 +7,9 @@ namespace LordOfRanger {
 	/// <summary>
 	/// このアプリケーションの情報を表示するフォーム
 	/// </summary>
-	public partial class AboutBox : Form {
-		public AboutBox() {
+	internal partial class AboutBox : Form {
+
+		internal AboutBox() {
 			InitializeComponent();
 
 			var appVersion = Application.ProductVersion;
@@ -16,7 +17,7 @@ namespace LordOfRanger {
 
 			this.lblInfo.Text = "\n\n" + appProductName + "\n";
 			this.lblInfo.Text += "アプリケーションバージョン : " + appVersion;
-			
+
 		}
 
 		private void btnOK_Click(object sender, EventArgs e) {

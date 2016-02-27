@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace LordOfRanger.Mouse {
-	class Click {
-		private enum Operation:int{
+	static class Click {
+
+		[ SuppressMessage( "ReSharper", "UnusedMember.Local" ) ]
+		private enum Operation {
 			MOVE = 0x0001,
 			LEFTDOWN = 0x0002,
 			LEFTUP = 0x0004,

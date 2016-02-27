@@ -1,5 +1,12 @@
-﻿namespace LordOfRanger.Options {
+﻿// ReSharper disable MemberCanBeInternal
+
+
+using System.Diagnostics.CodeAnalysis;
+
+namespace LordOfRanger.Options {
 	public class Options {
+
+		[ SuppressMessage( "ReSharper", "UnusedMember.Global" ) ]
 		public enum StartupState {
 			NORMAL,
 			MINIMIZED
@@ -21,7 +28,7 @@
 		public int upDownInterval = 15;
 		public int commandUpDownInterval = 30;
 		public int timerInterval = 30;
-		
+
 		/*Mouse*/
 		public int mouseReClick = 0;
 

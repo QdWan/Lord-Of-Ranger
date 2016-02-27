@@ -4,12 +4,14 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+// ReSharper disable JoinDeclarationAndInitializer
+// ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Setting.Version {
 	internal class V4 : IF {
 
 		private const int VERSION = 4;
-		private Mass _mass;
+		private readonly Mass _mass;
 
 		public V4( Mass instance ) {
 			this._mass = instance;
@@ -131,12 +133,14 @@ namespace LordOfRanger.Setting.Version {
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							msList.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
-							
+
 						}
 						offset = tmpOffset;
 						m.sendList = msList.ToArray();
 						this._mass.Add( m );
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			}
 		}
@@ -258,6 +262,8 @@ namespace LordOfRanger.Setting.Version {
 							data.AddRange( BitConverter.GetBytes( sl.sleepAfter ) );
 						}
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			}
 			var hotKeySize = BitConverter.GetBytes( 1 );
@@ -302,8 +308,8 @@ namespace LordOfRanger.Setting.Version {
 			}
 		}
 
-		private Bitmap BinaryToBitmap( byte[] binary ) {
-			if( binary.Length == 0 ) {
+		private static Bitmap BinaryToBitmap( IReadOnlyCollection<byte> binary ) {
+			if( binary.Count == 0 ) {
 				return null;
 			}
 			return (Bitmap)new ImageConverter().ConvertFrom( binary );

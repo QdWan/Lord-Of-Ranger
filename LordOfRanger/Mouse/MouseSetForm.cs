@@ -115,9 +115,9 @@ namespace LordOfRanger.Mouse {
 					return;
 				}
 			}
-			
+
 			this.result = Result.OK;
-			var tmpList = new List<Mouse.Set>();
+			var tmpList = new List<Set>();
 			foreach( DataGridViewRow row in this.dgv.Rows ) {
 				var x = int.Parse( row.Cells[DgvCol.X].Value.ToString() );
 				var y = int.Parse( row.Cells[DgvCol.Y].Value.ToString() );
@@ -188,6 +188,8 @@ namespace LordOfRanger.Mouse {
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Style.BackColor = Color.LavenderBlush;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Style.BackColor = Color.LavenderBlush;
 					break;
+				default:
+					return;
 			}
 		}
 
@@ -215,8 +217,17 @@ namespace LordOfRanger.Mouse {
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Arad.y;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Value = e.Message == MouseMessage.LUp ? MouseOperationText.LEFT : MouseOperationText.RIGHT;
 					break;
-				default:
+				case MouseMessage.Move:
+				case MouseMessage.LDown:
+				case MouseMessage.RDown:
+				case MouseMessage.MDown:
+				case MouseMessage.MUp:
+				case MouseMessage.Wheel:
+				case MouseMessage.XDown:
+				case MouseMessage.XUp:
 					return;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 			this._autoInputFlag = false;
 			this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Style.BackColor = Color.White;
@@ -230,7 +241,7 @@ namespace LordOfRanger.Mouse {
 				control.KeyPress += dgvTextBox_KeyPress;
 			}
 		}
-		private void dgvTextBox_KeyPress( object sender, KeyPressEventArgs e ) {
+		private static void dgvTextBox_KeyPress( object sender, KeyPressEventArgs e ) {
 			if( (e.KeyChar >= '0' && e.KeyChar <= '9') || e.KeyChar == 13 || e.KeyChar == '\b' ) {
 				return;
 			}

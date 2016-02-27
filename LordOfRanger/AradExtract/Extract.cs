@@ -5,6 +5,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.AradExtract {
 	internal class Extract {
@@ -17,9 +20,9 @@ namespace LordOfRanger.AradExtract {
 		private const uint COMPRESS_ZLIB = 0x06;
 		private const uint COMPRESS_NONE = 0x05;
 
-		private static char[] _decordFlag = ( "puchikon@neople dungeon and fighter DNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNF\0" ).ToCharArray();
+		private static readonly char[] DECORD_FLAG = ( "puchikon@neople dungeon and fighter DNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNFDNF\0" ).ToCharArray();
 
-		internal List<NpkIndex> npkIndexList;
+		internal readonly List<NpkIndex> npkIndexList;
 
 		internal Extract( string file ) {
 			var offset = 0;
@@ -44,7 +47,7 @@ namespace LordOfRanger.AradExtract {
 
 					var indexName = new char[256];
 					for( var j = 0; j < 256; j++ ) {
-						indexName[j] = (char)( fileData[offset++] ^ _decordFlag[j] );
+						indexName[j] = (char)( fileData[offset++] ^ DECORD_FLAG[j] );
 					}
 					index.name = new string( indexName );
 					index.name = index.name.Replace( "\0", "" );
@@ -164,7 +167,7 @@ namespace LordOfRanger.AradExtract {
 			/// <summary>
 			///     このヘッダに対応するNImgIndexの一覧
 			/// </summary>
-			internal NImgIndex[] NImgIndex {
+			internal IEnumerable<NImgIndex> NImgIndex {
 				get {
 					var offset = this.startOffset;
 					var allImgIndex = new List<NImgIndex>();
@@ -200,6 +203,7 @@ namespace LordOfRanger.AradExtract {
 						index.maxHeight = BitConverter.ToUInt32( this.fileData, offset );
 						offset += 4;
 						if( index.dwCompress == COMPRESS_NONE ) {
+							// ReSharper disable once SwitchStatementMissingSomeCases
 							switch( index.dwType ) {
 								case ARGB_8888:
 									totalIndexSize += (int)index.size;
@@ -304,6 +308,7 @@ namespace LordOfRanger.AradExtract {
 					var compressedSize = this.size;
 
 					if( this.dwCompress == COMPRESS_NONE ) {
+						// ReSharper disable once SwitchStatementMissingSomeCases
 						switch( this.dwType ) {
 							case ARGB_8888:
 								compressedSize = this.size;
@@ -365,11 +370,11 @@ namespace LordOfRanger.AradExtract {
 
 		internal struct NImg {
 
-			internal int width;
-			internal int height;
-			internal uint type;
-			internal byte[] data;
-			internal int index;
+			internal readonly int width;
+			internal readonly int height;
+			internal readonly uint type;
+			internal readonly byte[] data;
+			internal readonly int index;
 
 			internal NImg( int width, int height, uint type, byte[] data, int index ) {
 				this.width = width;

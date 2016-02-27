@@ -24,8 +24,8 @@ namespace LordOfRanger {
 		private Mass _mass;
 		private Job _job;
 		private string _currentSettingFile;
-		private Dictionary<byte, string> _hotKeys;
-		private bool _otherWindowOpen = false;
+		private readonly Dictionary<byte, string> _hotKeys;
+		private bool _otherWindowOpen;
 
 		private bool _editedFlag;
 		private bool EditedFlag {
@@ -98,6 +98,7 @@ namespace LordOfRanger {
 		private bool ConfirmSettingChange() {
 			if( EditedFlag ) {
 				var result = MessageBox.Show( "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
+				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( result ) {
 					case DialogResult.Yes:
 						EditedFlag = false;
@@ -108,10 +109,14 @@ namespace LordOfRanger {
 						break;
 					case DialogResult.Cancel:
 						return true;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			}
 			return false;
 		}
+
+
 
 		#region form event
 
@@ -137,7 +142,7 @@ namespace LordOfRanger {
 		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
 			Application.Exit();
 		}
-		
+
 		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
 			if( ConfirmSettingChange() ) {
 				e.Cancel = true;
@@ -148,7 +153,7 @@ namespace LordOfRanger {
 			Application.Exit();
 		}
 
-		private void Application_ApplicationExit( object sender, EventArgs e ) {
+		private static void Application_ApplicationExit( object sender, EventArgs e ) {
 			Options.OptionsForm.SaveCnf();
 		}
 
@@ -178,6 +183,8 @@ namespace LordOfRanger {
 		}
 
 		#endregion
+
+
 
 		#region setting form
 
@@ -248,8 +255,8 @@ namespace LordOfRanger {
 						mode = Mode.TOGGLE;
 						break;
 					case Act.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push ," + ");
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作["+ ( (Setting.Mouse)da ).sendList.Length + "]";
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Setting.Mouse)da ).sendList.Length + "]";
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -268,30 +275,32 @@ namespace LordOfRanger {
 		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
 		/// </summary>
 		private void LoadSettingList() {
-			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
-				Directory.CreateDirectory( Mass.SETTING_PATH );
-				Thread.Sleep( 300 );
-			}
-
-			var files = Directory.GetFiles( Mass.SETTING_PATH );
-			if( files.Length == 0 ) {
-				this._mass = new Mass();
-				CurrentSettingChange( "new" );
-				this._mass.name = this._currentSettingFile;
-				this._mass.Save();
-				LoadSettingList();
-				return;
-			}
-			this.lbSettingList.Items.Clear();
-			foreach( var file in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) ) {
-				this.lbSettingList.Items.Add( Path.GetFileNameWithoutExtension( file ) );
-			}
-			if( this.lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
-				this.lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
-			} else {
-				if( this.lbSettingList.Items.Count > 0 ) {
-					this.lbSettingList.SelectedIndex = 0;
+			while( true ) {
+				if( !Directory.Exists( Mass.SETTING_PATH ) ) {
+					Directory.CreateDirectory( Mass.SETTING_PATH );
+					Thread.Sleep( 300 );
 				}
+
+				var files = Directory.GetFiles( Mass.SETTING_PATH );
+				if( files.Length == 0 ) {
+					this._mass = new Mass();
+					CurrentSettingChange( "new" );
+					this._mass.name = this._currentSettingFile;
+					this._mass.Save();
+					continue;
+				}
+				this.lbSettingList.Items.Clear();
+				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
+					this.lbSettingList.Items.Add( filename );
+				}
+				if( this.lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
+					this.lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
+				} else {
+					if( this.lbSettingList.Items.Count > 0 ) {
+						this.lbSettingList.SelectedIndex = 0;
+					}
+				}
+				break;
 			}
 		}
 
@@ -350,8 +359,9 @@ namespace LordOfRanger {
 			Options.Options.options.currentSettingName = name;
 		}
 
-
 		#endregion
+
+
 
 		#region job
 
@@ -377,40 +387,40 @@ namespace LordOfRanger {
 					e.Cancel = true;
 				}
 			}
-			if( e.UpDown == KeyboardUpDown.DOWN ) {
-				if( this._job.ActiveWindow && this._job.BarrageEnable ) {
-					//キーダウンイベント
-					Task.Run( () => {
-						this._job.KeydownEvent( e );
-					} );
-				}
-			} else if( e.UpDown == KeyboardUpDown.UP ) {
-				if( this._job.ActiveWindow && this._job.BarrageEnable ) {
-					//キーアップイベント
-					Task.Run( () => {
-						this._job.KeyupEvent( e );
-					} );
-				}
-				if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
-					//setting change hot key
-					if( this._hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
-						if( ConfirmSettingChange() ) {
-							e.Cancel = true;
-						}
-						CurrentSettingChange( this._hotKeys[(byte)e.KeyCode] );
-						SettingUpdate();
+			switch( e.UpDown ) {
+				case KeyboardUpDown.DOWN:
+					if( this._job.ActiveWindow && this._job.BarrageEnable ) {
+						//キーダウンイベント
+						Task.Run( () => this._job.KeydownEvent( e ) );
+					}
+					break;
+				case KeyboardUpDown.UP:
+					if( this._job.ActiveWindow && this._job.BarrageEnable ) {
+						//キーアップイベント
+						Task.Run( () => this._job.KeyupEvent( e ) );
+					}
+					if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
+						//setting change hot key
+						if( this._hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
+							if( ConfirmSettingChange() ) {
+								e.Cancel = true;
+							}
+							CurrentSettingChange( this._hotKeys[(byte)e.KeyCode] );
+							SettingUpdate();
 #if DEBUG
 						goto echo;
 #else
-						return;
+							return;
 #endif
-					}
+						}
 
-
-					if( (byte)e.KeyCode == Options.Options.options.hotKeyLorSwitching ) {
-						this._job.BarrageEnable = !this._job.BarrageEnable;
+						if( (byte)e.KeyCode == Options.Options.options.hotKeyLorSwitching ) {
+							this._job.BarrageEnable = !this._job.BarrageEnable;
+						}
 					}
-				}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 #if DEBUG
 			echo:
@@ -421,6 +431,7 @@ namespace LordOfRanger {
 			this._sw.Reset();
 #endif
 		}
+
 		/// <summary>
 		/// タイマーから呼び出され、アラド戦記がアクティブになっているかどうか定期的にチェックする。
 		/// </summary>
@@ -434,7 +445,6 @@ namespace LordOfRanger {
 				// ignored
 			}
 		}
-
 
 		/// <summary>
 		/// 定期的に呼ばれる。
@@ -464,6 +474,8 @@ namespace LordOfRanger {
 
 		#endregion
 
+
+
 		#region job form
 
 		/// <summary>
@@ -478,6 +490,7 @@ namespace LordOfRanger {
 			}
 			this._otherWindowOpen = true;
 			var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+			// ReSharper disable once SwitchStatementMissingSomeCases
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.PUSH: {
 					//textbox
@@ -523,18 +536,21 @@ namespace LordOfRanger {
 								break;
 							case Act.InstanceType.MOUSE:
 								ksf.Dispose();
-								var msf = new MouseSetForm();
-								msf.MouseData = ((Setting.Mouse)act ).sendList;
+								var msf = new MouseSetForm {
+									MouseData = ( (Setting.Mouse)act ).sendList
+								};
 								msf.ShowDialog();
 								if( msf.result == MouseSetForm.Result.OK ) {
 									if( msf.editedFlag ) {
 										EditedFlag = true;
 									}
 									( (Setting.Mouse)act ).sendList = msf.MouseData;
-									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value= "マウス操作["+msf.MouseData.Length+"]";
+									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.MouseData.Length + "]";
 								}
 								this._otherWindowOpen = false;
 								return;
+							default:
+								throw new ArgumentOutOfRangeException();
 						}
 						break;
 					}
@@ -547,23 +563,22 @@ namespace LordOfRanger {
 				}
 				case DgvCol.ENABLE_SKILL_ICON:
 				case DgvCol.DISABLE_SKILL_ICON: {
-					var ofd = new OpenFileDialog();
-					ofd.Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png";
-					ofd.Title = "スキルアイコン画像を選択";
-					ofd.InitialDirectory = Application.ExecutablePath;
-					ofd.RestoreDirectory = true;
+					var ofd = new OpenFileDialog {
+						Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png",
+						Title = "スキルアイコン画像を選択",
+						InitialDirectory = Application.ExecutablePath,
+						RestoreDirectory = true
+					};
 					if( ofd.ShowDialog() == DialogResult.OK ) {
 						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( var act in this._mass.Value ) {
-							if( act.Id == sequence ) {
-								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-									case DgvCol.ENABLE_SKILL_ICON:
-										act.SkillIcon = new Bitmap( ofd.FileName );
-										break;
-									case DgvCol.DISABLE_SKILL_ICON:
-										act.DisableSkillIcon = new Bitmap( ofd.FileName );
-										break;
-								}
+						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+							switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+								case DgvCol.ENABLE_SKILL_ICON:
+									act.SkillIcon = new Bitmap( ofd.FileName );
+									break;
+								case DgvCol.DISABLE_SKILL_ICON:
+									act.DisableSkillIcon = new Bitmap( ofd.FileName );
+									break;
 							}
 						}
 					}
@@ -596,6 +611,8 @@ namespace LordOfRanger {
 					this.dgv.RefreshEdit();
 					break;
 				}
+				default:
+					return;
 			}
 		}
 
@@ -617,8 +634,9 @@ namespace LordOfRanger {
 					this._mass.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
 					this.dgv.RefreshEdit();
 					break;
+				default:
+					return;
 			}
-
 		}
 
 		/// <summary>
@@ -715,9 +733,9 @@ namespace LordOfRanger {
 		/// <param name="keys"></param>
 		/// <param name="separator">仕切り文字</param>
 		/// <returns></returns>
-		private static string KeysToText( byte[] keys ,string separator = "") {
+		private static string KeysToText( IReadOnlyList<byte> keys, string separator = "" ) {
 			var s = "";
-			for( var i = 0; i < keys.Length; i++ ) {
+			for( var i = 0; i < keys.Count; i++ ) {
 				if( i != 0 ) {
 					s += separator;
 				}

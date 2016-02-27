@@ -12,28 +12,17 @@ namespace LordOfRanger.Setting.Version {
 	/// 尚、プログラムのバージョンと設定のバージョンは別に管理する。
 	/// </summary>
 	class V {
-
-		/// <summary>
-		/// 最新のバージョン
-		/// </summary>
-		private const int VERSION = 5;
-
 		private IF _vif;
-		private Mass _instance;
+		private readonly Mass _instance;
 
 		/// <summary>
 		/// コンストラクタ
-		/// 操作するインスタンスを使って、各バージョンのインスタンスを作成する
-		/// VERSIONはreadonlyなので基本的には最新版のインスタンスしか生成されない
+		/// 操作するインスタンスを使って、最新バージョンのインスタンスを作成する
 		/// </summary>
 		/// <param name="instance"> 操作する対象のインスタンス </param>
 		internal V( Mass instance ) {
 			this._instance = instance;
-			switch( VERSION ) {
-				case 5:
-					this._vif = new V5( instance );
-					break;
-			}
+			this._vif = new V5( instance );
 		}
 
 		/// <summary>
@@ -48,8 +37,7 @@ namespace LordOfRanger.Setting.Version {
 			fs.Read( array, 0, (int)fs.Length );
 			fs.Close();
 
-			var offset = 0;
-			return BitConverter.ToInt32( array, offset );
+			return BitConverter.ToInt32( array, 0 );
 		}
 
 		/// <summary>

@@ -4,8 +4,9 @@ using LordOfRanger.Keyboard;
 
 namespace LordOfRanger.Options {
 	internal partial class OptionsForm : Form {
-		private static string _fileName = "./op.cnf";
-		
+
+		private const string FILE_NAME = "./op.cnf";
+
 		private byte _tmpHotKey;
 
 		internal OptionsForm() {
@@ -53,9 +54,9 @@ namespace LordOfRanger.Options {
 			if( Options.options == null ) {
 				Options.options = new Options();
 			}
-			if( System.IO.File.Exists( _fileName ) ) {
+			if( System.IO.File.Exists( FILE_NAME ) ) {
 				var serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-				var sr = new System.IO.StreamReader( _fileName, new System.Text.UTF8Encoding( false ) );
+				var sr = new System.IO.StreamReader( FILE_NAME, new System.Text.UTF8Encoding( false ) );
 				try {
 					Options.options = (Options)serializer2.Deserialize( sr );
 				} catch( InvalidOperationException ) {
@@ -68,7 +69,7 @@ namespace LordOfRanger.Options {
 
 		internal static void SaveCnf() {
 			var serializer1 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-			var sw = new System.IO.StreamWriter( _fileName, false, new System.Text.UTF8Encoding( false ) );
+			var sw = new System.IO.StreamWriter( FILE_NAME, false, new System.Text.UTF8Encoding( false ) );
 			serializer1.Serialize( sw, Options.options );
 			sw.Close();
 		}
@@ -102,7 +103,7 @@ namespace LordOfRanger.Options {
 			/* Hot Key */
 			this._tmpHotKey = Options.options.hotKeyLorSwitching;
 			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
-			
+
 			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
 			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 
@@ -135,7 +136,7 @@ namespace LordOfRanger.Options {
 
 			/* Hot Key */
 			Options.options.hotKeyLorSwitching = this._tmpHotKey;
-			
+
 			SaveCnf();
 			LoadCnf();
 		}

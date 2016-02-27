@@ -1,4 +1,5 @@
-﻿namespace LordOfRanger {
+﻿// ReSharper disable All
+namespace LordOfRanger {
 	/// <summary>
 	/// レイヤードウィンドウ
 	/// </summary>

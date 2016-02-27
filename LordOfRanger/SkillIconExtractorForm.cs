@@ -60,9 +60,10 @@ namespace LordOfRanger {
 		}
 
 		private void btnBrowse_Click( object sender, EventArgs e ) {
-			var fbd = new FolderBrowserDialog();
-			fbd.ShowNewFolderButton = false;
-			fbd.SelectedPath = this.txtDirectory.Text;
+			var fbd = new FolderBrowserDialog {
+				ShowNewFolderButton = false,
+				SelectedPath = this.txtDirectory.Text
+			};
 			if( fbd.ShowDialog( this ) == DialogResult.OK ) {
 				this.txtDirectory.Text = fbd.SelectedPath;
 			}

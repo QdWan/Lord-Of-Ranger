@@ -5,11 +5,11 @@
 			RIGHT,
 			MOVE
 		}
-		internal Operation op;
-		internal int x;
-		internal int y;
-		internal int sleepBetween;
-		internal int sleepAfter;
+		internal readonly Operation op;
+		internal readonly int x;
+		internal readonly int y;
+		internal readonly int sleepBetween;
+		internal readonly int sleepAfter;
 
 		internal Set(Operation op,int x,int y, int sleepBetween, int sleepAfter ) {
 			this.op = op;

@@ -9,16 +9,16 @@ namespace LordOfRanger {
 	/// </summary>
 	static class Arad {
 
-		internal static Process process;
+		private static Process _process;
 		internal static int x;
 		internal static int y;
 		internal static int w = 800;
 		internal static int h = 600;
-		private static bool _isAlive = false;
+		private static bool _isAlive;
 		internal static bool IsAlive {
 			get {
 				if( _isAlive ) {
-					_isAlive = !process.HasExited;
+					_isAlive = !_process.HasExited;
 				} else {
 					Get();
 				}
@@ -31,13 +31,13 @@ namespace LordOfRanger {
 				var hWnd = Api.GetForegroundWindow();
 				int id;
 				Api.GetWindowThreadProcessId( hWnd, out id );
-				return process.Id == id;
+				return _process.Id == id;
 
 			}
 		}
 
 		private const int MARGIN_LEFT = 0;
-		private static int _marginTop = 0;
+		private const int MARGIN_TOP = 0;
 		private const int MARGIN_RIGHT = 0;
 		private const int MARGIN_BOTTOM = 0;
 
@@ -45,27 +45,25 @@ namespace LordOfRanger {
 		/// プロセスを取得し、x,y,w,hをクラスのメンバ変数に格納する
 		/// </summary>
 		/// <returns>アラド戦記プロセス</returns>
-		internal static Process Get() {
+		internal static void Get() {
 
-			process = Process.GetProcessesByName( Options.Options.options.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+			_process = Process.GetProcessesByName( Options.Options.options.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
 
-			if( process == null ) {
+			if( _process == null ) {
 				_isAlive = false;
-				return null;
+				return;
 			}
 			_isAlive = true;
 			Api.Rect rect;
 			try {
-				Api.GetWindowRect( process.MainWindowHandle, out rect );
+				Api.GetWindowRect( _process.MainWindowHandle, out rect );
 			} catch( Exception ) {
-				return process;
+				return;
 			}
 			x = rect.left + MARGIN_LEFT;
-			y = rect.top + _marginTop;
+			y = rect.top + MARGIN_TOP;
 			w = rect.right - rect.left - MARGIN_LEFT - MARGIN_RIGHT;
-			h = rect.bottom - rect.top - MARGIN_BOTTOM - _marginTop;
-
-			return process;
+			h = rect.bottom - rect.top - MARGIN_BOTTOM - MARGIN_TOP;
 		}
 	}
 }

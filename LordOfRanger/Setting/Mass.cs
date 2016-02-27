@@ -52,7 +52,7 @@ namespace LordOfRanger.Setting {
 				return this._cancelList;
 			}
 		}
-		
+
 
 		internal int Sequence {
 			get;
@@ -100,6 +100,8 @@ namespace LordOfRanger.Setting {
 				case Act.InstanceType.MOUSE:
 					this._mouseList.Add( (Mouse)instance );
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 			CancelListReBuild();
 			return instance.Id;
@@ -128,6 +130,8 @@ namespace LordOfRanger.Setting {
 						case Act.InstanceType.MOUSE:
 							this._mouseList.RemoveAt( sequence );
 							break;
+						default:
+							throw new ArgumentOutOfRangeException();
 					}
 					this._value.RemoveAt( i );
 					break;
@@ -187,7 +191,7 @@ namespace LordOfRanger.Setting {
 		/// <param name="sequence"> 有効無効を切り替えるインスタンスのid </param>
 		/// <param name="enable"> 有効無効どちらに切り替えるか </param>
 		/// <returns></returns>
-		internal void ChangeKeyboardCancel( int sequence, bool enable) {
+		internal void ChangeKeyboardCancel( int sequence, bool enable ) {
 			foreach( var x in this._value.Where( x => x.Id == sequence ) ) {
 				x.KeyboardCancel = enable;
 				break;
@@ -196,6 +200,8 @@ namespace LordOfRanger.Setting {
 		}
 
 		#endregion
+
+
 
 		/// <summary>
 		/// データ配列の初期化
@@ -225,7 +231,7 @@ namespace LordOfRanger.Setting {
 				var v = new V( this );
 				v.Load( filename );
 			} catch( Exception ) {
-				MessageBox.Show(filename+"設定ファイルを読み込めませんでした。");
+				MessageBox.Show( filename + "設定ファイルを読み込めませんでした。" );
 			}
 		}
 
@@ -244,7 +250,8 @@ namespace LordOfRanger.Setting {
 		}
 
 		private void CancelListReBuild() {
-			this._cancelList = this._barrageList.CancelList.Concat(this._commandList.CancelList).Concat(this._toggleList.CancelList).Concat(this._mouseList.CancelList ).Distinct().ToArray();
+			this._cancelList = this._barrageList.CancelList.Concat( this._commandList.CancelList ).Concat( this._toggleList.CancelList ).Concat( this._mouseList.CancelList ).Distinct().ToArray();
 		}
+
 	}
 }

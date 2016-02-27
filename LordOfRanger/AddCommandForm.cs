@@ -49,24 +49,30 @@ namespace LordOfRanger {
 		}
 
 		private void AddCommandForm_KeyUp( object sender, KeyEventArgs e ) {
-			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
-				Close();
-			} else if( (byte)e.KeyCode == (byte)Keys.Return ) {
-				if( this.rbCommand.Checked ) {
-					this.type = Type.COMMAND;
-				} else if( this.rbBarrage.Checked ) {
-					this.type = Type.BARRAGE;
-				} else if( this.rbToggle.Checked ) {
-					this.type = Type.TOGGLE;
-				} else if( this.rbMouse.Checked ) {
-					this.type = Type.MOUSE;
-				} else {
-					MessageBox.Show( "Please select the type." );
+			switch( (byte)e.KeyCode ) {
+				case (byte)Keys.Escape:
+					Close();
+					break;
+				case (byte)Keys.Return:
+					if( this.rbCommand.Checked ) {
+						this.type = Type.COMMAND;
+					} else if( this.rbBarrage.Checked ) {
+						this.type = Type.BARRAGE;
+					} else if( this.rbToggle.Checked ) {
+						this.type = Type.TOGGLE;
+					} else if( this.rbMouse.Checked ) {
+						this.type = Type.MOUSE;
+					} else {
+						MessageBox.Show( "Please select the type." );
+						return;
+					}
+					this.result = Result.OK;
+					Close();
+					break;
+				default:
 					return;
-				}
-				this.result = Result.OK;
-				Close();
 			}
 		}
+
 	}
 }

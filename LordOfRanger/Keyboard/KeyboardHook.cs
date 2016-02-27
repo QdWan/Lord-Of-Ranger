@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+// ReSharper disable All
 
 namespace LordOfRanger.Keyboard {
 	///<summary>キーボードが操作されたときに実行されるメソッドを表すイベントハンドラ。</summary>
