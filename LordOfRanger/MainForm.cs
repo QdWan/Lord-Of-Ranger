@@ -17,7 +17,7 @@ namespace LordOfRanger {
 	internal partial class MainForm :Form {
 
 #if DEBUG
-		Stopwatch _sw = new Stopwatch();
+		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
 
 
