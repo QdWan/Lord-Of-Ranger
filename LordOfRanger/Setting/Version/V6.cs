@@ -8,12 +8,12 @@ using System.Threading;
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class V4 : IF {
+	internal class V6 : IF {
 
-		private const int VERSION = 4;
+		private const int VERSION = 6;
 		private readonly Mass _mass;
 
-		public V4( Mass instance ) {
+		public V6( Mass instance ) {
 			this._mass = instance;
 		}
 
@@ -43,6 +43,8 @@ namespace LordOfRanger.Setting.Version {
 			offset += 4;
 			this._mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
+			this._mass.SwitchPosition = BitConverter.ToInt32( array, offset );
+			offset += 4;
 			var headerCount = headerSize / 28;
 			var headers = new List<ArdHeader>();
 			for( var i = 0; i < headerCount; i++ ) {
@@ -78,6 +80,8 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
+						c.KeyboardCancel = BitConverter.ToBoolean( array, offset );
+						offset += 1;
 						this._mass.Add( c );
 						break;
 					case Act.InstanceType.BARRAGE:
@@ -92,6 +96,8 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
+						b.KeyboardCancel = BitConverter.ToBoolean( array, offset );
+						offset += 1;
 						this._mass.Add( b );
 						break;
 					case Act.InstanceType.TOGGLE:
@@ -106,6 +112,8 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
+						t.KeyboardCancel = BitConverter.ToBoolean( array, offset );
+						offset += 1;
 						this._mass.Add( t );
 						break;
 					case Act.InstanceType.MOUSE:
@@ -118,9 +126,10 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.disableSkillIconSize;
 						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
-						var msList = new List<LordOfRanger.Mouse.Set>();
+						m.mouseData.SwitchState = (Arad.SwitchingStyle)BitConverter.ToInt32( array, offset );
+						offset += 4;
 						var tmpOffset = offset;
-						while( tmpOffset < offset + ardHeader.sendDataSize ) {
+						while( tmpOffset < offset + ardHeader.sendDataSize - 4 ) {
 
 							var op = (LordOfRanger.Mouse.Set.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
@@ -132,11 +141,12 @@ namespace LordOfRanger.Setting.Version {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							msList.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+							m.mouseData.Value.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
 
 						}
 						offset = tmpOffset;
-						m.mouseData.Value = msList;
+						m.KeyboardCancel = BitConverter.ToBoolean( array, offset );
+						offset += 1;
 						this._mass.Add( m );
 						break;
 					default:
@@ -173,6 +183,12 @@ namespace LordOfRanger.Setting.Version {
 				hotKey 8bit
 			*/
 			var hotKey = this._mass.hotKey;
+
+			/*
+				switchPosition 32bit
+			*/
+			var switchPosition = BitConverter.GetBytes(this._mass.SwitchPosition);
+
 			/*
 				id 32bit
 				Type 32bit
@@ -251,7 +267,10 @@ namespace LordOfRanger.Setting.Version {
 					case Act.InstanceType.MOUSE:
 
 						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).mouseData.Value.Count * 4 * 5 ) );
+						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).mouseData.Value.Count * 4 * 5 + 4 ) );
+
+						//switchState
+						data.AddRange( BitConverter.GetBytes( (int)( (Mouse)da ).mouseData.SwitchState ) );
 
 						//sendList
 						foreach( var sl in ( (Mouse)da ).mouseData.Value ) {
@@ -265,6 +284,7 @@ namespace LordOfRanger.Setting.Version {
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+				data.AddRange( BitConverter.GetBytes( da.KeyboardCancel ) );
 			}
 			var hotKeySize = BitConverter.GetBytes( 1 );
 			headerSize = BitConverter.GetBytes( header.Count );
@@ -275,6 +295,7 @@ namespace LordOfRanger.Setting.Version {
 			settingBinary.AddRange( headerSize );
 			settingBinary.AddRange( sequence );
 			settingBinary.Add( hotKey );
+			settingBinary.AddRange( switchPosition );
 			settingBinary.AddRange( header );
 			settingBinary.AddRange( data );
 			var fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );

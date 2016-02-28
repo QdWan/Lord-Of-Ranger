@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace LordOfRanger.Mouse {
@@ -11,18 +10,22 @@ namespace LordOfRanger.Mouse {
 	/// </summary>
 	internal partial class MouseSetForm :Form {
 
-		private List<Set> _mouseList = new List<Set>();
+		internal readonly MouseData mouseData;
 		internal Result result;
 		private MouseHook _mouseHook;
 		private bool _autoInputFlag;
 		private int _autoInputRowIndex;
 		internal bool editedFlag;
 
-		internal MouseSetForm() {
+		internal MouseSetForm() : this(new MouseData()) {}
+
+		internal MouseSetForm(MouseData mouseData) {
+			this.mouseData = mouseData;
 			this.result = Result.CANCEL;
 			KeyPreview = true;
 			InitializeComponent();
 		}
+
 
 		internal enum Result {
 			OK,
@@ -48,8 +51,26 @@ namespace LordOfRanger.Mouse {
 
 		}
 
+		internal class MouseData {
+
+			internal MouseData() {
+				SwitchState = Arad.SwitchingStyle.BOTH;
+				Value = new List<Set>();
+			}
+
+			internal Arad.SwitchingStyle SwitchState {
+				get;
+				set;
+			}
+			internal List<Set> Value {
+				get;
+				set;
+			}
+
+		}
+
 		private void MouseSetForm_Load( object sender, EventArgs e ) {
-			foreach( var mouse in this._mouseList ) {
+			foreach( var mouse in this.mouseData.Value ) {
 				string op;
 				switch( mouse.op ) {
 					case Set.Operation.LEFT:
@@ -73,23 +94,13 @@ namespace LordOfRanger.Mouse {
 			}
 			this._mouseHook = new MouseHook();
 			this._mouseHook.MouseHooked += AutoInput;
+			this.cmbSwitch.SelectedIndex = (int)this.mouseData.SwitchState;
 		}
 		private void MouseSetForm_FormClosed( object sender, FormClosedEventArgs e ) {
 			this._mouseHook.MouseHooked -= AutoInput;
 
 		}
 
-		internal Set[] MouseData {
-			get {
-				if( this._mouseList.Count > 0 ) {
-					return this._mouseList.ToArray();
-				}
-				return new Set[] { };
-			}
-			set {
-				this._mouseList = value.ToList();
-			}
-		}
 
 		private void btnCancel_Click( object sender, EventArgs e ) {
 			this.result = Result.CANCEL;
@@ -98,6 +109,8 @@ namespace LordOfRanger.Mouse {
 
 		private void btnOk_Click( object sender, EventArgs e ) {
 			this.dgv.EndEdit();
+
+			this.mouseData.SwitchState = (Arad.SwitchingStyle)this.cmbSwitch.SelectedIndex;
 
 			foreach( DataGridViewRow row in this.dgv.Rows ) {
 				uint i;
@@ -140,7 +153,7 @@ namespace LordOfRanger.Mouse {
 				}
 				tmpList.Add( new Set( op, x, y, sleepBetween, sleepAfter ) );
 			}
-			this._mouseList = tmpList;
+			this.mouseData.Value = tmpList;
 			Close();
 		}
 
@@ -251,6 +264,7 @@ namespace LordOfRanger.Mouse {
 		private void btnUp_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex >= 1 ) {
+				this.editedFlag = true;
 				var row = this.dgv.Rows[rowIndex];
 				this.dgv.Rows.RemoveAt( rowIndex );
 				this.dgv.Rows.Insert( rowIndex - 1, row );
@@ -262,12 +276,17 @@ namespace LordOfRanger.Mouse {
 		private void btnDown_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex < this.dgv.Rows.Count - 1 ) {
+				this.editedFlag = true;
 				var row = this.dgv.Rows[rowIndex];
 				this.dgv.Rows.RemoveAt( rowIndex );
 				this.dgv.Rows.Insert( rowIndex + 1, row );
 				this.dgv.ClearSelection();
 				this.dgv.Rows[rowIndex + 1].Selected = true;
 			}
+		}
+
+		private void cmbSwitch_SelectedIndexChanged( object sender, EventArgs e ) {
+			this.editedFlag = true;
 		}
 	}
 }

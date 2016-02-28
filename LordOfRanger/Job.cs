@@ -122,9 +122,13 @@ namespace LordOfRanger {
 							}
 						}
 					}
+					//スイッチの状態によって、操作する/しないを判定する
+					if( m.mouseData.SwitchState != Arad.SwitchingStyle.BOTH && m.mouseData.SwitchState != Arad.SwitchState ) {
+						continue;
+					}
 					this._mouseTaskCancelToken = new CancellationTokenSource();
 					this._mouseTask = Task.Run( () => {
-						foreach( var send in m.sendList ) {
+						foreach( var send in m.mouseData.Value ) {
 							if( this._mouseTaskCancelToken.Token.IsCancellationRequested ) {
 								throw new TaskCanceledException();
 							}

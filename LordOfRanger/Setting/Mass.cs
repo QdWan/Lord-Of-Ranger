@@ -16,6 +16,17 @@ namespace LordOfRanger.Setting {
 		internal string name;
 		internal byte hotKey = 0x00;
 		internal const string EXTENSION = ".ard";
+		private int _switchPosition;
+		internal int SwitchPosition {
+			get {
+				return this._switchPosition;
+			}
+			set {
+				this._switchPosition = value;
+				Arad.switchPosition = value;
+			}
+		}
+
 		private List<Act> _value = new List<Act>();
 		internal IEnumerable<Act> Value {
 			get {

@@ -256,7 +256,7 @@ namespace LordOfRanger {
 						break;
 					case Act.InstanceType.MOUSE:
 						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Mouse)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Setting.Mouse)da ).sendList.Length + "]";
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Setting.Mouse)da ).mouseData.Value.Count + "]";
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -347,6 +347,7 @@ namespace LordOfRanger {
 			this.lblSettingName.Text = this._currentSettingFile;
 			this.lbSettingList.SelectedItem = this._currentSettingFile;
 			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
+			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
 			EditedFlag = false;
 		}
 
@@ -536,16 +537,15 @@ namespace LordOfRanger {
 								break;
 							case Act.InstanceType.MOUSE:
 								ksf.Dispose();
-								var msf = new MouseSetForm {
-									MouseData = ( (Setting.Mouse)act ).sendList
-								};
+								var msf = new MouseSetForm(((Setting.Mouse)act).mouseData);
+
 								msf.ShowDialog();
 								if( msf.result == MouseSetForm.Result.OK ) {
 									if( msf.editedFlag ) {
 										EditedFlag = true;
 									}
-									( (Setting.Mouse)act ).sendList = msf.MouseData;
-									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.MouseData.Length + "]";
+									( (Setting.Mouse)act ).mouseData = msf.mouseData;
+									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.mouseData.Value.Count + "]";
 								}
 								this._otherWindowOpen = false;
 								return;
@@ -655,6 +655,16 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void txtHotKey_TextChanged( object sender, EventArgs e ) {
 			EditedFlag = true;
+		}
+
+		/// <summary>
+		/// スイッチングシステムの位置を設定する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void cmbSwitchPosition_SelectedIndexChanged( object sender, EventArgs e ) {
+			EditedFlag = true;
+			this._mass.SwitchPosition = this.cmbSwitchPosition.SelectedIndex;
 		}
 
 		/// <summary>

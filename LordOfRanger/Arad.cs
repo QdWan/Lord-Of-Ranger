@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 
 namespace LordOfRanger {
@@ -15,6 +17,27 @@ namespace LordOfRanger {
 		internal static int w = 800;
 		internal static int h = 600;
 		private static bool _isAlive;
+		internal static int switchPosition = 0;
+
+		private static readonly Point ICON_SIZE = new Point( 29, 29 );
+		private static readonly Point[] QUICK_SLOT_POINTS = {
+			new Point(85,558),
+			new Point(115,558),
+			new Point(145,558),
+			new Point(175,558),
+			new Point(205,558),
+			new Point(235,558)
+		};
+
+		internal enum SwitchingStyle {
+			BOTH = 0,
+			A = 1,
+			B = 2,
+			UNKNOWN = 3
+		}
+		private static readonly Color SWITCH_A_COLOR = Color.FromArgb( 97, 255, 109 );
+		private static readonly Color SWITCH_B_COLOR = Color.FromArgb( 255, 238, 97 );
+
 		internal static bool IsAlive {
 			get {
 				if( _isAlive ) {
@@ -33,6 +56,20 @@ namespace LordOfRanger {
 				Api.GetWindowThreadProcessId( hWnd, out id );
 				return _process.Id == id;
 
+			}
+		}
+
+		internal static SwitchingStyle SwitchState {
+			get {
+				var bmp = GetScreenShot( QUICK_SLOT_POINTS[switchPosition].X,QUICK_SLOT_POINTS[switchPosition].Y,ICON_SIZE.X,ICON_SIZE.Y );
+				var color = bmp.GetPixel( 21, 7 );
+				if( color == SWITCH_A_COLOR ) {
+					return SwitchingStyle.A;
+				}
+				if( color == SWITCH_B_COLOR ) {
+					return SwitchingStyle.B;
+				}
+				return SwitchingStyle.UNKNOWN;
 			}
 		}
 
@@ -64,6 +101,32 @@ namespace LordOfRanger {
 			y = rect.top + MARGIN_TOP;
 			w = rect.right - rect.left - MARGIN_LEFT - MARGIN_RIGHT;
 			h = rect.bottom - rect.top - MARGIN_BOTTOM - MARGIN_TOP;
+		}
+
+		private static Bitmap GetScreenShot(int targetX = 0,int targetY = 0,int targetW = 0,int targetH = 0) {
+			if( targetW == 0 ) {
+				targetW = w;
+			}
+			if( targetH == 0 ) {
+				targetH = h;
+			}
+			if( targetX + targetW > w || targetY + targetH > h ) {
+				throw new ArgumentOutOfRangeException();
+			}
+
+			//アラドの相対座標に変換
+			targetX += x;
+			targetY += y;
+
+			var bmp = new Bitmap( targetW, targetH );
+			var disDc = Api.GetDC( IntPtr.Zero );
+			using( var g = Graphics.FromImage( bmp ) ) {
+				var hDc = g.GetHdc();
+				Api.BitBlt( hDc, 0, 0, targetW, targetH, disDc, targetX, targetY, 13369376 );
+				g.ReleaseHdc( hDc );
+			}
+			Api.ReleaseDC( IntPtr.Zero, disDc );
+			return bmp;
 		}
 	}
 }

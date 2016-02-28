@@ -27,6 +27,8 @@
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.label1 = new System.Windows.Forms.Label();
+			this.cmbSwitch = new System.Windows.Forms.ComboBox();
 			this.btnDown = new System.Windows.Forms.Button();
 			this.btnUp = new System.Windows.Forms.Button();
 			this.btnAdd = new System.Windows.Forms.Button();
@@ -83,6 +85,8 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.label1);
+			this.splitContainer2.Panel1.Controls.Add(this.cmbSwitch);
 			this.splitContainer2.Panel1.Controls.Add(this.btnDown);
 			this.splitContainer2.Panel1.Controls.Add(this.btnUp);
 			this.splitContainer2.Panel1.Controls.Add(this.btnAdd);
@@ -93,6 +97,29 @@
 			this.splitContainer2.Size = new System.Drawing.Size(561, 492);
 			this.splitContainer2.SplitterDistance = 34;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(12, 12);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(59, 12);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "作動条件 :";
+			// 
+			// cmbSwitch
+			// 
+			this.cmbSwitch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbSwitch.FormattingEnabled = true;
+			this.cmbSwitch.Items.AddRange(new object[] {
+            "両方",
+            "スイッチA",
+            "スイッチB"});
+			this.cmbSwitch.Location = new System.Drawing.Point(74, 8);
+			this.cmbSwitch.Name = "cmbSwitch";
+			this.cmbSwitch.Size = new System.Drawing.Size(121, 20);
+			this.cmbSwitch.TabIndex = 3;
+			this.cmbSwitch.SelectedIndexChanged += new System.EventHandler(this.cmbSwitch_SelectedIndexChanged);
 			// 
 			// btnDown
 			// 
@@ -258,6 +285,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel1.PerformLayout();
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
@@ -283,5 +311,7 @@
 		private System.Windows.Forms.DataGridViewButtonColumn dgvColDelete;
 		private System.Windows.Forms.Button btnDown;
 		private System.Windows.Forms.Button btnUp;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ComboBox cmbSwitch;
 	}
 }

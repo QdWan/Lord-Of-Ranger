@@ -40,11 +40,18 @@ namespace LordOfRanger {
 		[DllImport( "user32.dll" )]
 		internal static extern int GetWindowRect(IntPtr hWnd, out Rect rect);
 
+		//スクリーンショット取得
+		[DllImport( "user32.dll" )]
+		public static extern bool PrintWindow( IntPtr hWnd, IntPtr dc, uint reservedFlag );
+
 		[DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr GetDC(IntPtr hwnd);
 
 		[DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr ReleaseDC(IntPtr hwnd, IntPtr hdc);
+
+		[DllImport( "gdi32.dll" )]
+		public static extern int BitBlt( IntPtr hDestDc,int x,int y,int nWidth,int nHeight,IntPtr hSrcDc,int xSrc,int ySrc,int dwRop );
 
 		[DllImport( "gdi32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr CreateCompatibleDC(IntPtr hdc);

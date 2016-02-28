@@ -142,7 +142,7 @@ namespace LordOfRanger.Setting.Version {
 
 						}
 						offset = tmpOffset;
-						m.sendList = msList.ToArray();
+						m.mouseData.Value = msList;
 						m.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
 						this._mass.Add( m );
@@ -259,10 +259,10 @@ namespace LordOfRanger.Setting.Version {
 					case Act.InstanceType.MOUSE:
 
 						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).sendList.Length * 4 * 5 ) );
+						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).mouseData.Value.Count * 4 * 5 ) );
 
 						//sendList
-						foreach( var sl in ( (Mouse)da ).sendList ) {
+						foreach( var sl in ( (Mouse)da ).mouseData.Value ) {
 							data.AddRange( BitConverter.GetBytes( (int)sl.op ) );
 							data.AddRange( BitConverter.GetBytes( sl.x ) );
 							data.AddRange( BitConverter.GetBytes( sl.y ) );

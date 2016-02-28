@@ -24,10 +24,11 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.cmbSwitchPosition = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.txtHotKey = new System.Windows.Forms.TextBox();
 			this.btnHotKeyChange = new System.Windows.Forms.Button();
@@ -64,6 +65,7 @@
 			this.skillIconExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.label2 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -120,6 +122,8 @@
 			// 
 			// splitContainer3.Panel1
 			// 
+			this.splitContainer3.Panel1.Controls.Add(this.label2);
+			this.splitContainer3.Panel1.Controls.Add(this.cmbSwitchPosition);
 			this.splitContainer3.Panel1.Controls.Add(this.label1);
 			this.splitContainer3.Panel1.Controls.Add(this.txtHotKey);
 			this.splitContainer3.Panel1.Controls.Add(this.btnHotKeyChange);
@@ -133,6 +137,23 @@
 			this.splitContainer3.SplitterDistance = 515;
 			this.splitContainer3.TabIndex = 0;
 			this.splitContainer3.TabStop = false;
+			// 
+			// cmbSwitchPosition
+			// 
+			this.cmbSwitchPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbSwitchPosition.FormattingEnabled = true;
+			this.cmbSwitchPosition.Items.AddRange(new object[] {
+            "クイックスロット1",
+            "クイックスロット2",
+            "クイックスロット3",
+            "クイックスロット4",
+            "クイックスロット5",
+            "クイックスロット6"});
+			this.cmbSwitchPosition.Location = new System.Drawing.Point(320, 9);
+			this.cmbSwitchPosition.Name = "cmbSwitchPosition";
+			this.cmbSwitchPosition.Size = new System.Drawing.Size(121, 20);
+			this.cmbSwitchPosition.TabIndex = 3;
+			this.cmbSwitchPosition.SelectedIndexChanged += new System.EventHandler(this.cmbSwitchPosition_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -328,9 +349,9 @@
 			// dgvColDelete
 			// 
 			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle1.NullValue = "削除";
-			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle2.NullValue = "削除";
+			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle2;
 			this.dgvColDelete.FillWeight = 92.4663F;
 			this.dgvColDelete.HeaderText = "削除";
 			this.dgvColDelete.Name = "dgvColDelete";
@@ -545,6 +566,15 @@
 			this.aboutToolStripMenuItem.Text = "Lord Of Rangerについて";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(252, 14);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(65, 12);
+			this.label2.TabIndex = 4;
+			this.label2.Text = "スイッチ配置:";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -630,6 +660,8 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvColSend;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn dgvColKeyboardCancel;
 		private System.Windows.Forms.DataGridViewButtonColumn dgvColDelete;
+		private System.Windows.Forms.ComboBox cmbSwitchPosition;
+		private System.Windows.Forms.Label label2;
 	}
 }
 

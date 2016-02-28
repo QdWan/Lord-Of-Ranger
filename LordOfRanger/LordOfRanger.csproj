@@ -175,6 +175,7 @@
     <Compile Include="Setting\Version\V.cs" />
     <Compile Include="Setting\Version\V2.cs" />
     <Compile Include="Setting\Version\V1.cs" />
+    <Compile Include="Setting\Version\V6.cs" />
     <Compile Include="Setting\Version\V5.cs" />
     <Compile Include="Setting\Version\V4.cs" />
     <Compile Include="Setting\Version\V3.cs" />

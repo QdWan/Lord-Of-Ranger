@@ -1,7 +1,9 @@
 ﻿namespace LordOfRanger.Setting {
 	internal class Mouse : Act {
-		internal LordOfRanger.Mouse.Set[] sendList = new LordOfRanger.Mouse.Set[0];
+
+		internal LordOfRanger.Mouse.MouseSetForm.MouseData mouseData;
 		internal Mouse() {
+			this.mouseData = new LordOfRanger.Mouse.MouseSetForm.MouseData();
 			this.type = InstanceType.MOUSE;
 		}
 	}
