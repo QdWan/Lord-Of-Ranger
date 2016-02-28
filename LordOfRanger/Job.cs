@@ -275,7 +275,7 @@ namespace LordOfRanger {
 					KeyPush( t.send );
 				}
 			} catch( KeyNotFoundException ) {
-				//It happens at the timing of the changeover.
+
 			}
 		}
 

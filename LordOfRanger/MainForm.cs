@@ -127,7 +127,7 @@ namespace LordOfRanger {
 					this.notifyIcon1.Visible = true;
 				}
 			} catch( Exception ) {
-				// ignored
+				
 			}
 		}
 
@@ -442,7 +442,7 @@ namespace LordOfRanger {
 					this._job.ActiveWindow = Arad.IsActiveWindow;
 				}
 			} catch( Exception ) {
-				// ignored
+				
 			}
 		}
 
