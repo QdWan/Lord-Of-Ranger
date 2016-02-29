@@ -107,7 +107,7 @@ namespace LordOfRanger {
 				throw new ArgumentOutOfRangeException();
 			}
 
-			//アラドの相対座標に変換
+			//アラドの相対座標から画面の絶対座標に変換
 			targetX += x;
 			targetY += y;
 
