@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace LordOfRanger.Setting.Version {
 	internal class V1 :IF {
-		private Mass _mass;
+		private readonly Mass _mass;
 		private const int VERSION = 1;
 
 		public V1( Mass instance ) {
@@ -80,6 +80,7 @@ namespace LordOfRanger.Setting.Version {
 			}
 
 			foreach( var ardHeader in headers ) {
+				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( ardHeader.instanceType ) {
 					case Act.InstanceType.COMMAND:
 						var c = new Command();
@@ -123,6 +124,8 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						this._mass.Add( t );
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			}
 		}
@@ -202,6 +205,7 @@ namespace LordOfRanger.Setting.Version {
 
 				data.AddRange( skillIcon );
 				data.AddRange( disableSkillIcon );
+				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( da.Type ) {
 					case Act.InstanceType.COMMAND:
 						//pushDataSize
@@ -233,6 +237,8 @@ namespace LordOfRanger.Setting.Version {
 						//send
 						data.Add( ( (Toggle)da ).send );
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 
 			}

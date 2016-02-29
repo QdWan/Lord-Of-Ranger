@@ -78,7 +78,7 @@ namespace LordOfRanger.Setting {
 
 
 	internal class ActList<TAct> where TAct : Act {
-		private List<TAct> _value = new List<TAct>();
+		private readonly List<TAct> _value = new List<TAct>();
 		internal IEnumerable<TAct> Value {
 			get {
 				return this._value;
