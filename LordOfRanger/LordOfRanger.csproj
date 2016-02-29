@@ -129,6 +129,7 @@
     <Compile Include="Api.cs" />
     <Compile Include="Arad.cs" />
     <Compile Include="AradExtract\Extract.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LayeredWindowSurface.cs">
       <SubType>Form</SubType>
@@ -156,6 +157,7 @@
     </Compile>
     <Compile Include="Mouse\Click.cs" />
     <Compile Include="Mouse\Set.cs" />
+    <Compile Include="Mouse\Common.cs" />
     <Compile Include="Options\Options.cs" />
     <Compile Include="Options\OptionsForm.cs">
       <SubType>Form</SubType>

@@ -51,35 +51,17 @@ namespace LordOfRanger.Mouse {
 
 		}
 
-		internal class MouseData {
-
-			internal MouseData() {
-				SwitchState = Arad.SwitchingStyle.BOTH;
-				Value = new List<Set>();
-			}
-
-			internal Arad.SwitchingStyle SwitchState {
-				get;
-				set;
-			}
-			internal List<Set> Value {
-				get;
-				set;
-			}
-
-		}
-
 		private void MouseSetForm_Load( object sender, EventArgs e ) {
 			foreach( var mouse in this.mouseData.Value ) {
 				string op;
 				switch( mouse.op ) {
-					case Set.Operation.LEFT:
+					case Operation.LEFT:
 						op = MouseOperationText.LEFT;
 						break;
-					case Set.Operation.RIGHT:
+					case Operation.RIGHT:
 						op = MouseOperationText.RIGHT;
 						break;
-					case Set.Operation.MOVE:
+					case Operation.MOVE:
 						op = MouseOperationText.MOVE;
 						break;
 					default:
@@ -111,7 +93,7 @@ namespace LordOfRanger.Mouse {
 		private void btnOk_Click( object sender, EventArgs e ) {
 			this.dgv.EndEdit();
 
-			this.mouseData.SwitchState = (Arad.SwitchingStyle)this.cmbSwitch.SelectedIndex;
+			this.mouseData.SwitchState = (SwitchingStyle)this.cmbSwitch.SelectedIndex;
 
 			foreach( DataGridViewRow row in this.dgv.Rows ) {
 				uint i;
@@ -138,16 +120,16 @@ namespace LordOfRanger.Mouse {
 				var sleepBetween = int.Parse( row.Cells[DgvCol.SLEEP_BETWEEN].Value.ToString() );
 				var sleepAfter = int.Parse( row.Cells[DgvCol.SLEEP_AFTER].Value.ToString() );
 				var cb = (DataGridViewComboBoxCell)row.Cells[DgvCol.OPERATION];
-				Set.Operation op;
+				Operation op;
 				switch( (string)cb.EditedFormattedValue ) {
 					case MouseOperationText.LEFT:
-						op = Set.Operation.LEFT;
+						op = Operation.LEFT;
 						break;
 					case MouseOperationText.RIGHT:
-						op = Set.Operation.RIGHT;
+						op = Operation.RIGHT;
 						break;
 					case MouseOperationText.MOVE:
-						op = Set.Operation.MOVE;
+						op = Operation.MOVE;
 						break;
 					default:
 						continue;

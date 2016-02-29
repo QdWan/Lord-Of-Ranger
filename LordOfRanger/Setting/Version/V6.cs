@@ -126,12 +126,12 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.disableSkillIconSize;
 						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
-						m.mouseData.SwitchState = (Arad.SwitchingStyle)BitConverter.ToInt32( array, offset );
+						m.mouseData.SwitchState = (SwitchingStyle)BitConverter.ToInt32( array, offset );
 						offset += 4;
 						var tmpOffset = offset;
 						while( tmpOffset < offset + ardHeader.sendDataSize - 4 ) {
 
-							var op = (LordOfRanger.Mouse.Set.Operation)BitConverter.ToInt32( array, tmpOffset );
+							var op = (LordOfRanger.Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							var x = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;

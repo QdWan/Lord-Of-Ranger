@@ -1,10 +1,5 @@
 ﻿namespace LordOfRanger.Mouse {
 	class Set {
-		internal enum Operation{
-			LEFT,
-			RIGHT,
-			MOVE
-		}
 		internal readonly Operation op;
 		internal readonly int x;
 		internal readonly int y;

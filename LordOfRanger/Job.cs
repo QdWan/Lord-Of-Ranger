@@ -123,7 +123,7 @@ namespace LordOfRanger {
 						}
 					}
 					//スイッチの状態によって、操作する/しないを判定する
-					if( m.mouseData.SwitchState != Arad.SwitchingStyle.BOTH && m.mouseData.SwitchState != Arad.SwitchState ) {
+					if( m.mouseData.SwitchState != SwitchingStyle.BOTH && m.mouseData.SwitchState != Arad.SwitchState ) {
 						continue;
 					}
 					this._mouseTaskCancelToken = new CancellationTokenSource();
@@ -133,15 +133,15 @@ namespace LordOfRanger {
 								throw new TaskCanceledException();
 							}
 							switch( send.op ) {
-								case Set.Operation.LEFT:
+								case Operation.LEFT:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
 									Click.Left( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
 									break;
-								case Set.Operation.RIGHT:
+								case Operation.RIGHT:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
 									Click.Right( Arad.x + send.x, Arad.y + send.y, send.sleepBetween );
 									break;
-								case Set.Operation.MOVE:
+								case Operation.MOVE:
 									Api.SetCursorPos( Arad.x + send.x, Arad.y + send.y );
 									break;
 								default:

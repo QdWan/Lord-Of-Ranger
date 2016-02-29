@@ -128,7 +128,7 @@ namespace LordOfRanger.Setting.Version {
 						var tmpOffset = offset;
 						while( tmpOffset < offset + ardHeader.sendDataSize ) {
 
-							var op = (LordOfRanger.Mouse.Set.Operation)BitConverter.ToInt32( array, tmpOffset );
+							var op = (LordOfRanger.Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							var x = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;

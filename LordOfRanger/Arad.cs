@@ -29,12 +29,6 @@ namespace LordOfRanger {
 			new Point(235,558)
 		};
 
-		internal enum SwitchingStyle {
-			BOTH = 0,
-			A = 1,
-			B = 2,
-			UNKNOWN = 3
-		}
 		private static readonly Color SWITCH_A_COLOR = Color.FromArgb( 97, 255, 109 );
 		private static readonly Color SWITCH_B_COLOR = Color.FromArgb( 255, 238, 97 );
 
