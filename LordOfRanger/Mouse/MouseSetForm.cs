@@ -95,6 +95,7 @@ namespace LordOfRanger.Mouse {
 			this._mouseHook = new MouseHook();
 			this._mouseHook.MouseHooked += AutoInput;
 			this.cmbSwitch.SelectedIndex = (int)this.mouseData.SwitchState;
+			this.editedFlag = false;
 		}
 		private void MouseSetForm_FormClosed( object sender, FormClosedEventArgs e ) {
 			this._mouseHook.MouseHooked -= AutoInput;
