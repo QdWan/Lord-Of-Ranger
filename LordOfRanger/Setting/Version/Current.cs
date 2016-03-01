@@ -8,12 +8,12 @@ using System.Threading;
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class V6 : IF {
+	internal class Current : IF {
 
 		private const int VERSION = 6;
 		private readonly Mass _mass;
 
-		public V6( Mass instance ) {
+		public Current( Mass instance ) {
 			this._mass = instance;
 		}
 

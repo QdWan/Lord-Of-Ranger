@@ -22,7 +22,7 @@ namespace LordOfRanger.Setting.Version {
 		/// <param name="instance"> 操作する対象のインスタンス </param>
 		internal V( Mass instance ) {
 			this._instance = instance;
-			this._vif = new V6( instance );
+			this._vif = new Current( instance );
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace LordOfRanger.Setting.Version {
 					this._vif = new V5( this._instance );
 					break;
 				case 6:
-					this._vif = new V6( this._instance );
+					this._vif = new Current( this._instance );
 					break;
 				default:
 					return;
@@ -97,7 +97,7 @@ namespace LordOfRanger.Setting.Version {
 				case 5:
 					return V5.GetHotKey( filename );
 				case 6:
-					return V6.GetHotKey( filename );
+					return Current.GetHotKey( filename );
 				default:
 					return 0x00;
 			}
