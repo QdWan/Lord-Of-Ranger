@@ -202,12 +202,9 @@ namespace LordOfRanger {
 
 			_enablekeyF[key] = true;
 
-			var left = _backDirection;
-			var right = _frontDirection;
-
 			//コマンド
 			foreach( var c in this._mass.Commands.Where( c => CommandCheck( key, c.Push ) ) ) {
-				this._commandTask = Task.Run( () => ThreadCommand( c.sendList, left, right ) );
+				this._commandTask = Task.Run( () => ThreadCommand( c.sendList, _frontDirection, _backDirection ) );
 				break;
 			}
 
@@ -245,10 +242,10 @@ namespace LordOfRanger {
 				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( tmpSendKey ) {
 					case (byte)Keys.Right:
-						tmpSendKey = back;
+						tmpSendKey = front;
 						break;
 					case (byte)Keys.Left:
-						tmpSendKey = front;
+						tmpSendKey = back;
 						break;
 				}
 				KeyPush( tmpSendKey, Options.Options.options.commandUpDownInterval );
