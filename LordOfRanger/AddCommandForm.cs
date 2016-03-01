@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace LordOfRanger {
 	/// <summary>
-	/// 行追加時に、コマンド、トグル、連打を選択するフォーム
+	/// 行追加時に、コマンド、連打切替、連打を選択するフォーム
 	/// </summary>
 	internal partial class AddCommandForm :Form {
 		internal Result result;

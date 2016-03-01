@@ -163,7 +163,7 @@ namespace LordOfRanger {
 		/// EnablekeyEは関数の終わりにそれぞれtrueに書き換えられる
 		/// ここでは
 		/// コマンドの呼び出し、
-		/// トグルの有効無効の切り替え、
+		/// 連打切替の有効無効の切り替え、
 		/// 方向キーの記憶を行う
 		/// </summary>
 		/// <param name="e"> 押されたキー情報 </param>
@@ -258,7 +258,7 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// 一定時間ごとに呼ばれる
-		/// ここで連打、トグルの処理を行う
+		/// ここで連打、連打切替の処理を行う
 		/// </summary>
 		internal void TimerEvent() {
 			if( !ActiveWindow || !this._barrageEnable ) {
