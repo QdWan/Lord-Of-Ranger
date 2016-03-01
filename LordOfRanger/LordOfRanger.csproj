@@ -156,7 +156,6 @@
       <DependentUpon>MouseSetForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Mouse\Click.cs" />
-    <Compile Include="Mouse\Set.cs" />
     <Compile Include="Mouse\Common.cs" />
     <Compile Include="Options\Options.cs" />
     <Compile Include="Options\OptionsForm.cs">
