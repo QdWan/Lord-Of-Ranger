@@ -152,7 +152,7 @@ namespace LordOfRanger.Setting.Version {
 			return mass;
 		}
 
-		public void Save(Mass mass) {
+		public static void Save(Mass mass) {
 			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
 				Directory.CreateDirectory( Mass.SETTING_PATH );
 				Thread.Sleep( 300 );

@@ -63,7 +63,7 @@ namespace LordOfRanger.Setting {
 		/// 最新バージョンで保存する
 		/// </summary>
 		internal static void Save(Mass mass) {
-			(new Current()).Save(mass);
+			Current.Save(mass);
 		}
 
 		/// <summary>
