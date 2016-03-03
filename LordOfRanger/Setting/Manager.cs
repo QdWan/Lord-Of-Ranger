@@ -1,17 +1,15 @@
 ﻿using System;
 using System.IO;
+using LordOfRanger.Setting.Version;
 
-
-
-namespace LordOfRanger.Setting.Version {
+namespace LordOfRanger.Setting {
 	/// <summary>
 	/// 設定ファイルのバージョンを管理するクラス
-	/// このクラスを通して、Version1,Version2などの設定ファイルを読み込む
-	/// 保存する際は必ず最新バージョンで保存される。
-	/// バージョンを追加した際には、VERSIONの数値を書き換え、常に最新を参照するようにする。
+	/// このクラスを通して設定ファイルを読み込む
+	/// 読み込んだバージョンがいくつであろうと、保存する際は必ず最新バージョンで保存される。
 	/// 尚、プログラムのバージョンと設定のバージョンは別に管理する。
 	/// </summary>
-	static class V {
+	static class Manager {
 
 		/// <summary>
 		/// インスタンスのバージョンを取得する

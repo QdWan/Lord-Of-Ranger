@@ -102,7 +102,7 @@ namespace LordOfRanger {
 				switch( result ) {
 					case DialogResult.Yes:
 						EditedFlag = false;
-						Setting.Version.V.Save( this._mass );
+						Manager.Save( this._mass );
 						break;
 					case DialogResult.No:
 						EditedFlag = false;
@@ -162,7 +162,7 @@ namespace LordOfRanger {
 			Options.OptionsForm.SaveCnf();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
-			this._mass = Setting.Version.V.Load( this._mass.name );
+			this._mass = Manager.Load( this._mass.name );
 			this._otherWindowOpen = false;
 		}
 
@@ -286,7 +286,7 @@ namespace LordOfRanger {
 					this._mass = new Mass();
 					CurrentSettingChange( "new" );
 					this._mass.name = this._currentSettingFile;
-					Setting.Version.V.Save(this._mass);
+					Manager.Save(this._mass);
 					continue;
 				}
 				this.lbSettingList.Items.Clear();
@@ -315,7 +315,7 @@ namespace LordOfRanger {
 			foreach( var file in files ) {
 				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
 					var filename = Path.GetFileNameWithoutExtension( file );
-					var hotkey = Setting.Version.V.GetHotKey( filename );
+					var hotkey = Manager.GetHotKey( filename );
 					if( hotkey != 0x00 ) {
 						string file2;
 						if( !this._hotKeys.TryGetValue( hotkey, out file2 ) ) {
@@ -340,7 +340,7 @@ namespace LordOfRanger {
 				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
 			}
 			LoadHotKeys( firstFlag );
-			this._mass = Setting.Version.V.Load( this._currentSettingFile );
+			this._mass = Manager.Load( this._currentSettingFile );
 			SettingView();
 			this._job = new Job( this._mass );
 
@@ -713,7 +713,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			Setting.Version.V.Save(this._mass);
+			Manager.Save(this._mass);
 			SettingUpdate();
 		}
 
@@ -724,7 +724,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			this._mass = Setting.Version.V.Load( this._mass.name );
+			this._mass = Manager.Load( this._mass.name );
 			SettingUpdate();
 		}
 
