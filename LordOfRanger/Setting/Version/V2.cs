@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 // ReSharper disable JoinDeclarationAndInitializer
 // ReSharper disable UseObjectOrCollectionInitializer
 
@@ -11,14 +10,9 @@ using System.Threading;
 
 namespace LordOfRanger.Setting.Version {
 	internal class V2 :IF {
-		private readonly Mass _mass;
 		private const int VERSION = 2;
 
-		public V2( Mass instance ) {
-			this._mass = instance;
-		}
-
-		struct ArdHeader {
+		private struct ArdHeader {
 			internal int id;
 			internal Act.InstanceType instanceType;
 			internal int priority;
@@ -28,11 +22,12 @@ namespace LordOfRanger.Setting.Version {
 			internal int sendDataSize;
 		}
 
-		public void Load( string filename ) {
-			this._mass.Init();
-			this._mass.name = filename;
+		public Mass Load( string filename ) {
+			var mass = new Mass();
+			mass.Init();
+			mass.name = filename;
 
-			var fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+			var fs = new FileStream( Mass.SETTING_PATH + mass.name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 			var array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
@@ -43,16 +38,16 @@ namespace LordOfRanger.Setting.Version {
 			offset += 4;
 
 			if( version != VERSION ) {
-				return;
+				throw new InvalidDataException();
 			}
 
 			var hotKeySize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			var headerSize = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			this._mass.Sequence = BitConverter.ToInt32( array, offset );
+			mass.Sequence = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			this._mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
+			mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
 			var headerCount = headerSize / 28;
 			var headers = new List<ArdHeader>();
@@ -91,7 +86,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						c.sendList = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray();
 						offset += ardHeader.sendDataSize;
-						this._mass.Add( c );
+						mass.Add( c );
 						break;
 					case Act.InstanceType.BARRAGE:
 						var b = new Barrage();
@@ -105,7 +100,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						b.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						this._mass.Add( b );
+						mass.Add( b );
 						break;
 					case Act.InstanceType.TOGGLE:
 						var t = new Toggle();
@@ -119,151 +114,16 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.pushDataSize;
 						t.send = array.Skip( offset ).Take( ardHeader.sendDataSize ).ToArray()[0];
 						offset += ardHeader.sendDataSize;
-						this._mass.Add( t );
+						mass.Add( t );
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
 			}
+			return mass;
 		}
 
-		public void Save() {
-			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
-				Directory.CreateDirectory( Mass.SETTING_PATH );
-				Thread.Sleep( 300 );
-			}
-			/*
-				version 32bit
-				This is setting version, not program version.
-			*/
-			var version = BitConverter.GetBytes( VERSION );
-			/*
-				hotKeySize 32bit
-				8 bit only.
-			*/
-
-			/*
-				headerSize 32bit
-			*/
-			byte[] headerSize;
-
-			/* 
-				sequence
-			*/
-			var sequence = BitConverter.GetBytes( this._mass.Sequence );
-			/*
-				hotKey 8bit
-			*/
-			var hotKey = this._mass.hotKey;
-			/*
-				id 32bit
-				Type 32bit
-				priority 32bit
-				skillIconSize 32bit
-				disableSkillIconSize 32bit
-				pushDataSize 32bit
-				sendDataSize 32bit
-			*/
-
-			/*
-				headerSize 32bit
-			*/
-			var header = new List<byte>();
-
-			/*
-				skillIcon variable
-				disableSkillIcon variable
-				push 8bit
-				(sendList variable || send 8bit)
-			*/
-			var data = new List<byte>();
-			foreach( var da in this._mass.Value ) {
-				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
-
-				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];
-
-				//id
-				header.AddRange( BitConverter.GetBytes( da.Id ) );
-
-				//Type
-				header.AddRange( BitConverter.GetBytes( (int)da.Type ) );
-
-				//priority
-				header.AddRange( BitConverter.GetBytes( da.Priority ) );
-
-				//skillIconSize
-				header.AddRange( BitConverter.GetBytes( skillIcon.Length ) );
-
-				//disableSkillIconSize
-				header.AddRange( BitConverter.GetBytes( disableSkillIcon.Length ) );
-
-				data.AddRange( skillIcon );
-				data.AddRange( disableSkillIcon );
-				// ReSharper disable once SwitchStatementMissingSomeCases
-				switch( da.Type ) {
-					case Act.InstanceType.COMMAND:
-
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Command)da ).Push[0] );
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( ( ( (Command)da ).sendList.Length ) ) );
-
-						//sendList
-						data.AddRange( ( (Command)da ).sendList );
-						break;
-					case Act.InstanceType.BARRAGE:
-
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Barrage)da ).Push[0] );
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//send
-						data.Add( ( (Barrage)da ).send );
-						break;
-					case Act.InstanceType.TOGGLE:
-
-						//pushDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//push
-						data.Add( ( (Toggle)da ).Push[0] );
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//send
-						data.Add( ( (Toggle)da ).send );
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			var hotKeySize = BitConverter.GetBytes( 1 );
-			headerSize = BitConverter.GetBytes( header.Count );
-
-			var settingBinary = new List<byte>();
-			settingBinary.AddRange( version );
-			settingBinary.AddRange( hotKeySize );
-			settingBinary.AddRange( headerSize );
-			settingBinary.AddRange( sequence );
-			settingBinary.Add( hotKey );
-			settingBinary.AddRange( header );
-			settingBinary.AddRange( data );
-			var fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
-			fs.Write( settingBinary.ToArray(), 0, settingBinary.Count );
-			fs.Close();
-		}
-
-		public static byte GetHotKey( string filename ) {
+		public byte GetHotKey( string filename ) {
 			try {
 				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				var array = new byte[fs.Length];

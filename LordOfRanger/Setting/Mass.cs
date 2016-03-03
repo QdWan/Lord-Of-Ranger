@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using LordOfRanger.Setting.Version;
-
-
 
 namespace LordOfRanger.Setting {
 	/// <summary>
@@ -81,9 +78,6 @@ namespace LordOfRanger.Setting {
 			Init();
 		}
 
-		internal void Reload() {
-			Load(this.name);
-		}
 
 		#region Data Interface
 
@@ -223,41 +217,6 @@ namespace LordOfRanger.Setting {
 			this._commandList = new ActList<Command>();
 			this._toggleList = new ActList<Toggle>();
 			this._mouseList = new ActList<Mouse>();
-		}
-
-		/// <summary>
-		/// この設定ファイルの保存
-		/// </summary>
-		internal void Save() {
-			var v = new V( this );
-			v.Save();
-		}
-
-		/// <summary>
-		/// 設定ファイルの読み込み
-		/// </summary>
-		/// <param name="filename"> 読み込むファイル名 </param>
-		internal void Load( string filename ) {
-			try {
-				var v = new V( this );
-				v.Load( filename );
-			} catch( Exception ) {
-				MessageBox.Show( filename + "設定ファイルを読み込めませんでした。" );
-			}
-		}
-
-		/// <summary>
-		/// ファイルを切り替えるホットキーを取得する
-		/// </summary>
-		/// <param name="filename"> 取得するファイル名 </param>
-		/// <returns> ホットキー </returns>
-		internal static byte GetHotKey( string filename ) {
-			try {
-				return V.GetHotKey( filename );
-			} catch( Exception ) {
-				MessageBox.Show( filename + "設定ファイルを読み込めませんでした。" );
-				return 0x00;
-			}
 		}
 
 		private void CancelListReBuild() {

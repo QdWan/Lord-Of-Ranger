@@ -11,17 +11,13 @@ namespace LordOfRanger.Setting.Version {
 	internal class Current : IF {
 
 		private const int VERSION = 6;
-		private readonly Mass _mass;
 
-		public Current( Mass instance ) {
-			this._mass = instance;
-		}
+		public Mass Load( string filename ) {
+			var mass = new Mass();
+			mass.Init();
+			mass.name = filename;
 
-		public void Load( string filename ) {
-			this._mass.Init();
-			this._mass.name = filename;
-
-			var fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
+			var fs = new FileStream( Mass.SETTING_PATH + mass.name + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 			var array = new byte[fs.Length];
 
 			fs.Read( array, 0, (int)fs.Length );
@@ -32,18 +28,18 @@ namespace LordOfRanger.Setting.Version {
 			offset += 4;
 
 			if( version != VERSION ) {
-				return;
+				throw new InvalidDataException();
 			}
 
 			var hotKeySize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			var headerSize = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			this._mass.Sequence = BitConverter.ToInt32( array, offset );
+			mass.Sequence = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			this._mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
+			mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
-			this._mass.SwitchPosition = BitConverter.ToInt32( array, offset );
+			mass.SwitchPosition = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			var headerCount = headerSize / 28;
 			var headers = new List<ArdHeader>();
@@ -82,7 +78,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						c.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
-						this._mass.Add( c );
+						mass.Add( c );
 						break;
 					case Act.InstanceType.BARRAGE:
 						var b = new Barrage();
@@ -98,7 +94,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						b.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
-						this._mass.Add( b );
+						mass.Add( b );
 						break;
 					case Act.InstanceType.TOGGLE:
 						var t = new Toggle();
@@ -114,7 +110,7 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.sendDataSize;
 						t.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
-						this._mass.Add( t );
+						mass.Add( t );
 						break;
 					case Act.InstanceType.MOUSE:
 						var m = new Mouse();
@@ -147,15 +143,16 @@ namespace LordOfRanger.Setting.Version {
 						offset = tmpOffset;
 						m.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
-						this._mass.Add( m );
+						mass.Add( m );
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
 			}
+			return mass;
 		}
 
-		public void Save() {
+		public void Save(Mass mass) {
 			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
 				Directory.CreateDirectory( Mass.SETTING_PATH );
 				Thread.Sleep( 300 );
@@ -178,16 +175,16 @@ namespace LordOfRanger.Setting.Version {
 			/* 
 				sequence
 			*/
-			var sequence = BitConverter.GetBytes( this._mass.Sequence );
+			var sequence = BitConverter.GetBytes( mass.Sequence );
 			/*
 				hotKey 8bit
 			*/
-			var hotKey = this._mass.hotKey;
+			var hotKey = mass.hotKey;
 
 			/*
 				switchPosition 32bit
 			*/
-			var switchPosition = BitConverter.GetBytes(this._mass.SwitchPosition);
+			var switchPosition = BitConverter.GetBytes(mass.SwitchPosition);
 
 			/*
 				id 32bit
@@ -211,7 +208,7 @@ namespace LordOfRanger.Setting.Version {
 				(sendList variable || send 8bit)
 			*/
 			var data = new List<byte>();
-			foreach( var da in this._mass.Value ) {
+			foreach( var da in mass.Value ) {
 				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
 
 				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];
@@ -298,12 +295,12 @@ namespace LordOfRanger.Setting.Version {
 			settingBinary.AddRange( switchPosition );
 			settingBinary.AddRange( header );
 			settingBinary.AddRange( data );
-			var fs = new FileStream( Mass.SETTING_PATH + this._mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
+			var fs = new FileStream( Mass.SETTING_PATH + mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
 			fs.Write( settingBinary.ToArray(), 0, settingBinary.Count );
 			fs.Close();
 		}
 
-		public static byte GetHotKey( string filename ) {
+		public byte GetHotKey( string filename ) {
 			try {
 				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				var array = new byte[fs.Length];

@@ -1,8 +1,9 @@
 ﻿namespace LordOfRanger.Setting.Version {
 	interface IF {
 
-		void Save();
+		Mass Load(string filename);
 
-		void Load(string filename);
+		byte GetHotKey( string filename );
+
 	}
 }
