@@ -33,30 +33,22 @@ namespace LordOfRanger.Setting {
 		/// </summary>
 		/// <param name="filename"> 読み込むファイルのファイル名 </param>
 		internal static Mass Load( string filename ) {
-			IF vif;
 			switch( GetVersion( filename ) ) {
 				case 1:
-					vif = new V1();
-					break;
+					return V1.Load( filename );
 				case 2:
-					vif = new V2();
-					break;
+					return V2.Load( filename );
 				case 3:
-					vif = new V3();
-					break;
+					return V3.Load( filename );
 				case 4:
-					vif = new V4();
-					break;
+					return V4.Load( filename );
 				case 5:
-					vif = new V5();
-					break;
+					return V5.Load( filename );
 				case 6:
-					vif = new Current();
-					break;
+					return Current.Load( filename );
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-			return vif.Load( filename );
 		}
 
 		/// <summary>
@@ -72,30 +64,22 @@ namespace LordOfRanger.Setting {
 		/// <param name="filename"> ファイルのホットキーを取得する </param>
 		/// <returns></returns>
 		internal static byte GetHotKey( string filename ) {
-			IF vif;
 			switch( GetVersion( filename ) ) {
 				case 1:
-					vif = new V1();
-					break;
+					return V1.GetHotKey( filename );
 				case 2:
-					vif = new V2();
-					break;
+					return V2.GetHotKey( filename );
 				case 3:
-					vif = new V3();
-					break;
+					return V3.GetHotKey( filename );
 				case 4:
-					vif = new V4();
-					break;
+					return V4.GetHotKey( filename );
 				case 5:
-					vif = new V5();
-					break;
+					return V5.GetHotKey( filename );
 				case 6:
-					vif = new Current();
-					break;
+					return Current.GetHotKey( filename );
 				default:
-					return 0x00;
+					throw new ArgumentOutOfRangeException();
 			}
-			return vif.GetHotKey( filename );
 		}
 	}
 }

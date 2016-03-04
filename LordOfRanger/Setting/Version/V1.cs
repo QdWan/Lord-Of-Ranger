@@ -6,7 +6,7 @@ using System.Linq;
 // ReSharper disable JoinDeclarationAndInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class V1 :IF {
+	internal class V1 {
 		private const int VERSION = 1;
 
 		private struct ArdHeader {
@@ -19,7 +19,7 @@ namespace LordOfRanger.Setting.Version {
 			internal int sendDataSize;
 		}
 
-		public Mass Load( string filename ) {
+		internal static Mass Load( string filename ) {
 			var mass = new Mass();
 			mass.Init();
 			mass.name = filename;
@@ -124,7 +124,7 @@ namespace LordOfRanger.Setting.Version {
 			return mass;
 		}
 
-		public byte GetHotKey( string filename ) {
+		internal static byte GetHotKey( string filename ) {
 			try {
 				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				var array = new byte[fs.Length];

@@ -9,7 +9,7 @@ using System.Linq;
 
 
 namespace LordOfRanger.Setting.Version {
-	internal class V2 :IF {
+	internal class V2 {
 		private const int VERSION = 2;
 
 		private struct ArdHeader {
@@ -22,7 +22,7 @@ namespace LordOfRanger.Setting.Version {
 			internal int sendDataSize;
 		}
 
-		public Mass Load( string filename ) {
+		internal static Mass Load( string filename ) {
 			var mass = new Mass();
 			mass.Init();
 			mass.name = filename;
@@ -123,7 +123,7 @@ namespace LordOfRanger.Setting.Version {
 			return mass;
 		}
 
-		public byte GetHotKey( string filename ) {
+		internal static byte GetHotKey( string filename ) {
 			try {
 				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				var array = new byte[fs.Length];

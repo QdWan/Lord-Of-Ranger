@@ -173,7 +173,6 @@
     <Compile Include="Setting\Mass.cs" />
     <Compile Include="Setting\Mouse.cs" />
     <Compile Include="Setting\Toggle.cs" />
-    <Compile Include="Setting\Version\If.cs" />
     <Compile Include="Setting\Version\V2.cs" />
     <Compile Include="Setting\Version\V1.cs" />
     <Compile Include="Setting\Version\Current.cs" />

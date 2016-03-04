@@ -8,11 +8,11 @@ using System.Threading;
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class Current : IF {
+	internal class Current  {
 
 		private const int VERSION = 6;
 
-		public Mass Load( string filename ) {
+		internal static Mass Load( string filename ) {
 			var mass = new Mass();
 			mass.Init();
 			mass.name = filename;
@@ -300,7 +300,7 @@ namespace LordOfRanger.Setting.Version {
 			fs.Close();
 		}
 
-		public byte GetHotKey( string filename ) {
+		internal static byte GetHotKey( string filename ) {
 			try {
 				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
 				var array = new byte[fs.Length];
