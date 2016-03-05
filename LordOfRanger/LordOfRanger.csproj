@@ -126,7 +126,6 @@
     <Compile Include="AddSettingForm.Designer.cs">
       <DependentUpon>AddSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Api.cs" />
     <Compile Include="Arad\Client.cs" />
     <Compile Include="Arad\Extract.cs" />
     <Compile Include="Arad\Common.cs" />
@@ -191,6 +190,12 @@
     <Compile Include="SkillLayer.Designer.cs">
       <DependentUpon>SkillLayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Win32\DC.cs" />
+    <Compile Include="Win32\Keyboard.cs" />
+    <Compile Include="Win32\LayerWindow.cs" />
+    <Compile Include="Win32\Mouse.cs" />
+    <Compile Include="Win32\Object.cs" />
+    <Compile Include="Win32\Window.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>

@@ -19,7 +19,7 @@ namespace LordOfRanger {
 		/// <summary>
 		/// BLENDFUNCTION を取得、設定します。
 		/// </summary>
-		protected Api.Blendfunction blendFunction;
+		protected Win32.LayerWindow.Blendfunction blendFunction;
 
 
 
@@ -94,7 +94,7 @@ namespace LordOfRanger {
 			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			ResumeLayout( false );
 			AllowDragMove = true;
-			this.blendFunction = new Api.Blendfunction( 0, 0, 255, 1 );
+			this.blendFunction = new Win32.LayerWindow.Blendfunction( 0, 0, 255, 1 );
 		}
 
 		/// <summary>
@@ -164,23 +164,23 @@ namespace LordOfRanger {
 			var oldBitmap = System.IntPtr.Zero;
 
 			try {
-				screen = Api.GetDC( System.IntPtr.Zero );
-				memScreen = Api.CreateCompatibleDC( screen );
+				screen = Win32.DC.GetDC( System.IntPtr.Zero );
+				memScreen = Win32.DC.CreateCompatibleDC( screen );
 				gdiBitmap = OffScreen.GetHbitmap( System.Drawing.Color.FromArgb( 0 ) );
-				oldBitmap = Api.SelectObject( memScreen, gdiBitmap );
+				oldBitmap = Win32.Object.SelectObject( memScreen, gdiBitmap );
 
 				var size = Size;
 				var pointSource = new System.Drawing.Point( 0, 0 );
 				var topPos = Location;
 
 				InvokeWithThreadSafe( () => {
-					Api.UpdateLayeredWindow( Handle, screen, ref topPos, ref size, memScreen, ref pointSource, 0, ref this.blendFunction, 2 );
+					Win32.LayerWindow.UpdateLayeredWindow( Handle, screen, ref topPos, ref size, memScreen, ref pointSource, 0, ref this.blendFunction, 2 );
 				} );
 			} finally {
-				Api.ReleaseDC( System.IntPtr.Zero, screen );
-				Api.SelectObject( memScreen, oldBitmap );
-				Api.DeleteObject( gdiBitmap );
-				Api.DeleteDC( memScreen );
+				Win32.DC.ReleaseDC( System.IntPtr.Zero, screen );
+				Win32.Object.SelectObject( memScreen, oldBitmap );
+				Win32.Object.DeleteObject( gdiBitmap );
+				Win32.DC.DeleteDC( memScreen );
 				OffScreen.Dispose();
 				OffScreen = null;
 			}

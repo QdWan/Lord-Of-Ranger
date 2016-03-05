@@ -135,15 +135,15 @@ namespace LordOfRanger {
 							}
 							switch( send.op ) {
 								case Operation.LEFT:
-									Api.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
+									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
 									Click.Left( Arad.Client.x + send.x, Arad.Client.y + send.y, send.sleepBetween );
 									break;
 								case Operation.RIGHT:
-									Api.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
+									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
 									Click.Right( Arad.Client.x + send.x, Arad.Client.y + send.y, send.sleepBetween );
 									break;
 								case Operation.MOVE:
-									Api.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
+									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
 									break;
 								default:
 									throw new ArgumentOutOfRangeException();

@@ -27,9 +27,9 @@ namespace LordOfRanger.Mouse {
 		/// <param name="y">Y座標</param>
 		/// <param name="sleepBetween">MOUSEDOWNとMOUSEUPの間の時間(ms)</param>
 		public static void Left( int x,int y,int sleepBetween) {
-			Api.mouse_event( (int)Operation.LEFTDOWN, x, y, 0, UIntPtr.Zero );
+			Win32.Mouse.mouse_event( (int)Operation.LEFTDOWN, x, y, 0, UIntPtr.Zero );
 			Thread.Sleep( sleepBetween );
-			Api.mouse_event( (int)Operation.LEFTUP, x, y, 0, UIntPtr.Zero );
+			Win32.Mouse.mouse_event( (int)Operation.LEFTUP, x, y, 0, UIntPtr.Zero );
 		}
 
 		/// <summary>
@@ -39,9 +39,9 @@ namespace LordOfRanger.Mouse {
 		/// <param name="y">Y座標</param>
 		/// <param name="sleepBetween">MOUSEDOWNとMOUSEUPの間の時間(ms)</param>
 		public static void Right( int x, int y, int sleepBetween ) {
-			Api.mouse_event( (int)Operation.RIGHTDOWN, x, y, 0, UIntPtr.Zero );
+			Win32.Mouse.mouse_event( (int)Operation.RIGHTDOWN, x, y, 0, UIntPtr.Zero );
 			Thread.Sleep( sleepBetween );
-			Api.mouse_event( (int)Operation.RIGHTUP, x, y, 0, UIntPtr.Zero );
+			Win32.Mouse.mouse_event( (int)Operation.RIGHTUP, x, y, 0, UIntPtr.Zero );
 		}
 	}
 

@@ -44,9 +44,9 @@ namespace LordOfRanger.Arad {
 
 		internal static bool IsActiveWindow {
 			get {
-				var hWnd = Api.GetForegroundWindow();
+				var hWnd = Win32.Window.GetForegroundWindow();
 				int id;
-				Api.GetWindowThreadProcessId( hWnd, out id );
+				Win32.Window.GetWindowThreadProcessId( hWnd, out id );
 				return _process.Id == id;
 
 			}
@@ -84,9 +84,9 @@ namespace LordOfRanger.Arad {
 				return;
 			}
 			_isAlive = true;
-			Api.Rect rect;
+			Win32.Window.RECT rect;
 			try {
-				Api.GetWindowRect( _process.MainWindowHandle, out rect );
+				Win32.Window.GetWindowRect( _process.MainWindowHandle, out rect );
 			} catch( Exception ) {
 				return;
 			}
@@ -112,13 +112,13 @@ namespace LordOfRanger.Arad {
 			targetY += y;
 
 			var bmp = new Bitmap( targetW, targetH );
-			var disDc = Api.GetDC( IntPtr.Zero );
+			var disDc = Win32.DC.GetDC( IntPtr.Zero );
 			using( var g = Graphics.FromImage( bmp ) ) {
 				var hDc = g.GetHdc();
-				Api.BitBlt( hDc, 0, 0, targetW, targetH, disDc, targetX, targetY, 13369376 );
+				Win32.Object.BitBlt( hDc, 0, 0, targetW, targetH, disDc, targetX, targetY, 13369376 );
 				g.ReleaseHdc( hDc );
 			}
-			Api.ReleaseDC( IntPtr.Zero, disDc );
+			Win32.DC.ReleaseDC( IntPtr.Zero, disDc );
 			return bmp;
 		}
 	}

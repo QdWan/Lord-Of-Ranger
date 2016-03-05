@@ -14,9 +14,9 @@ namespace LordOfRanger.Keyboard {
 		internal static void Down(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
-				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 1, EXTRA_INFO );
+				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 1, EXTRA_INFO );
 			} else {
-				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 0, EXTRA_INFO );
+				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 0, EXTRA_INFO );
 			}
 		}
 
@@ -28,9 +28,9 @@ namespace LordOfRanger.Keyboard {
 		internal static void Up(byte key, int sl = 0) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
-				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 3, EXTRA_INFO );
+				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 3, EXTRA_INFO );
 			} else {
-				Api.keybd_event( key, (byte)Api.MapVirtualKey( key, 0 ), 2, EXTRA_INFO );
+				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 2, EXTRA_INFO );
 			}
 		}
 

@@ -33,8 +33,8 @@ namespace LordOfRanger {
 					var iThisProcessId = hThisProcess.Id;
 
 					foreach( var hProcess in hProcesses.Where( hProcess => hProcess.Id != iThisProcessId ) ) {
-						Api.ShowWindow( hProcess.MainWindowHandle, Api.SW_NORMAL );
-						Api.SetForegroundWindow( hProcess.MainWindowHandle );
+						Win32.Window.ShowWindow( hProcess.MainWindowHandle, Win32.Window.SW_NORMAL );
+						Win32.Window.SetForegroundWindow( hProcess.MainWindowHandle );
 						break;
 					}
 					MessageBox.Show( "既にLordOfRangerが起動されています。" );
