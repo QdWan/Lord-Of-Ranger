@@ -77,11 +77,11 @@ namespace LordOfRanger {
 
 			this._job = new Job( this._mass );
 
-			if( Options.Options.options.activeWindowMonitoring ) {
-				this.timerActiveWindowCheck.Interval = Options.Options.options.activeWindowMonitoringinterval;
+			if( Properties.Settings.Default.activeWindowMonitoring ) {
+				this.timerActiveWindowCheck.Interval = Properties.Settings.Default.activeWindowMonitoringinterval;
 				this.timerActiveWindowCheck.Start();
 			}
-			this.timerBarrage.Interval = Options.Options.options.timerInterval;
+			this.timerBarrage.Interval = Properties.Settings.Default.timerInterval;
 			this.timerBarrage.Start();
 
 			var keyboardHook = new KeyboardHook();
@@ -154,12 +154,12 @@ namespace LordOfRanger {
 		}
 
 		private static void Application_ApplicationExit( object sender, EventArgs e ) {
-			Options.OptionsForm.SaveCnf();
+			Properties.Settings.Default.Save();
 		}
 
 		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
-			Options.OptionsForm.SaveCnf();
+			Properties.Settings.Default.Save();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
 			this._mass = Manager.Load( this._mass.name );
@@ -293,8 +293,8 @@ namespace LordOfRanger {
 				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
 					this.lbSettingList.Items.Add( filename );
 				}
-				if( this.lbSettingList.FindStringExact( Options.Options.options.currentSettingName ) != ListBox.NoMatches ) {
-					this.lbSettingList.SelectedItem = Options.Options.options.currentSettingName;
+				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
+					this.lbSettingList.SelectedItem = Properties.Settings.Default.currentSettingName;
 				} else {
 					if( this.lbSettingList.Items.Count > 0 ) {
 						this.lbSettingList.SelectedIndex = 0;
@@ -357,7 +357,7 @@ namespace LordOfRanger {
 		/// <param name="name">設定ファイルの名前</param>
 		private void CurrentSettingChange( string name ) {
 			this._currentSettingFile = name;
-			Options.Options.options.currentSettingName = name;
+			Properties.Settings.Default.currentSettingName = name;
 		}
 
 		#endregion
@@ -415,7 +415,7 @@ namespace LordOfRanger {
 #endif
 						}
 
-						if( (byte)e.KeyCode == Options.Options.options.hotKeyLorSwitching ) {
+						if( (byte)e.KeyCode == Properties.Settings.Default.hotKeyLorSwitching ) {
 							this._job.BarrageEnable = !this._job.BarrageEnable;
 						}
 					}

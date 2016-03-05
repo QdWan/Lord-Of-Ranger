@@ -5,8 +5,6 @@ using LordOfRanger.Keyboard;
 namespace LordOfRanger.Options {
 	internal partial class OptionsForm : Form {
 
-		private const string FILE_NAME = "./op.cnf";
-
 		private byte _tmpHotKey;
 
 		internal OptionsForm() {
@@ -50,58 +48,33 @@ namespace LordOfRanger.Options {
 		}
 		#endregion
 
-		internal static void LoadCnf() {
-			if( Options.options == null ) {
-				Options.options = new Options();
-			}
-			if( System.IO.File.Exists( FILE_NAME ) ) {
-				var serializer2 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-				var sr = new System.IO.StreamReader( FILE_NAME, new System.Text.UTF8Encoding( false ) );
-				try {
-					Options.options = (Options)serializer2.Deserialize( sr );
-				} catch( InvalidOperationException ) {
-					MessageBox.Show("op.cnfが壊れていて設定を読み込めませんでした。初期設定で起動します。");
-				} finally {
-					sr.Close();
-				}
-			}
-		}
-
-		internal static void SaveCnf() {
-			var serializer1 = new System.Xml.Serialization.XmlSerializer( typeof( Options ) );
-			var sw = new System.IO.StreamWriter( FILE_NAME, false, new System.Text.UTF8Encoding( false ) );
-			serializer1.Serialize( sw, Options.options );
-			sw.Close();
-		}
-
 		private void LoadOptions() {
-			LoadCnf();
 
-			this.cmbGeneralStartupState.SelectedIndex = Options.options.startupState;
-			this.txtGeneralProcessName.Text = Options.options.processName;
+			this.cmbGeneralStartupState.SelectedIndex = Properties.Settings.Default.startupState;
+			this.txtGeneralProcessName.Text = Properties.Settings.Default.processName;
 
 			/* barrage/toggle */
-			this.nudIntervalToggleUpDown.Value = Options.options.upDownInterval;
-			this.nudIntervalToggleTimer.Value = Options.options.timerInterval;
+			this.nudIntervalToggleUpDown.Value = Properties.Settings.Default.upDownInterval;
+			this.nudIntervalToggleTimer.Value = Properties.Settings.Default.timerInterval;
 
 			/* command */
-			this.nudIntervalCommandKeys.Value = Options.options.commandInterval;
-			this.nudIntervalCommandUpDown.Value = Options.options.commandUpDownInterval;
+			this.nudIntervalCommandKeys.Value = Properties.Settings.Default.commandInterval;
+			this.nudIntervalCommandUpDown.Value = Properties.Settings.Default.commandUpDownInterval;
 
 			/* mouse */
-			this.cmbMouseReClick.SelectedIndex = Options.options.mouseReClick;
+			this.cmbMouseReClick.SelectedIndex = Properties.Settings.Default.mouseReClick;
 
 			/* icon */
-			this.chkSkillIconEnable.Checked = Options.options.iconViewFlag;
-			this.nudOneRowIcons.Value = Options.options.oneRowIcons;
-			this.cmbSkillIconDisplayPosition.SelectedIndex = Options.options.iconDisplayPosition;
+			this.chkSkillIconEnable.Checked = Properties.Settings.Default.iconViewFlag;
+			this.nudOneRowIcons.Value = Properties.Settings.Default.oneRowIcons;
+			this.cmbSkillIconDisplayPosition.SelectedIndex = Properties.Settings.Default.iconDisplayPosition;
 
 			/* active window */
-			this.chkOtherActiveWindowMonitoringEnable.Checked = Options.options.activeWindowMonitoring;
-			this.nudOtherActiveWindowMonitoringTimerInterval.Value = Options.options.activeWindowMonitoringinterval;
+			this.chkOtherActiveWindowMonitoringEnable.Checked = Properties.Settings.Default.activeWindowMonitoring;
+			this.nudOtherActiveWindowMonitoringTimerInterval.Value = Properties.Settings.Default.activeWindowMonitoringinterval;
 
 			/* Hot Key */
-			this._tmpHotKey = Options.options.hotKeyLorSwitching;
+			this._tmpHotKey = Properties.Settings.Default.hotKeyLorSwitching;
 			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
 
 			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
@@ -111,34 +84,33 @@ namespace LordOfRanger.Options {
 
 		private void SaveOptions() {
 
-			Options.options.startupState = this.cmbGeneralStartupState.SelectedIndex;
-			Options.options.processName = this.txtGeneralProcessName.Text;
+			Properties.Settings.Default.startupState = this.cmbGeneralStartupState.SelectedIndex;
+			Properties.Settings.Default.processName = this.txtGeneralProcessName.Text;
 
 			/* barrage/toggle */
-			Options.options.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
-			Options.options.timerInterval = (int)this.nudIntervalToggleTimer.Value;
+			Properties.Settings.Default.upDownInterval = (int)this.nudIntervalToggleUpDown.Value;
+			Properties.Settings.Default.timerInterval = (int)this.nudIntervalToggleTimer.Value;
 
 			/* command */
-			Options.options.commandInterval = (int)this.nudIntervalCommandKeys.Value;
-			Options.options.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
+			Properties.Settings.Default.commandInterval = (int)this.nudIntervalCommandKeys.Value;
+			Properties.Settings.Default.commandUpDownInterval = (int)this.nudIntervalCommandUpDown.Value;
 
 			/* mouse */
-			Options.options.mouseReClick = this.cmbMouseReClick.SelectedIndex;
+			Properties.Settings.Default.mouseReClick = this.cmbMouseReClick.SelectedIndex;
 
 			/* icon */
-			Options.options.iconViewFlag = this.chkSkillIconEnable.Checked;
-			Options.options.oneRowIcons = (int)this.nudOneRowIcons.Value;
-			Options.options.iconDisplayPosition = this.cmbSkillIconDisplayPosition.SelectedIndex;
+			Properties.Settings.Default.iconViewFlag = this.chkSkillIconEnable.Checked;
+			Properties.Settings.Default.oneRowIcons = (int)this.nudOneRowIcons.Value;
+			Properties.Settings.Default.iconDisplayPosition = this.cmbSkillIconDisplayPosition.SelectedIndex;
 
 			/* active window */
-			Options.options.activeWindowMonitoring = this.chkOtherActiveWindowMonitoringEnable.Checked;
-			Options.options.activeWindowMonitoringinterval = (int)this.nudOtherActiveWindowMonitoringTimerInterval.Value;
+			Properties.Settings.Default.activeWindowMonitoring = this.chkOtherActiveWindowMonitoringEnable.Checked;
+			Properties.Settings.Default.activeWindowMonitoringinterval = (int)this.nudOtherActiveWindowMonitoringTimerInterval.Value;
 
 			/* Hot Key */
-			Options.options.hotKeyLorSwitching = this._tmpHotKey;
+			Properties.Settings.Default.hotKeyLorSwitching = this._tmpHotKey;
 
-			SaveCnf();
-			LoadCnf();
+			Properties.Settings.Default.Save();
 		}
 	}
 }

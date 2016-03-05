@@ -114,7 +114,7 @@ namespace LordOfRanger {
 				_enablekeyE[(byte)e.KeyCode] = false;
 				foreach( var m in this._mass.Mice.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
 					if( this._mouseTask?.Status == TaskStatus.Running ) {
-						if( Options.Options.options.mouseReClick == 0 ) {
+						if( Properties.Settings.Default.mouseReClick == 0 ) {
 							return;
 						} else {
 							this._mouseTaskCancelToken.Cancel();
@@ -248,8 +248,8 @@ namespace LordOfRanger {
 						tmpSendKey = back;
 						break;
 				}
-				KeyPush( tmpSendKey, Options.Options.options.commandUpDownInterval );
-				Sleep( Options.Options.options.commandInterval );
+				KeyPush( tmpSendKey, Properties.Settings.Default.commandUpDownInterval );
+				Sleep( Properties.Settings.Default.commandInterval );
 			}
 		}
 
@@ -324,7 +324,7 @@ namespace LordOfRanger {
 		/// </summary>
 		private void IconUpdate() {
 			Bitmap bmp;
-			if( !Options.Options.options.iconViewFlag ) {
+			if( !Properties.Settings.Default.iconViewFlag ) {
 				bmp = new Bitmap( 1, 1 );
 				goto gotoLabelDraw;
 			}
@@ -343,33 +343,33 @@ namespace LordOfRanger {
 					goto gotoLabelDraw;
 				}
 				Arad.Get();
-				bmp = new Bitmap( Math.Min( iconList.Length, Options.Options.options.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Options.Options.options.oneRowIcons ) * ICON_SIZE );
+				bmp = new Bitmap( Math.Min( iconList.Length, Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Properties.Settings.Default.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
 				for( var i = 0; i < iconList.Length; i++ ) {
 					if( iconList[i] == null ) {
 						continue;
 					}
-					g.DrawImage( iconList[i], ( i % Options.Options.options.oneRowIcons ) * ICON_SIZE, (int)( Math.Floor( (double)i / Options.Options.options.oneRowIcons ) ) * ICON_SIZE );
+					g.DrawImage( iconList[i], ( i % Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)( Math.Floor( (double)i / Properties.Settings.Default.oneRowIcons ) ) * ICON_SIZE );
 				}
 			} else {
 				bmp = new Bitmap( 1, 1 );
 			}
 			_skillLayer.Visible = true;
 			_skillLayer.Size = new Size( bmp.Width, bmp.Height );
-			switch( (Options.Options.IconDisplayPosition)Options.Options.options.iconDisplayPosition ) {
-				case Options.Options.IconDisplayPosition.TOP_LEFT:
+			switch( (Options.IconDisplayPosition)Properties.Settings.Default.iconDisplayPosition ) {
+				case Options.IconDisplayPosition.TOP_LEFT:
 					_skillLayer.Top = Arad.y - bmp.Height;
 					_skillLayer.Left = Arad.x;
 					break;
-				case Options.Options.IconDisplayPosition.TOP_RIGHT:
+				case Options.IconDisplayPosition.TOP_RIGHT:
 					_skillLayer.Top = Arad.y - bmp.Height;
 					_skillLayer.Left = Arad.x + Arad.w - bmp.Width;
 					break;
-				case Options.Options.IconDisplayPosition.BOTTOM_LEFT:
+				case Options.IconDisplayPosition.BOTTOM_LEFT:
 					_skillLayer.Top = Arad.y + Arad.h;
 					_skillLayer.Left = Arad.x;
 					break;
-				case Options.Options.IconDisplayPosition.BOTTOM_RIGHT:
+				case Options.IconDisplayPosition.BOTTOM_RIGHT:
 					_skillLayer.Top = Arad.y + Arad.h;
 					_skillLayer.Left = Arad.x + Arad.w - bmp.Width;
 					break;
@@ -399,7 +399,7 @@ namespace LordOfRanger {
 		/// <param name="key"> 送信するキー </param>
 		private static void KeyPush( byte key ) {
 			Key.Down( key );
-			Sleep( Options.Options.options.upDownInterval );
+			Sleep( Properties.Settings.Default.upDownInterval );
 			Key.Up( key );
 		}
 

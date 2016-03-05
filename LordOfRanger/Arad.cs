@@ -77,7 +77,7 @@ namespace LordOfRanger {
 		/// <returns>アラド戦記プロセス</returns>
 		internal static void Get() {
 
-			_process = Process.GetProcessesByName( Options.Options.options.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+			_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
 
 			if( _process == null ) {
 				_isAlive = false;

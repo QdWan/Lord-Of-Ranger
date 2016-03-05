@@ -10,14 +10,19 @@ namespace LordOfRanger {
 		/// </summary>
 		[STAThread]
 		static void Main() {
-			Options.OptionsForm.LoadCnf();
+			if( Properties.Settings.Default.newFileFlag ) {
+				Properties.Settings.Default.Upgrade();
+				Properties.Settings.Default.newFileFlag = true;
+				Properties.Settings.Default.Save();
+			}
+
 			// 多重起動対策 
 			using( var mutex = new System.Threading.Mutex( false, Application.ProductName ) ) {
 				if( mutex.WaitOne( 0, false ) ) {
 					Application.EnableVisualStyles();
 					Application.SetCompatibleTextRenderingDefault( false );
 					var mainForm = new MainForm();
-					if( Options.Options.options.startupState == (int)Options.Options.StartupState.NORMAL ) {
+					if( (Options.StartupState)Properties.Settings.Default.startupState == Options.StartupState.NORMAL ) {
 						Application.Run( mainForm );
 					} else {
 						Application.Run();
