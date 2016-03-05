@@ -1,4 +1,4 @@
-﻿namespace LordOfRanger {
+﻿namespace LordOfRanger.Arad {
 	internal enum SwitchingStyle {
 		BOTH = 0,
 		A = 1,

@@ -438,9 +438,9 @@ namespace LordOfRanger {
 		/// </summary>
 		private void ActiveWindowCheck() {
 			try {
-				this._job.Alive = Arad.IsAlive;
+				this._job.Alive = Arad.Client.IsAlive;
 				if( this._job.Alive ) {
-					this._job.ActiveWindow = Arad.IsActiveWindow;
+					this._job.ActiveWindow = Arad.Client.IsActiveWindow;
 				}
 			} catch( Exception ) {
 				

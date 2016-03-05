@@ -127,9 +127,9 @@
       <DependentUpon>AddSettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Api.cs" />
-    <Compile Include="Arad.cs" />
-    <Compile Include="AradExtract\Extract.cs" />
-    <Compile Include="Common.cs" />
+    <Compile Include="Arad\Client.cs" />
+    <Compile Include="Arad\Extract.cs" />
+    <Compile Include="Arad\Common.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LayeredWindowSurface.cs">
       <SubType>Form</SubType>

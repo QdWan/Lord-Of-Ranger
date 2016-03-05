@@ -5,11 +5,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable NotAccessedField.Global
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace LordOfRanger.AradExtract {
+namespace LordOfRanger.Arad {
 	internal class Extract {
 
 		private const uint ARGB_1555 = 0x0e;

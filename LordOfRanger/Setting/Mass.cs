@@ -20,7 +20,7 @@ namespace LordOfRanger.Setting {
 			}
 			set {
 				this._switchPosition = value;
-				Arad.switchPosition = value;
+				Arad.Client.switchPosition = value;
 			}
 		}
 

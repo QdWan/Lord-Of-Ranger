@@ -3,12 +3,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-namespace LordOfRanger {
+namespace LordOfRanger.Arad {
 	/// <summary>
 	/// アラド戦記クライアントに対する動作はここで定義する
 	/// なお、アラド戦記が多数起動されていない前提で作成されている
 	/// </summary>
-	static class Arad {
+	static class Client {
 
 		private static Process _process;
 		internal static int x;

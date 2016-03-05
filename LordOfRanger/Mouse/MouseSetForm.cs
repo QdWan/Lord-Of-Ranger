@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using LordOfRanger.Arad;
 
 namespace LordOfRanger.Mouse {
 	/// <summary>
@@ -205,12 +206,12 @@ namespace LordOfRanger.Mouse {
 			switch( e.Message ) {
 				case MouseMessage.LUp:
 				case MouseMessage.RUp:
-					Arad.Get();
-					if( !Arad.IsAlive || !Arad.IsActiveWindow ) {
+					Arad.Client.Get();
+					if( !Arad.Client.IsAlive || !Arad.Client.IsActiveWindow ) {
 						return;
 					}
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = e.Point.X - Arad.x;
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Arad.y;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = e.Point.X - Arad.Client.x;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Arad.Client.y;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Value = e.Message == MouseMessage.LUp ? MouseOperationText.LEFT : MouseOperationText.RIGHT;
 					break;
 				case MouseMessage.Move:
