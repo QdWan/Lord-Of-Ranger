@@ -7,7 +7,7 @@ using System.Linq;
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class V3 {
+	internal static class V3 {
 
 		private const int VERSION = 3;
 

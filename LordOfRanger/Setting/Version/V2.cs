@@ -9,7 +9,7 @@ using System.Linq;
 
 
 namespace LordOfRanger.Setting.Version {
-	internal class V2 {
+	internal static class V2 {
 		private const int VERSION = 2;
 
 		private struct ArdHeader {

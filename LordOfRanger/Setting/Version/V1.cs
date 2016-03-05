@@ -6,7 +6,7 @@ using System.Linq;
 // ReSharper disable JoinDeclarationAndInitializer
 
 namespace LordOfRanger.Setting.Version {
-	internal class V1 {
+	internal static class V1 {
 		private const int VERSION = 1;
 
 		private struct ArdHeader {
