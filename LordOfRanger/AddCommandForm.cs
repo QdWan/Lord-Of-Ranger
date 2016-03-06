@@ -37,7 +37,7 @@ namespace LordOfRanger {
 			} else if( this.rbMouse.Checked ) {
 				this.type = Type.MOUSE;
 			} else {
-				MessageBox.Show( "Please select the type." );
+				MessageBox.Show( "モードを選択してください。" );
 				return;
 			}
 			this.result = Result.OK;
@@ -63,7 +63,7 @@ namespace LordOfRanger {
 					} else if( this.rbMouse.Checked ) {
 						this.type = Type.MOUSE;
 					} else {
-						MessageBox.Show( "Please select the type." );
+						MessageBox.Show( "モードを選択してください。" );
 						return;
 					}
 					this.result = Result.OK;

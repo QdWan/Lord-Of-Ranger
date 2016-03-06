@@ -53,7 +53,7 @@
 			this.btnExtract.Name = "btnExtract";
 			this.btnExtract.Size = new System.Drawing.Size(75, 23);
 			this.btnExtract.TabIndex = 0;
-			this.btnExtract.Text = "Extract!";
+			this.btnExtract.Text = "抽出";
 			this.btnExtract.UseVisualStyleBackColor = true;
 			this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
 			// 
@@ -63,7 +63,7 @@
 			this.btnBrowse.Name = "btnBrowse";
 			this.btnBrowse.Size = new System.Drawing.Size(75, 23);
 			this.btnBrowse.TabIndex = 1;
-			this.btnBrowse.Text = "Browse...";
+			this.btnBrowse.Text = "参照";
 			this.btnBrowse.UseVisualStyleBackColor = true;
 			this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
 			// 

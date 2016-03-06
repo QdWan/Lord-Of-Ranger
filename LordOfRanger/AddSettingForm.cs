@@ -31,7 +31,7 @@ namespace LordOfRanger {
 				case (byte)Keys.Return:
 					this.settingName = this.txtSettingName.Text;
 					if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
-						MessageBox.Show( "Please give a unique name." );
+						MessageBox.Show( "同じ設定名が存在します。" );
 						return;
 					}
 					var mass = new Setting.Mass {
@@ -49,7 +49,7 @@ namespace LordOfRanger {
 		private void btnOk_Click( object sender, EventArgs e ) {
 			this.settingName = this.txtSettingName.Text;
 			if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
-				MessageBox.Show( "Please give a unique name." );
+				MessageBox.Show( "同じ設定名が存在します。" );
 				return;
 			}
 			var mass = new Setting.Mass {
