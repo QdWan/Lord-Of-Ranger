@@ -133,17 +133,19 @@ namespace LordOfRanger {
 							if( this._mouseTaskCancelToken.Token.IsCancellationRequested ) {
 								throw new TaskCanceledException();
 							}
+							var x = Client.x + (int)Math.Round( send.x * Client.ratioW );
+							var y = Client.y + (int)Math.Round( send.y * Client.ratioH );
 							switch( send.op ) {
 								case Operation.LEFT:
-									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
-									Click.Left( Client.x + send.x, Client.y + send.y, send.sleepBetween );
+									Win32.Mouse.SetCursorPos( x, y );
+									Click.Left( x, y, send.sleepBetween );
 									break;
 								case Operation.RIGHT:
-									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
-									Click.Right( Client.x + send.x, Client.y + send.y, send.sleepBetween );
+									Win32.Mouse.SetCursorPos( x, y );
+									Click.Right( x, y, send.sleepBetween );
 									break;
 								case Operation.MOVE:
-									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
+									Win32.Mouse.SetCursorPos( x, y );
 									break;
 								default:
 									throw new ArgumentOutOfRangeException();
@@ -344,7 +346,7 @@ namespace LordOfRanger {
 					goto gotoLabelDraw;
 				}
 				Client.Get();
-				bmp = new Bitmap( Math.Min( iconList.Length, Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Properties.Settings.Default.oneRowIcons ) * ICON_SIZE );
+				bmp = new Bitmap( Math.Min( iconList.Length, Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)Math.Round( (double)iconList.Length / Properties.Settings.Default.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
 				for( var i = 0; i < iconList.Length; i++ ) {
 					if( iconList[i] == null ) {

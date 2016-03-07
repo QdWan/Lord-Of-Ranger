@@ -10,15 +10,26 @@ namespace LordOfRanger.Arad {
 	/// </summary>
 	static class Client {
 
+		private const int DEFAULT_W = 800;
+		private const int DEFAULT_H = 600;
+		internal static double ratioH;
+		internal static double ratioW;
 		private static Process _process;
 		internal static int x;
 		internal static int y;
-		internal static int w = 800;
-		internal static int h = 600;
+		internal static int w = DEFAULT_W;
+		internal static int h = DEFAULT_H;
 		private static bool _isAlive;
 		internal static int switchPosition = 0;
 
+
+		/// <summary>
+		/// 800x600の時のアイコンサイズ
+		/// </summary>
 		private static readonly Point ICON_SIZE = new Point( 29, 29 );
+		/// <summary>
+		/// 800x600の時のクイックスロットの左上の座標
+		/// </summary>
 		private static readonly Point[] QUICK_SLOT_POINTS = {
 			new Point(85,558),
 			new Point(115,558),
@@ -28,8 +39,10 @@ namespace LordOfRanger.Arad {
 			new Point(235,558)
 		};
 
-		private static readonly Color SWITCH_A_COLOR = Color.FromArgb( 97, 255, 109 );
-		private static readonly Color SWITCH_B_COLOR = Color.FromArgb( 255, 238, 97 );
+		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 97, 255, 109 );
+		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 96, 253, 108 );
+		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 255, 236, 96 );
+		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 238, 97 );
 
 		internal static bool IsAlive {
 			get {
@@ -54,16 +67,29 @@ namespace LordOfRanger.Arad {
 
 		internal static SwitchingStyle SwitchState {
 			get {
-				var bmp = GetScreenShot( QUICK_SLOT_POINTS[switchPosition].X,QUICK_SLOT_POINTS[switchPosition].Y,ICON_SIZE.X,ICON_SIZE.Y );
-				var color = bmp.GetPixel( 21, 7 );
-				if( color == SWITCH_A_COLOR ) {
+				var bmp = GetScreenShot(
+					(int)Math.Round( QUICK_SLOT_POINTS[switchPosition].X * ratioW ),
+					(int)Math.Round( QUICK_SLOT_POINTS[switchPosition].Y * ratioH ),
+					(int)Math.Round( ICON_SIZE.X * ratioW ),
+					(int)Math.Round( ICON_SIZE.Y * ratioH ) );
+				var color = bmp.GetPixel( (int)Math.Round( 21 * ratioW ), (int)Math.Round( 7 * ratioH ) );
+				Console.WriteLine(color.ToString());
+				if( CheckColor(color,SWITCH_A_COLOR_MIN,SWITCH_A_COLOR_MAX )) {
 					return SwitchingStyle.A;
 				}
-				if( color == SWITCH_B_COLOR ) {
+				if( CheckColor( color, SWITCH_B_COLOR_MIN, SWITCH_B_COLOR_MAX ) ) {
 					return SwitchingStyle.B;
 				}
 				return SwitchingStyle.UNKNOWN;
 			}
+		}
+
+		private static bool CheckColor( Color check, Color min, Color max ) {
+			if( check.R >= min.R && check.R <= max.R && check.G >= min.G && check.G <= max.G && check.B >= min.B && check.B <= max.B ) {
+				return true;
+			}
+			return false;
+
 		}
 
 		private const int MARGIN_LEFT = 0;
@@ -94,6 +120,9 @@ namespace LordOfRanger.Arad {
 			y = rect.top + MARGIN_TOP;
 			w = rect.right - rect.left - MARGIN_LEFT - MARGIN_RIGHT;
 			h = rect.bottom - rect.top - MARGIN_BOTTOM - MARGIN_TOP;
+
+			ratioH = ( (double)h / DEFAULT_H );
+			ratioW = ( (double)w / DEFAULT_W );
 		}
 
 		private static Bitmap GetScreenShot(int targetX = 0,int targetY = 0,int targetW = 0,int targetH = 0) {

@@ -210,8 +210,8 @@ namespace LordOfRanger.Mouse {
 					if( !Client.IsAlive || !Client.IsActiveWindow ) {
 						return;
 					}
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = e.Point.X - Client.x;
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Client.y;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = Math.Round(e.Point.X / Client.ratioW) - Client.x;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = Math.Round( e.Point.Y / Client.ratioH) - Client.y;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Value = e.Message == MouseMessage.LUp ? MouseOperationText.LEFT : MouseOperationText.RIGHT;
 					break;
 				case MouseMessage.Move:
