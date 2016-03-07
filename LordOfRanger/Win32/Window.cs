@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace LordOfRanger.Win32 {
-	class Window {
+	static class Window {
 
 		//Get Active Window
 		[DllImport( "user32.dll" )]
@@ -18,7 +18,7 @@ namespace LordOfRanger.Win32 {
 
 		[DllImport( "user32.dll" )]
 		internal static extern int GetWindowRect( IntPtr hWnd, out RECT rect );
-		
+
 		[StructLayout( LayoutKind.Sequential, Pack = 4 )]
 		internal struct RECT {
 			internal readonly int left;

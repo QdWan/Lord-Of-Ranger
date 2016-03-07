@@ -206,12 +206,12 @@ namespace LordOfRanger.Mouse {
 			switch( e.Message ) {
 				case MouseMessage.LUp:
 				case MouseMessage.RUp:
-					Arad.Client.Get();
-					if( !Arad.Client.IsAlive || !Arad.Client.IsActiveWindow ) {
+					Client.Get();
+					if( !Client.IsAlive || !Client.IsActiveWindow ) {
 						return;
 					}
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = e.Point.X - Arad.Client.x;
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Arad.Client.y;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = e.Point.X - Client.x;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = e.Point.Y - Client.y;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Value = e.Message == MouseMessage.LUp ? MouseOperationText.LEFT : MouseOperationText.RIGHT;
 					break;
 				case MouseMessage.Move:

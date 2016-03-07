@@ -124,7 +124,7 @@ namespace LordOfRanger {
 						}
 					}
 					//スイッチの状態によって、操作する/しないを判定する
-					if( m.mouseData.SwitchState != SwitchingStyle.BOTH && m.mouseData.SwitchState != Arad.Client.SwitchState ) {
+					if( m.mouseData.SwitchState != SwitchingStyle.BOTH && m.mouseData.SwitchState != Client.SwitchState ) {
 						continue;
 					}
 					this._mouseTaskCancelToken = new CancellationTokenSource();
@@ -135,15 +135,15 @@ namespace LordOfRanger {
 							}
 							switch( send.op ) {
 								case Operation.LEFT:
-									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
-									Click.Left( Arad.Client.x + send.x, Arad.Client.y + send.y, send.sleepBetween );
+									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
+									Click.Left( Client.x + send.x, Client.y + send.y, send.sleepBetween );
 									break;
 								case Operation.RIGHT:
-									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
-									Click.Right( Arad.Client.x + send.x, Arad.Client.y + send.y, send.sleepBetween );
+									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
+									Click.Right( Client.x + send.x, Client.y + send.y, send.sleepBetween );
 									break;
 								case Operation.MOVE:
-									Win32.Mouse.SetCursorPos( Arad.Client.x + send.x, Arad.Client.y + send.y );
+									Win32.Mouse.SetCursorPos( Client.x + send.x, Client.y + send.y );
 									break;
 								default:
 									throw new ArgumentOutOfRangeException();
@@ -339,11 +339,11 @@ namespace LordOfRanger {
 			}
 			if( bmpList.Count != 0 ) {
 				var iconList = bmpList.ToArray();
-				if( !Arad.Client.IsAlive || !ActiveWindow ) {
+				if( !Client.IsAlive || !ActiveWindow ) {
 					bmp = new Bitmap( 1, 1 );
 					goto gotoLabelDraw;
 				}
-				Arad.Client.Get();
+				Client.Get();
 				bmp = new Bitmap( Math.Min( iconList.Length, Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Properties.Settings.Default.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
 				for( var i = 0; i < iconList.Length; i++ ) {
@@ -359,24 +359,24 @@ namespace LordOfRanger {
 			_skillLayer.Size = new Size( bmp.Width, bmp.Height );
 			switch( (Options.IconDisplayPosition)Properties.Settings.Default.iconDisplayPosition ) {
 				case Options.IconDisplayPosition.TOP_LEFT:
-					_skillLayer.Top = Arad.Client.y - bmp.Height;
-					_skillLayer.Left = Arad.Client.x;
+					_skillLayer.Top = Client.y - bmp.Height;
+					_skillLayer.Left = Client.x;
 					break;
 				case Options.IconDisplayPosition.TOP_RIGHT:
-					_skillLayer.Top = Arad.Client.y - bmp.Height;
-					_skillLayer.Left = Arad.Client.x + Arad.Client.w - bmp.Width;
+					_skillLayer.Top = Client.y - bmp.Height;
+					_skillLayer.Left = Client.x + Client.w - bmp.Width;
 					break;
 				case Options.IconDisplayPosition.BOTTOM_LEFT:
-					_skillLayer.Top = Arad.Client.y + Arad.Client.h;
-					_skillLayer.Left = Arad.Client.x;
+					_skillLayer.Top = Client.y + Client.h;
+					_skillLayer.Left = Client.x;
 					break;
 				case Options.IconDisplayPosition.BOTTOM_RIGHT:
-					_skillLayer.Top = Arad.Client.y + Arad.Client.h;
-					_skillLayer.Left = Arad.Client.x + Arad.Client.w - bmp.Width;
+					_skillLayer.Top = Client.y + Client.h;
+					_skillLayer.Left = Client.x + Client.w - bmp.Width;
 					break;
 				default:
-					_skillLayer.Top = Arad.Client.y - bmp.Height;
-					_skillLayer.Left = Arad.Client.x;
+					_skillLayer.Top = Client.y - bmp.Height;
+					_skillLayer.Left = Client.x;
 					break;
 			}
 			gotoLabelDraw:

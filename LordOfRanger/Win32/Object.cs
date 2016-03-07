@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LordOfRanger.Win32 {
-	class Object {
+	static class Object {
 		[DllImport( "gdi32.dll" )]
 		public static extern int BitBlt( IntPtr hDestDc, int x, int y, int nWidth, int nHeight, IntPtr hSrcDc, int xSrc, int ySrc, int dwRop );
 

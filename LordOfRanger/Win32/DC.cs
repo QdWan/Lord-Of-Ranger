@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace LordOfRanger.Win32 {
-	class DC {
+	static class DC {
 
 		[DllImport( "gdi32.dll", CharSet = CharSet.Auto, SetLastError = true )]
 		internal static extern IntPtr CreateCompatibleDC( IntPtr hdc );
