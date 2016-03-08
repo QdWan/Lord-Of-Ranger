@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using LordOfRanger.Setting.Action;
 
 namespace LordOfRanger.Setting {
 	/// <summary>
@@ -48,8 +49,8 @@ namespace LordOfRanger.Setting {
 				return this._toggleList.Value;
 			}
 		}
-		private ActList<Mouse> _mouseList;
-		internal IEnumerable<Mouse> Mice {
+		private ActList<Action.Mouse> _mouseList;
+		internal IEnumerable<Action.Mouse> Mice {
 			get {
 				return this._mouseList.Value;
 			}
@@ -103,7 +104,7 @@ namespace LordOfRanger.Setting {
 					this._toggleList.Add( (Toggle)instance );
 					break;
 				case Act.InstanceType.MOUSE:
-					this._mouseList.Add( (Mouse)instance );
+					this._mouseList.Add( (Action.Mouse)instance );
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -216,7 +217,7 @@ namespace LordOfRanger.Setting {
 			this._barrageList = new ActList<Barrage>();
 			this._commandList = new ActList<Command>();
 			this._toggleList = new ActList<Toggle>();
-			this._mouseList = new ActList<Mouse>();
+			this._mouseList = new ActList<Action.Mouse>();
 		}
 
 		private void CancelListReBuild() {

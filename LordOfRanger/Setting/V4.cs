@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using LordOfRanger.Setting.Action;
+
 // ReSharper disable JoinDeclarationAndInitializer
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace LordOfRanger.Setting.Version {
-	internal static class V3 {
+namespace LordOfRanger.Setting {
+	internal static class V4 {
 
-		private const int VERSION = 3;
+		private const int VERSION = 4;
 
 		internal static Mass Load( string filename ) {
 			var mass = new Mass();
@@ -104,7 +106,7 @@ namespace LordOfRanger.Setting.Version {
 						mass.Add( t );
 						break;
 					case Act.InstanceType.MOUSE:
-						var m = new Mouse();
+						var m = new Action.Mouse();
 						m.Id = ardHeader.id;
 						m.Priority = ardHeader.priority;
 						m.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
@@ -113,11 +115,11 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.disableSkillIconSize;
 						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
-						var msList = new List<LordOfRanger.Mouse.Set>();
+						var msList = new List<Mouse.Set>();
 						var tmpOffset = offset;
 						while( tmpOffset < offset + ardHeader.sendDataSize ) {
 
-							var op = (LordOfRanger.Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
+							var op = (Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							var x = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
@@ -127,7 +129,7 @@ namespace LordOfRanger.Setting.Version {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							msList.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+							msList.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
 
 						}
 						offset = tmpOffset;

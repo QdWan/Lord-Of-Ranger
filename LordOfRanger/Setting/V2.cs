@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-// ReSharper disable JoinDeclarationAndInitializer
+using LordOfRanger.Setting.Action;
 
-namespace LordOfRanger.Setting.Version {
-	internal static class V1 {
-		private const int VERSION = 1;
+// ReSharper disable JoinDeclarationAndInitializer
+// ReSharper disable UseObjectOrCollectionInitializer
+
+
+
+namespace LordOfRanger.Setting {
+	internal static class V2 {
+		private const int VERSION = 2;
 
 		private struct ArdHeader {
 			internal int id;
@@ -38,16 +43,12 @@ namespace LordOfRanger.Setting.Version {
 				throw new InvalidDataException();
 			}
 
-			var titleSize = BitConverter.ToInt32( array, offset );
-			offset += 4;
 			var hotKeySize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			var headerSize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			mass.Sequence = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			//	var title = Encoding.UTF8.GetString( array, offset, titleSize );
-			offset += titleSize;
 			mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
 			var headerCount = headerSize / 28;
@@ -70,6 +71,7 @@ namespace LordOfRanger.Setting.Version {
 				offset += 4;
 				headers.Add( ardHeader );
 			}
+
 
 			foreach( var ardHeader in headers ) {
 				// ReSharper disable once SwitchStatementMissingSomeCases
@@ -120,7 +122,6 @@ namespace LordOfRanger.Setting.Version {
 						throw new ArgumentOutOfRangeException();
 				}
 			}
-
 			return mass;
 		}
 
@@ -133,24 +134,23 @@ namespace LordOfRanger.Setting.Version {
 				fs.Close();
 
 				var offset = 0;
+
 				//	var version = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				var titleSize = BitConverter.ToInt32( array, offset );
 				offset += 4;
 				var hotKeySize = BitConverter.ToInt32( array, offset );
 				offset += 4;
+
 				//	var headerSize = BitConverter.ToInt32( array, offset );
 				offset += 4;
+
 				//	sequence = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				//	string title = Encoding.UTF8.GetString( array, offset, titleSize );
-				offset += titleSize;
 				return array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
-
 			} catch( Exception ) {
 				return 0x00;
 			}
 		}
+
 		private static Bitmap BinaryToBitmap( IReadOnlyCollection<byte> binary ) {
 			if( binary.Count == 0 ) {
 				return null;

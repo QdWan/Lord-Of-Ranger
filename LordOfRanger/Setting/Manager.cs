@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using LordOfRanger.Setting.Version;
 
 namespace LordOfRanger.Setting {
 	/// <summary>

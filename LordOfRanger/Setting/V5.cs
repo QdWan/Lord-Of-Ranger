@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using LordOfRanger.Arad;
+using LordOfRanger.Setting.Action;
 
 // ReSharper disable JoinDeclarationAndInitializer
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace LordOfRanger.Setting.Version {
-	internal static class Current  {
+namespace LordOfRanger.Setting {
+	internal static class V5 {
 
-		private const int VERSION = 6;
+		private const int VERSION = 5;
 
 		internal static Mass Load( string filename ) {
 			var mass = new Mass();
@@ -41,8 +40,6 @@ namespace LordOfRanger.Setting.Version {
 			offset += 4;
 			mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
-			mass.SwitchPosition = BitConverter.ToInt32( array, offset );
-			offset += 4;
 			var headerCount = headerSize / 28;
 			var headers = new List<ArdHeader>();
 			for( var i = 0; i < headerCount; i++ ) {
@@ -115,7 +112,7 @@ namespace LordOfRanger.Setting.Version {
 						mass.Add( t );
 						break;
 					case Act.InstanceType.MOUSE:
-						var m = new Mouse();
+						var m = new Action.Mouse();
 						m.Id = ardHeader.id;
 						m.Priority = ardHeader.priority;
 						m.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
@@ -124,12 +121,11 @@ namespace LordOfRanger.Setting.Version {
 						offset += ardHeader.disableSkillIconSize;
 						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
-						m.mouseData.SwitchState = (SwitchingStyle)BitConverter.ToInt32( array, offset );
-						offset += 4;
+						var msList = new List<Mouse.Set>();
 						var tmpOffset = offset;
-						while( tmpOffset < offset + ardHeader.sendDataSize - 4 ) {
+						while( tmpOffset < offset + ardHeader.sendDataSize ) {
 
-							var op = (LordOfRanger.Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
+							var op = (Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
 							var x = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
@@ -139,10 +135,11 @@ namespace LordOfRanger.Setting.Version {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							m.mouseData.Value.Add(new LordOfRanger.Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+							msList.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
 
 						}
 						offset = tmpOffset;
+						m.mouseData.Value = msList;
 						m.KeyboardCancel = BitConverter.ToBoolean( array, offset );
 						offset += 1;
 						mass.Add( m );
@@ -152,154 +149,6 @@ namespace LordOfRanger.Setting.Version {
 				}
 			}
 			return mass;
-		}
-
-		public static void Save(Mass mass) {
-			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
-				Directory.CreateDirectory( Mass.SETTING_PATH );
-				Thread.Sleep( 300 );
-			}
-			/*
-				version 32bit
-				This is setting version, not program version.
-			*/
-			var version = BitConverter.GetBytes( VERSION );
-			/*
-				hotKeySize 32bit
-				8 bit only.
-			*/
-
-			/*
-				headerSize 32bit
-			*/
-			byte[] headerSize;
-
-			/* 
-				sequence
-			*/
-			var sequence = BitConverter.GetBytes( mass.Sequence );
-			/*
-				hotKey 8bit
-			*/
-			var hotKey = mass.hotKey;
-
-			/*
-				switchPosition 32bit
-			*/
-			var switchPosition = BitConverter.GetBytes(mass.SwitchPosition);
-
-			/*
-				id 32bit
-				Type 32bit
-				priority 32bit
-				skillIconSize 32bit
-				disableSkillIconSize 32bit
-				pushDataSize 32bit
-				sendDataSize 32bit
-			*/
-
-			/*
-				headerSize 32bit
-			*/
-			var header = new List<byte>();
-
-			/*
-				skillIcon variable
-				disableSkillIcon variable
-				push 8bit
-				(sendList variable || send 8bit)
-			*/
-			var data = new List<byte>();
-			foreach( var da in mass.Value ) {
-				var skillIcon = (byte[])new ImageConverter().ConvertTo( da.SkillIcon, typeof( byte[] ) ) ?? new byte[0];
-
-				var disableSkillIcon = (byte[])new ImageConverter().ConvertTo( da.DisableSkillIcon, typeof( byte[] ) ) ?? new byte[0];
-
-				//id
-				header.AddRange( BitConverter.GetBytes( da.Id ) );
-
-				//Type
-				header.AddRange( BitConverter.GetBytes( (int)da.Type ) );
-
-				//priority
-				header.AddRange( BitConverter.GetBytes( da.Priority ) );
-
-				//skillIconSize
-				header.AddRange( BitConverter.GetBytes( skillIcon.Length ) );
-
-				//disableSkillIconSize
-				header.AddRange( BitConverter.GetBytes( disableSkillIcon.Length ) );
-
-				//pushDataSize
-				header.AddRange( BitConverter.GetBytes( da.Push.Length ) );
-
-				data.AddRange( skillIcon );
-				data.AddRange( disableSkillIcon );
-
-				//push
-				data.AddRange( da.Push );
-				switch( da.Type ) {
-					case Act.InstanceType.COMMAND:
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( ( ( (Command)da ).sendList.Length ) ) );
-
-						//sendList
-						data.AddRange( ( (Command)da ).sendList );
-						break;
-					case Act.InstanceType.BARRAGE:
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//send
-						data.Add( ( (Barrage)da ).send );
-						break;
-					case Act.InstanceType.TOGGLE:
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( 1 ) );
-
-						//send
-						data.Add( ( (Toggle)da ).send );
-						break;
-					case Act.InstanceType.MOUSE:
-
-						//sendDataSize
-						header.AddRange( BitConverter.GetBytes( ( (Mouse)da ).mouseData.Value.Count * 4 * 5 + 4 ) );
-
-						//switchState
-						data.AddRange( BitConverter.GetBytes( (int)( (Mouse)da ).mouseData.SwitchState ) );
-
-						//sendList
-						foreach( var sl in ( (Mouse)da ).mouseData.Value ) {
-							data.AddRange( BitConverter.GetBytes( (int)sl.op ) );
-							data.AddRange( BitConverter.GetBytes( sl.x ) );
-							data.AddRange( BitConverter.GetBytes( sl.y ) );
-							data.AddRange( BitConverter.GetBytes( sl.sleepBetween ) );
-							data.AddRange( BitConverter.GetBytes( sl.sleepAfter ) );
-						}
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-				data.AddRange( BitConverter.GetBytes( da.KeyboardCancel ) );
-			}
-			var hotKeySize = BitConverter.GetBytes( 1 );
-			headerSize = BitConverter.GetBytes( header.Count );
-
-			var settingBinary = new List<byte>();
-			settingBinary.AddRange( version );
-			settingBinary.AddRange( hotKeySize );
-			settingBinary.AddRange( headerSize );
-			settingBinary.AddRange( sequence );
-			settingBinary.Add( hotKey );
-			settingBinary.AddRange( switchPosition );
-			settingBinary.AddRange( header );
-			settingBinary.AddRange( data );
-			var fs = new FileStream( Mass.SETTING_PATH + mass.name + Mass.EXTENSION, FileMode.Create, FileAccess.Write );
-			fs.Write( settingBinary.ToArray(), 0, settingBinary.Count );
-			fs.Close();
 		}
 
 		internal static byte GetHotKey( string filename ) {
