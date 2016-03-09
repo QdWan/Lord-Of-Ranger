@@ -74,7 +74,6 @@ namespace LordOfRanger.Arad {
 					(int)Math.Round( ICON_SIZE.X * ratioW ),
 					(int)Math.Round( ICON_SIZE.Y * ratioH ) );
 				var color = bmp.GetPixel( (int)Math.Round( JUDGE_POINT.X * ratioW ), (int)Math.Round( JUDGE_POINT.Y * ratioH ) );
-				Console.WriteLine(color.ToString());
 				if( CheckColor(color,SWITCH_A_COLOR_MIN,SWITCH_A_COLOR_MAX )) {
 					return SwitchingStyle.A;
 				}
