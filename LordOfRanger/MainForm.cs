@@ -74,14 +74,13 @@ namespace LordOfRanger {
 			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
 			SettingUpdate( true );
 
+			this._job?.Dispose();
 			this._job = new Job( this._mass );
 
 			if( Properties.Settings.Default.activeWindowMonitoring ) {
 				this.timerActiveWindowCheck.Interval = Properties.Settings.Default.activeWindowMonitoringinterval;
 				this.timerActiveWindowCheck.Start();
 			}
-			this.timerBarrage.Interval = Properties.Settings.Default.timerInterval;
-			this.timerBarrage.Start();
 
 			var keyboardHook = new KeyboardHook();
 			keyboardHook.KeyboardHooked += KeyHookEvent;
@@ -341,6 +340,7 @@ namespace LordOfRanger {
 			LoadHotKeys( firstFlag );
 			this._mass = Manager.Load( this._currentSettingFile );
 			SettingView();
+			this._job?.Dispose();
 			this._job = new Job( this._mass );
 
 			this.lblSettingName.Text = this._currentSettingFile;
@@ -447,29 +447,12 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 定期的に呼ばれる。
-		/// Jobのキータイマーイベントを呼び出す
-		/// </summary>
-		private void KeyPushTimer() {
-			this._job.TimerEvent();
-		}
-
-		/// <summary>
 		/// アクティブウィンドウのチェックを行うため定期的に呼び出される
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void timerActiveWindowCheck_Tick( object sender, EventArgs e ) {
 			ActiveWindowCheck();
-		}
-
-		/// <summary>
-		/// キータイマーイベントのために定期的に呼び出される。
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void timerBarrage_Tick( object sender, EventArgs e ) {
-			KeyPushTimer();
 		}
 
 		#endregion

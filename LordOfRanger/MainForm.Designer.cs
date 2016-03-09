@@ -24,10 +24,11 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.label2 = new System.Windows.Forms.Label();
 			this.cmbSwitchPosition = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.txtHotKey = new System.Windows.Forms.TextBox();
@@ -58,14 +59,12 @@
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.timerActiveWindowCheck = new System.Windows.Forms.Timer(this.components);
-			this.timerBarrage = new System.Windows.Forms.Timer(this.components);
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.sETTINGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.skillIconExtractorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.label2 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -137,6 +136,15 @@
 			this.splitContainer3.SplitterDistance = 515;
 			this.splitContainer3.TabIndex = 0;
 			this.splitContainer3.TabStop = false;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(252, 14);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(65, 12);
+			this.label2.TabIndex = 4;
+			this.label2.Text = "スイッチ配置:";
 			// 
 			// cmbSwitchPosition
 			// 
@@ -349,9 +357,9 @@
 			// dgvColDelete
 			// 
 			this.dgvColDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			dataGridViewCellStyle2.NullValue = "削除";
-			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			dataGridViewCellStyle1.NullValue = "削除";
+			this.dgvColDelete.DefaultCellStyle = dataGridViewCellStyle1;
 			this.dgvColDelete.FillWeight = 92.4663F;
 			this.dgvColDelete.HeaderText = "削除";
 			this.dgvColDelete.Name = "dgvColDelete";
@@ -512,11 +520,6 @@
 			this.timerActiveWindowCheck.Interval = 500;
 			this.timerActiveWindowCheck.Tick += new System.EventHandler(this.timerActiveWindowCheck_Tick);
 			// 
-			// timerBarrage
-			// 
-			this.timerBarrage.Interval = 30;
-			this.timerBarrage.Tick += new System.EventHandler(this.timerBarrage_Tick);
-			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -565,15 +568,6 @@
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
 			this.aboutToolStripMenuItem.Text = "Lord Of Rangerについて";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(252, 14);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(65, 12);
-			this.label2.TabIndex = 4;
-			this.label2.Text = "スイッチ配置:";
 			// 
 			// MainForm
 			// 
@@ -626,7 +620,6 @@
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
 		private System.Windows.Forms.Timer timerActiveWindowCheck;
-		private System.Windows.Forms.Timer timerBarrage;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.Button btnCancel;

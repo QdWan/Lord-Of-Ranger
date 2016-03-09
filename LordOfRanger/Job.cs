@@ -16,7 +16,7 @@ namespace LordOfRanger {
 	/// <summary>
 	/// Setting.Massを読み込み、それを実行するクラス
 	/// </summary>
-	class Job {
+	class Job : IDisposable {
 		private static Dictionary<byte, bool> _enablekeyF;
 		private static Dictionary<byte, bool> _enablekeyE;
 		private readonly Dictionary<int, bool> _enableToggle;
@@ -25,6 +25,7 @@ namespace LordOfRanger {
 		private Task _commandTask;
 		private Task _mouseTask;
 		private CancellationTokenSource _mouseTaskCancelToken;
+		private readonly CancellationTokenSource _barrageTaskCancelToken;
 		private static SkillLayer _skillLayer;
 
 		private const int ICON_SIZE = 30;
@@ -84,8 +85,15 @@ namespace LordOfRanger {
 				_skillLayer = new SkillLayer();
 				_skillLayer.Show();
 			}
+			this._barrageTaskCancelToken = new CancellationTokenSource();
+			Task.Run( () => BarrageLoop(), this._barrageTaskCancelToken.Token);
 			IconUpdate();
 		}
+
+		public void Dispose() {
+			this._barrageTaskCancelToken.Cancel();
+		}
+
 
 		/// <summary>
 		/// 機能の有効無効を取得、設定する
@@ -256,11 +264,21 @@ namespace LordOfRanger {
 			}
 		}
 
+		private void BarrageLoop() {
+			while( true ) {
+				if( this._barrageTaskCancelToken.Token.IsCancellationRequested ) {
+					throw new TaskCanceledException();
+				}
+				Task.Run( ()=> TimerEvent() );
+				Thread.Sleep( Properties.Settings.Default.timerInterval);
+			}
+		}
+
 		/// <summary>
 		/// 一定時間ごとに呼ばれる
 		/// ここで連打、連打切替の処理を行う
 		/// </summary>
-		internal void TimerEvent() {
+		private void TimerEvent() {
 			if( !ActiveWindow || !this._barrageEnable ) {
 				return;
 			}

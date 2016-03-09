@@ -258,9 +258,9 @@
 			this.label3.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label3.Location = new System.Drawing.Point(6, 26);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(123, 18);
+			this.label3.Size = new System.Drawing.Size(65, 18);
 			this.label3.TabIndex = 5;
-			this.label3.Text = "連打間隔(要再起動) :";
+			this.label3.Text = "連打間隔 :";
 			// 
 			// label2
 			// 
