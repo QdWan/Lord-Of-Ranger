@@ -27,6 +27,7 @@ namespace LordOfRanger.Arad {
 		/// 800x600の時のアイコンサイズ
 		/// </summary>
 		private static readonly Point ICON_SIZE = new Point( 29, 29 );
+		private static readonly Point JUDGE_POINT = new Point(8,20);
 		/// <summary>
 		/// 800x600の時のクイックスロットの左上の座標
 		/// </summary>
@@ -39,10 +40,10 @@ namespace LordOfRanger.Arad {
 			new Point(235,558)
 		};
 
-		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 97, 255, 109 );
-		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 96, 253, 108 );
-		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 255, 236, 96 );
-		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 238, 97 );
+		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 88, 255, 100 );
+		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 87, 254, 99 );
+		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 237, 88 );
+		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 254, 235, 87 );
 
 		internal static bool IsAlive {
 			get {
@@ -72,7 +73,7 @@ namespace LordOfRanger.Arad {
 					(int)Math.Round( QUICK_SLOT_POINTS[switchPosition].Y * ratioH ),
 					(int)Math.Round( ICON_SIZE.X * ratioW ),
 					(int)Math.Round( ICON_SIZE.Y * ratioH ) );
-				var color = bmp.GetPixel( (int)Math.Round( 21 * ratioW ), (int)Math.Round( 7 * ratioH ) );
+				var color = bmp.GetPixel( (int)Math.Round( JUDGE_POINT.X * ratioW ), (int)Math.Round( JUDGE_POINT.Y * ratioH ) );
 				Console.WriteLine(color.ToString());
 				if( CheckColor(color,SWITCH_A_COLOR_MIN,SWITCH_A_COLOR_MAX )) {
 					return SwitchingStyle.A;
