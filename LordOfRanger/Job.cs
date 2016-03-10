@@ -17,6 +17,8 @@ namespace LordOfRanger {
 	/// Setting.Massを読み込み、それを実行するクラス
 	/// </summary>
 	class Job : IDisposable {
+
+		private readonly Common.Logging _logging;
 		private static Dictionary<byte, bool> _enablekeyF;
 		private static Dictionary<byte, bool> _enablekeyE;
 		private readonly Dictionary<int, bool> _enableToggle;
@@ -68,6 +70,7 @@ namespace LordOfRanger {
 		/// <param name="mass"></param>
 		internal Job( Mass mass ) {
 			this._mass = mass;
+			this._logging = new Common.Logging("job.log");
 			_enablekeyF = new Dictionary<byte, bool>();
 			_enablekeyE = new Dictionary<byte, bool>();
 			for( byte key = 0x00; key <= 0xff; key++ ) {
@@ -296,8 +299,8 @@ namespace LordOfRanger {
 				foreach( var t in this._mass.Toggles.Where( t => this._enableToggle[t.Id] ) ) {
 					KeyPush( t.send );
 				}
-			} catch( KeyNotFoundException ) {
-
+			} catch( KeyNotFoundException ex ) {
+				this._logging.Write( ex );
 			}
 		}
 

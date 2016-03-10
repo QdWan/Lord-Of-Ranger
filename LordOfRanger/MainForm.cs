@@ -19,13 +19,12 @@ namespace LordOfRanger {
 		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
 
-
+		private readonly Common.Logging _logging;
 		private Mass _mass;
 		private Job _job;
 		private string _currentSettingFile;
 		private readonly Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen;
-
 		private bool _editedFlag;
 		private bool EditedFlag {
 			get {
@@ -67,6 +66,7 @@ namespace LordOfRanger {
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
+			this._logging = new Common.Logging("main.log");
 			this._hotKeys = new Dictionary<byte, string>();
 
 			this._mass = new Mass();
@@ -124,8 +124,8 @@ namespace LordOfRanger {
 					Hide();
 					this.notifyIcon1.Visible = true;
 				}
-			} catch( Exception ) {
-				
+			} catch( Exception ex) {
+				this._logging.Write(ex);
 			}
 		}
 
@@ -441,8 +441,8 @@ namespace LordOfRanger {
 				if( this._job.Alive ) {
 					this._job.ActiveWindow = Arad.Client.IsActiveWindow;
 				}
-			} catch( Exception ) {
-				
+			} catch( Exception ex) {
+				this._logging.Write( ex );
 			}
 		}
 
