@@ -33,7 +33,7 @@ namespace LordOfRanger {
 					var ext = new Extract( filename );
 					foreach( var index in ext.npkIndexList ) {
 						if( Regex.IsMatch( index.name, "skillicon" ) ) {
-							var filePathNoextern = index.name.Substring( 0, index.name.LastIndexOf( '.' ) ) + "/";
+							var filePathNoextern = index.name.Substring( 0, index.name.LastIndexOf( '.' ) ) + Path.DirectorySeparatorChar;
 							this.lblStatus.Text = index.name;
 							await Task.Run( () => {
 								if( !Directory.Exists( filePathNoextern ) ) {
@@ -49,10 +49,10 @@ namespace LordOfRanger {
 					Console.WriteLine( ex );
 				}
 			}
-			if( Directory.Exists( Application.StartupPath + @"\sprite" ) ) {
-				Process.Start( Application.StartupPath + @"\sprite" );
+			if( Directory.Exists( Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ) + Path.DirectorySeparatorChar + "sprite" + Path.DirectorySeparatorChar ) ) {
+				Process.Start( Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ) + Path.DirectorySeparatorChar + "sprite" + Path.DirectorySeparatorChar );
 			} else {
-				Process.Start( Application.StartupPath );
+				Process.Start( Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ) + Path.DirectorySeparatorChar );
 			}
 			this.lblStatus.Text = "";
 			this.progressBar1.Visible = false;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using LordOfRanger.Behavior.Action;
 
 namespace LordOfRanger.Behavior {
@@ -10,7 +10,7 @@ namespace LordOfRanger.Behavior {
 	/// 中身はActを継承したCommand,Toggle,Barrage,Mouseクラスのインスタンスの配列
 	/// </summary>
 	internal class Mass {
-		internal static readonly string SETTING_PATH = Application.StartupPath + "/setting/";
+		internal static readonly string SETTING_PATH = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ) + Path.DirectorySeparatorChar + "setting" + Path.DirectorySeparatorChar;
 		internal string name;
 		internal byte hotKey = 0x00;
 		internal const string EXTENSION = ".ard";
