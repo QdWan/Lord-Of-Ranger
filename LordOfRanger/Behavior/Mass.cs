@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using LordOfRanger.Setting.Action;
+using LordOfRanger.Behavior.Action;
 
-namespace LordOfRanger.Setting {
+namespace LordOfRanger.Behavior {
 	/// <summary>
 	/// ユーザーが作成した設定ファイル1つ分を纏めるクラス
 	/// 中身はActを継承したCommand,Toggle,Barrage,Mouseクラスのインスタンスの配列

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LordOfRanger.Setting {
+namespace LordOfRanger.Behavior {
 	/// <summary>
 	/// 設定ファイルのバージョンを管理するクラス
 	/// このクラスを通して設定ファイルを読み込む

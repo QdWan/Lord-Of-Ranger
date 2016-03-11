@@ -3,26 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using LordOfRanger.Setting.Action;
+using LordOfRanger.Behavior.Action;
 
 // ReSharper disable JoinDeclarationAndInitializer
 // ReSharper disable UseObjectOrCollectionInitializer
 
+namespace LordOfRanger.Behavior {
+	internal static class V3 {
 
-
-namespace LordOfRanger.Setting {
-	internal static class V2 {
-		private const int VERSION = 2;
-
-		private struct ArdHeader {
-			internal int id;
-			internal Act.InstanceType instanceType;
-			internal int priority;
-			internal int skillIconSize;
-			internal int disableSkillIconSize;
-			internal int pushDataSize;
-			internal int sendDataSize;
-		}
+		private const int VERSION = 3;
 
 		internal static Mass Load( string filename ) {
 			var mass = new Mass();
@@ -72,9 +61,7 @@ namespace LordOfRanger.Setting {
 				headers.Add( ardHeader );
 			}
 
-
 			foreach( var ardHeader in headers ) {
-				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( ardHeader.instanceType ) {
 					case Act.InstanceType.COMMAND:
 						var c = new Command();
@@ -118,6 +105,37 @@ namespace LordOfRanger.Setting {
 						offset += ardHeader.sendDataSize;
 						mass.Add( t );
 						break;
+					case Act.InstanceType.MOUSE:
+						var m = new Action.Mouse();
+						m.Id = ardHeader.id;
+						m.Priority = ardHeader.priority;
+						m.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
+						offset += ardHeader.skillIconSize;
+						m.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
+						offset += ardHeader.disableSkillIconSize;
+						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
+						offset += ardHeader.pushDataSize;
+						var msList = new List<Mouse.Set>();
+						var tmpOffset = offset;
+						while( tmpOffset < offset + ardHeader.sendDataSize ) {
+
+							var op = (Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var x = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var y = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var sleepBetween = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							msList.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+
+						}
+						offset = tmpOffset;
+						m.mouseData.Value = msList;
+						mass.Add( m );
+						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
@@ -156,6 +174,18 @@ namespace LordOfRanger.Setting {
 				return null;
 			}
 			return (Bitmap)new ImageConverter().ConvertFrom( binary );
+		}
+
+		private struct ArdHeader {
+
+			internal int id;
+			internal Act.InstanceType instanceType;
+			internal int priority;
+			internal int skillIconSize;
+			internal int disableSkillIconSize;
+			internal int pushDataSize;
+			internal int sendDataSize;
+
 		}
 
 	}

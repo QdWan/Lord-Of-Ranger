@@ -1,4 +1,4 @@
-﻿namespace LordOfRanger.Setting.Action {
+﻿namespace LordOfRanger.Behavior.Action {
 	/// <summary>
 	/// このクラスのインスタンス1つがユーザーがメインウィンドウのDataGridViewで設定したファイルの1行分にあたる。
 	/// 主にメカニックのコロナや、バトルメイジのチェイサーのように常に連打し続けるようなもののために作成

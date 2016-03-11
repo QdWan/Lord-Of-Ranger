@@ -6,9 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LordOfRanger.Arad;
+using LordOfRanger.Behavior;
 using LordOfRanger.Keyboard;
 using LordOfRanger.Mouse;
-using LordOfRanger.Setting;
+
 // ReSharper disable RedundantIfElseBlock
 
 namespace LordOfRanger {

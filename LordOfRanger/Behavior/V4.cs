@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using LordOfRanger.Setting.Action;
+using LordOfRanger.Behavior.Action;
 
 // ReSharper disable JoinDeclarationAndInitializer
+// ReSharper disable UseObjectOrCollectionInitializer
 
-namespace LordOfRanger.Setting {
-	internal static class V1 {
-		private const int VERSION = 1;
+namespace LordOfRanger.Behavior {
+	internal static class V4 {
 
-		private struct ArdHeader {
-			internal int id;
-			internal Act.InstanceType instanceType;
-			internal int priority;
-			internal int skillIconSize;
-			internal int disableSkillIconSize;
-			internal int pushDataSize;
-			internal int sendDataSize;
-		}
+		private const int VERSION = 4;
 
 		internal static Mass Load( string filename ) {
 			var mass = new Mass();
@@ -40,16 +32,12 @@ namespace LordOfRanger.Setting {
 				throw new InvalidDataException();
 			}
 
-			var titleSize = BitConverter.ToInt32( array, offset );
-			offset += 4;
 			var hotKeySize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			var headerSize = BitConverter.ToInt32( array, offset );
 			offset += 4;
 			mass.Sequence = BitConverter.ToInt32( array, offset );
 			offset += 4;
-			//	var title = Encoding.UTF8.GetString( array, offset, titleSize );
-			offset += titleSize;
 			mass.hotKey = array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
 			offset += hotKeySize;
 			var headerCount = headerSize / 28;
@@ -74,7 +62,6 @@ namespace LordOfRanger.Setting {
 			}
 
 			foreach( var ardHeader in headers ) {
-				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( ardHeader.instanceType ) {
 					case Act.InstanceType.COMMAND:
 						var c = new Command();
@@ -118,11 +105,41 @@ namespace LordOfRanger.Setting {
 						offset += ardHeader.sendDataSize;
 						mass.Add( t );
 						break;
+					case Act.InstanceType.MOUSE:
+						var m = new Action.Mouse();
+						m.Id = ardHeader.id;
+						m.Priority = ardHeader.priority;
+						m.SkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.skillIconSize ).ToArray() );
+						offset += ardHeader.skillIconSize;
+						m.DisableSkillIcon = BinaryToBitmap( array.Skip( offset ).Take( ardHeader.disableSkillIconSize ).ToArray() );
+						offset += ardHeader.disableSkillIconSize;
+						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
+						offset += ardHeader.pushDataSize;
+						var msList = new List<Mouse.Set>();
+						var tmpOffset = offset;
+						while( tmpOffset < offset + ardHeader.sendDataSize ) {
+
+							var op = (Mouse.Operation)BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var x = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var y = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var sleepBetween = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
+							tmpOffset += 4;
+							msList.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+
+						}
+						offset = tmpOffset;
+						m.mouseData.Value = msList;
+						mass.Add( m );
+						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
 			}
-
 			return mass;
 		}
 
@@ -135,29 +152,40 @@ namespace LordOfRanger.Setting {
 				fs.Close();
 
 				var offset = 0;
+
 				//	var version = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				var titleSize = BitConverter.ToInt32( array, offset );
 				offset += 4;
 				var hotKeySize = BitConverter.ToInt32( array, offset );
 				offset += 4;
+
 				//	var headerSize = BitConverter.ToInt32( array, offset );
 				offset += 4;
+
 				//	sequence = BitConverter.ToInt32( array, offset );
 				offset += 4;
-				//	string title = Encoding.UTF8.GetString( array, offset, titleSize );
-				offset += titleSize;
 				return array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
-
 			} catch( Exception ) {
 				return 0x00;
 			}
 		}
+
 		private static Bitmap BinaryToBitmap( IReadOnlyCollection<byte> binary ) {
 			if( binary.Count == 0 ) {
 				return null;
 			}
 			return (Bitmap)new ImageConverter().ConvertFrom( binary );
+		}
+
+		private struct ArdHeader {
+
+			internal int id;
+			internal Act.InstanceType instanceType;
+			internal int priority;
+			internal int skillIconSize;
+			internal int disableSkillIconSize;
+			internal int pushDataSize;
+			internal int sendDataSize;
+
 		}
 
 	}

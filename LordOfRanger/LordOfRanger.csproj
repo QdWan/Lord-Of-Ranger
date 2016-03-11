@@ -166,19 +166,19 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setting\Action\Barrage.cs" />
-    <Compile Include="Setting\Action\Command.cs" />
-    <Compile Include="Setting\Action\Act.cs" />
-    <Compile Include="Setting\Manager.cs" />
-    <Compile Include="Setting\Mass.cs" />
-    <Compile Include="Setting\Action\Mouse.cs" />
-    <Compile Include="Setting\Action\Toggle.cs" />
-    <Compile Include="Setting\V2.cs" />
-    <Compile Include="Setting\V1.cs" />
-    <Compile Include="Setting\Current.cs" />
-    <Compile Include="Setting\V5.cs" />
-    <Compile Include="Setting\V4.cs" />
-    <Compile Include="Setting\V3.cs" />
+    <Compile Include="Behavior\Action\Barrage.cs" />
+    <Compile Include="Behavior\Action\Command.cs" />
+    <Compile Include="Behavior\Action\Act.cs" />
+    <Compile Include="Behavior\Manager.cs" />
+    <Compile Include="Behavior\Mass.cs" />
+    <Compile Include="Behavior\Action\Mouse.cs" />
+    <Compile Include="Behavior\Action\Toggle.cs" />
+    <Compile Include="Behavior\V2.cs" />
+    <Compile Include="Behavior\V1.cs" />
+    <Compile Include="Behavior\Current.cs" />
+    <Compile Include="Behavior\V5.cs" />
+    <Compile Include="Behavior\V4.cs" />
+    <Compile Include="Behavior\V3.cs" />
     <Compile Include="SkillIconExtractorForm.cs">
       <SubType>Form</SubType>
     </Compile>

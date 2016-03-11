@@ -7,10 +7,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using LordOfRanger.Behavior;
+using LordOfRanger.Behavior.Action;
 using LordOfRanger.Keyboard;
 using LordOfRanger.Mouse;
-using LordOfRanger.Setting;
-using LordOfRanger.Setting.Action;
 
 namespace LordOfRanger {
 	internal partial class MainForm :Form {
@@ -253,8 +253,8 @@ namespace LordOfRanger {
 						mode = Mode.TOGGLE;
 						break;
 					case Act.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Setting.Action.Mouse)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Setting.Action.Mouse)da ).mouseData.Value.Count + "]";
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Behavior.Action.Mouse)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Behavior.Action.Mouse)da ).mouseData.Value.Count + "]";
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -519,14 +519,14 @@ namespace LordOfRanger {
 								break;
 							case Act.InstanceType.MOUSE:
 								ksf.Dispose();
-								var msf = new MouseSetForm(((Setting.Action.Mouse)act).mouseData);
+								var msf = new MouseSetForm(((Behavior.Action.Mouse)act).mouseData);
 
 								msf.ShowDialog();
 								if( msf.result == MouseSetForm.Result.OK ) {
 									if( msf.editedFlag ) {
 										EditedFlag = true;
 									}
-									( (Setting.Action.Mouse)act ).mouseData = msf.mouseData;
+									( (Behavior.Action.Mouse)act ).mouseData = msf.mouseData;
 									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.mouseData.Value.Count + "]";
 								}
 								this._otherWindowOpen = false;
@@ -675,7 +675,7 @@ namespace LordOfRanger {
 						mode = Mode.TOGGLE;
 						break;
 					case AddCommandForm.Type.MOUSE:
-						sequence = this._mass.Add( new Setting.Action.Mouse() );
+						sequence = this._mass.Add( new Behavior.Action.Mouse() );
 						mode = Mode.MOUSE;
 						break;
 					default:

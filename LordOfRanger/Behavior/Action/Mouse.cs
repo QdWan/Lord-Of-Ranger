@@ -1,4 +1,4 @@
-﻿namespace LordOfRanger.Setting.Action {
+﻿namespace LordOfRanger.Behavior.Action {
 	internal class Mouse : Act {
 
 		internal LordOfRanger.Mouse.MouseData mouseData;

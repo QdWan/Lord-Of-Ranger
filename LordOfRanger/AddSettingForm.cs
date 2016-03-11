@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LordOfRanger.Behavior;
 
 namespace LordOfRanger {
 
@@ -30,14 +31,14 @@ namespace LordOfRanger {
 					break;
 				case (byte)Keys.Return:
 					this.settingName = this.txtSettingName.Text;
-					if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
+					if( System.IO.File.Exists( Mass.SETTING_PATH + this.settingName + Mass.EXTENSION ) ) {
 						MessageBox.Show( "同じ設定名が存在します。" );
 						return;
 					}
-					var mass = new Setting.Mass {
+					var mass = new Mass {
 						name = this.settingName
 					};
-					Setting.Manager.Save(mass);
+					Manager.Save(mass);
 					this.result = Result.OK;
 					Close();
 					break;
@@ -48,14 +49,14 @@ namespace LordOfRanger {
 
 		private void btnOk_Click( object sender, EventArgs e ) {
 			this.settingName = this.txtSettingName.Text;
-			if( System.IO.File.Exists( Setting.Mass.SETTING_PATH + this.settingName + Setting.Mass.EXTENSION ) ) {
+			if( System.IO.File.Exists( Mass.SETTING_PATH + this.settingName + Mass.EXTENSION ) ) {
 				MessageBox.Show( "同じ設定名が存在します。" );
 				return;
 			}
-			var mass = new Setting.Mass {
+			var mass = new Mass {
 				name = this.settingName
 			};
-			Setting.Manager.Save(mass);
+			Manager.Save(mass);
 			this.result = Result.OK;
 			Close();
 		}
