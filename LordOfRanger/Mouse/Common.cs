@@ -14,28 +14,28 @@ namespace LordOfRanger.Mouse {
 
 		internal MouseData() {
 			SwitchState = SwitchingStyle.BOTH;
-			Value = new List<Set>();
+			Value = new List<ActionPattern>();
 		}
 
 		internal SwitchingStyle SwitchState {
 			get;
 			set;
 		}
-		internal List<Set> Value {
+		internal List<ActionPattern> Value {
 			get;
 			set;
 		}
 
 	}
 
-	class Set {
+	class ActionPattern {
 		internal readonly Operation op;
 		internal readonly int x;
 		internal readonly int y;
 		internal readonly int sleepBetween;
 		internal readonly int sleepAfter;
 
-		internal Set( Operation op, int x, int y, int sleepBetween, int sleepAfter ) {
+		internal ActionPattern( Operation op, int x, int y, int sleepBetween, int sleepAfter ) {
 			this.op = op;
 			this.x = x;
 			this.y = y;

@@ -114,7 +114,7 @@ namespace LordOfRanger.Mouse {
 			}
 
 			this.result = Result.OK;
-			var tmpList = new List<Set>();
+			var tmpList = new List<ActionPattern>();
 			foreach( DataGridViewRow row in this.dgv.Rows ) {
 				var x = int.Parse( row.Cells[DgvCol.X].Value.ToString() );
 				var y = int.Parse( row.Cells[DgvCol.Y].Value.ToString() );
@@ -135,7 +135,7 @@ namespace LordOfRanger.Mouse {
 					default:
 						continue;
 				}
-				tmpList.Add( new Set( op, x, y, sleepBetween, sleepAfter ) );
+				tmpList.Add( new ActionPattern( op, x, y, sleepBetween, sleepAfter ) );
 			}
 			this.mouseData.Value = tmpList;
 			Close();

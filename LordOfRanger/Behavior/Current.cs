@@ -140,7 +140,7 @@ namespace LordOfRanger.Behavior {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							m.mouseData.Value.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+							m.mouseData.Value.Add(new Mouse.ActionPattern( op,x,y,sleepBetween,sleepAfter ));
 
 						}
 						offset = tmpOffset;

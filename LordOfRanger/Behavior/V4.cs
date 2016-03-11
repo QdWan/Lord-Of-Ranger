@@ -115,7 +115,7 @@ namespace LordOfRanger.Behavior {
 						offset += ardHeader.disableSkillIconSize;
 						m.Push = array.Skip( offset ).Take( ardHeader.pushDataSize ).ToArray();
 						offset += ardHeader.pushDataSize;
-						var msList = new List<Mouse.Set>();
+						var msList = new List<Mouse.ActionPattern>();
 						var tmpOffset = offset;
 						while( tmpOffset < offset + ardHeader.sendDataSize ) {
 
@@ -129,7 +129,7 @@ namespace LordOfRanger.Behavior {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							msList.Add(new Mouse.Set( op,x,y,sleepBetween,sleepAfter ));
+							msList.Add(new Mouse.ActionPattern( op,x,y,sleepBetween,sleepAfter ));
 
 						}
 						offset = tmpOffset;
