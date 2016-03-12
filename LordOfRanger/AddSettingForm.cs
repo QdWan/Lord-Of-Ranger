@@ -24,7 +24,7 @@ namespace LordOfRanger {
 
 		internal string settingName;
 
-		private void AddSettingForm_KeyUp( object sender, KeyEventArgs e ) {
+		private void AddSettingForm_KeyDown( object sender, KeyEventArgs e ) {
 			switch( (byte)e.KeyCode ) {
 				case (byte)Keys.Escape:
 					Close();
