@@ -109,7 +109,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(420, 369);
+			this.tabControl1.Size = new System.Drawing.Size(690, 544);
 			this.tabControl1.TabIndex = 0;
 			// 
 			// tabGeneral
@@ -118,7 +118,7 @@
 			this.tabGeneral.Location = new System.Drawing.Point(4, 27);
 			this.tabGeneral.Name = "tabGeneral";
 			this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
-			this.tabGeneral.Size = new System.Drawing.Size(412, 338);
+			this.tabGeneral.Size = new System.Drawing.Size(682, 513);
 			this.tabGeneral.TabIndex = 2;
 			this.tabGeneral.Text = "一般";
 			this.tabGeneral.UseVisualStyleBackColor = true;
@@ -130,9 +130,9 @@
 			this.groupBox6.Controls.Add(this.cmbGeneralStartupState);
 			this.groupBox6.Controls.Add(this.label9);
 			this.groupBox6.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox6.Location = new System.Drawing.Point(6, 6);
+			this.groupBox6.Location = new System.Drawing.Point(8, 8);
 			this.groupBox6.Name = "groupBox6";
-			this.groupBox6.Size = new System.Drawing.Size(398, 91);
+			this.groupBox6.Size = new System.Drawing.Size(300, 100);
 			this.groupBox6.TabIndex = 2;
 			this.groupBox6.TabStop = false;
 			this.groupBox6.Text = "一般";
@@ -140,7 +140,7 @@
 			// txtGeneralProcessName
 			// 
 			this.txtGeneralProcessName.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.txtGeneralProcessName.Location = new System.Drawing.Point(257, 62);
+			this.txtGeneralProcessName.Location = new System.Drawing.Point(167, 60);
 			this.txtGeneralProcessName.Name = "txtGeneralProcessName";
 			this.txtGeneralProcessName.Size = new System.Drawing.Size(121, 25);
 			this.txtGeneralProcessName.TabIndex = 14;
@@ -163,7 +163,7 @@
 			this.cmbGeneralStartupState.Items.AddRange(new object[] {
             "通常\t",
             "タスクトレイ"});
-			this.cmbGeneralStartupState.Location = new System.Drawing.Point(257, 26);
+			this.cmbGeneralStartupState.Location = new System.Drawing.Point(167, 24);
 			this.cmbGeneralStartupState.Name = "cmbGeneralStartupState";
 			this.cmbGeneralStartupState.Size = new System.Drawing.Size(121, 26);
 			this.cmbGeneralStartupState.TabIndex = 1;
@@ -185,7 +185,7 @@
 			this.tabBarrage.Location = new System.Drawing.Point(4, 27);
 			this.tabBarrage.Name = "tabBarrage";
 			this.tabBarrage.Padding = new System.Windows.Forms.Padding(3);
-			this.tabBarrage.Size = new System.Drawing.Size(412, 338);
+			this.tabBarrage.Size = new System.Drawing.Size(682, 513);
 			this.tabBarrage.TabIndex = 0;
 			this.tabBarrage.Text = "連打/連打切替";
 			this.tabBarrage.UseVisualStyleBackColor = true;
@@ -197,9 +197,9 @@
 			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Controls.Add(this.label2);
 			this.groupBox2.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox2.Location = new System.Drawing.Point(8, 6);
+			this.groupBox2.Location = new System.Drawing.Point(8, 8);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(396, 102);
+			this.groupBox2.Size = new System.Drawing.Size(300, 100);
 			this.groupBox2.TabIndex = 9;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "間隔";
@@ -207,7 +207,7 @@
 			// nudIntervalToggleTimer
 			// 
 			this.nudIntervalToggleTimer.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalToggleTimer.Location = new System.Drawing.Point(244, 19);
+			this.nudIntervalToggleTimer.Location = new System.Drawing.Point(214, 25);
 			this.nudIntervalToggleTimer.Maximum = new decimal(new int[] {
             300,
             0,
@@ -231,7 +231,7 @@
 			// nudIntervalToggleUpDown
 			// 
 			this.nudIntervalToggleUpDown.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalToggleUpDown.Location = new System.Drawing.Point(244, 66);
+			this.nudIntervalToggleUpDown.Location = new System.Drawing.Point(214, 60);
 			this.nudIntervalToggleUpDown.Maximum = new decimal(new int[] {
             300,
             0,
@@ -256,7 +256,7 @@
 			// 
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label3.Location = new System.Drawing.Point(6, 26);
+			this.label3.Location = new System.Drawing.Point(6, 30);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(65, 18);
 			this.label3.TabIndex = 5;
@@ -264,10 +264,11 @@
 			// 
 			// label2
 			// 
+			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label2.Location = new System.Drawing.Point(6, 58);
+			this.label2.Location = new System.Drawing.Point(6, 65);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(194, 31);
+			this.label2.Size = new System.Drawing.Size(193, 18);
 			this.label2.TabIndex = 3;
 			this.label2.Text = "キーを押してから離すまでの時間:";
 			// 
@@ -277,7 +278,7 @@
 			this.tabCommand.Location = new System.Drawing.Point(4, 27);
 			this.tabCommand.Name = "tabCommand";
 			this.tabCommand.Padding = new System.Windows.Forms.Padding(3);
-			this.tabCommand.Size = new System.Drawing.Size(412, 338);
+			this.tabCommand.Size = new System.Drawing.Size(682, 513);
 			this.tabCommand.TabIndex = 5;
 			this.tabCommand.Text = "コマンド";
 			this.tabCommand.UseVisualStyleBackColor = true;
@@ -289,9 +290,9 @@
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox1.Location = new System.Drawing.Point(8, 7);
+			this.groupBox1.Location = new System.Drawing.Point(8, 8);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(396, 99);
+			this.groupBox1.Size = new System.Drawing.Size(300, 99);
 			this.groupBox1.TabIndex = 9;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "間隔";
@@ -299,7 +300,7 @@
 			// nudIntervalCommandUpDown
 			// 
 			this.nudIntervalCommandUpDown.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalCommandUpDown.Location = new System.Drawing.Point(244, 65);
+			this.nudIntervalCommandUpDown.Location = new System.Drawing.Point(214, 60);
 			this.nudIntervalCommandUpDown.Maximum = new decimal(new int[] {
             300,
             0,
@@ -323,7 +324,7 @@
 			// nudIntervalCommandKeys
 			// 
 			this.nudIntervalCommandKeys.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudIntervalCommandKeys.Location = new System.Drawing.Point(244, 27);
+			this.nudIntervalCommandKeys.Location = new System.Drawing.Point(214, 25);
 			this.nudIntervalCommandKeys.Maximum = new decimal(new int[] {
             300,
             0,
@@ -346,19 +347,21 @@
 			// 
 			// label1
 			// 
+			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label1.Location = new System.Drawing.Point(6, 29);
+			this.label1.Location = new System.Drawing.Point(6, 30);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(194, 29);
+			this.label1.Size = new System.Drawing.Size(137, 18);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "キー入力後の待機時間 :";
 			// 
 			// label4
 			// 
+			this.label4.AutoSize = true;
 			this.label4.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label4.Location = new System.Drawing.Point(6, 58);
+			this.label4.Location = new System.Drawing.Point(6, 65);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(194, 31);
+			this.label4.Size = new System.Drawing.Size(193, 18);
 			this.label4.TabIndex = 7;
 			this.label4.Text = "キーを押してから離すまでの時間:";
 			// 
@@ -367,7 +370,7 @@
 			this.tabMouse.Controls.Add(this.groupBox7);
 			this.tabMouse.Location = new System.Drawing.Point(4, 27);
 			this.tabMouse.Name = "tabMouse";
-			this.tabMouse.Size = new System.Drawing.Size(412, 338);
+			this.tabMouse.Size = new System.Drawing.Size(682, 513);
 			this.tabMouse.TabIndex = 4;
 			this.tabMouse.Text = "マウス操作";
 			this.tabMouse.UseVisualStyleBackColor = true;
@@ -377,9 +380,9 @@
 			this.groupBox7.Controls.Add(this.cmbMouseReClick);
 			this.groupBox7.Controls.Add(this.label13);
 			this.groupBox7.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.groupBox7.Location = new System.Drawing.Point(6, 3);
+			this.groupBox7.Location = new System.Drawing.Point(8, 8);
 			this.groupBox7.Name = "groupBox7";
-			this.groupBox7.Size = new System.Drawing.Size(398, 91);
+			this.groupBox7.Size = new System.Drawing.Size(650, 70);
 			this.groupBox7.TabIndex = 3;
 			this.groupBox7.TabStop = false;
 			this.groupBox7.Text = "マウス操作";
@@ -392,7 +395,7 @@
 			this.cmbMouseReClick.Items.AddRange(new object[] {
             "実行中の操作を優先",
             "後に押した操作を優先"});
-			this.cmbMouseReClick.Location = new System.Drawing.Point(239, 39);
+			this.cmbMouseReClick.Location = new System.Drawing.Point(491, 26);
 			this.cmbMouseReClick.Name = "cmbMouseReClick";
 			this.cmbMouseReClick.Size = new System.Drawing.Size(153, 26);
 			this.cmbMouseReClick.TabIndex = 1;
@@ -403,9 +406,9 @@
 			this.label13.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.label13.Location = new System.Drawing.Point(12, 29);
 			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(221, 36);
+			this.label13.Size = new System.Drawing.Size(329, 18);
 			this.label13.TabIndex = 0;
-			this.label13.Text = "マウス操作実行中に\r\n再度マウス操作キーを押した時の動作 :";
+			this.label13.Text = "マウス操作実行中に再度マウス操作キーを押した時の動作 :";
 			// 
 			// tabSkillIcon
 			// 
@@ -413,7 +416,7 @@
 			this.tabSkillIcon.Location = new System.Drawing.Point(4, 27);
 			this.tabSkillIcon.Name = "tabSkillIcon";
 			this.tabSkillIcon.Padding = new System.Windows.Forms.Padding(3);
-			this.tabSkillIcon.Size = new System.Drawing.Size(412, 338);
+			this.tabSkillIcon.Size = new System.Drawing.Size(682, 513);
 			this.tabSkillIcon.TabIndex = 1;
 			this.tabSkillIcon.Text = "スキルアイコン";
 			this.tabSkillIcon.UseVisualStyleBackColor = true;
@@ -425,7 +428,7 @@
 			this.groupBox5.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.groupBox5.Location = new System.Drawing.Point(9, 9);
 			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(395, 142);
+			this.groupBox5.Size = new System.Drawing.Size(300, 130);
 			this.groupBox5.TabIndex = 5;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "スキルアイコン";
@@ -449,9 +452,9 @@
 			this.panelSkillIcon.Controls.Add(this.label5);
 			this.panelSkillIcon.Controls.Add(this.nudOneRowIcons);
 			this.panelSkillIcon.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.panelSkillIcon.Location = new System.Drawing.Point(8, 42);
+			this.panelSkillIcon.Location = new System.Drawing.Point(24, 42);
 			this.panelSkillIcon.Name = "panelSkillIcon";
-			this.panelSkillIcon.Size = new System.Drawing.Size(381, 75);
+			this.panelSkillIcon.Size = new System.Drawing.Size(259, 75);
 			this.panelSkillIcon.TabIndex = 4;
 			// 
 			// cmbSkillIconDisplayPosition
@@ -492,7 +495,7 @@
 			// nudOneRowIcons
 			// 
 			this.nudOneRowIcons.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudOneRowIcons.Location = new System.Drawing.Point(304, 7);
+			this.nudOneRowIcons.Location = new System.Drawing.Point(207, 3);
 			this.nudOneRowIcons.Minimum = new decimal(new int[] {
             1,
             0,
@@ -515,7 +518,7 @@
 			this.tabOther.Location = new System.Drawing.Point(4, 27);
 			this.tabOther.Name = "tabOther";
 			this.tabOther.Padding = new System.Windows.Forms.Padding(3);
-			this.tabOther.Size = new System.Drawing.Size(412, 338);
+			this.tabOther.Size = new System.Drawing.Size(682, 513);
 			this.tabOther.TabIndex = 3;
 			this.tabOther.Text = "その他";
 			this.tabOther.UseVisualStyleBackColor = true;
@@ -527,7 +530,7 @@
 			this.groupBox4.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.groupBox4.Location = new System.Drawing.Point(6, 113);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(396, 51);
+			this.groupBox4.Size = new System.Drawing.Size(300, 100);
 			this.groupBox4.TabIndex = 3;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "ホットキー";
@@ -535,7 +538,7 @@
 			// txtOtherHotKeyLORSwitching
 			// 
 			this.txtOtherHotKeyLORSwitching.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.txtOtherHotKeyLORSwitching.Location = new System.Drawing.Point(290, 17);
+			this.txtOtherHotKeyLORSwitching.Location = new System.Drawing.Point(200, 55);
 			this.txtOtherHotKeyLORSwitching.Name = "txtOtherHotKeyLORSwitching";
 			this.txtOtherHotKeyLORSwitching.ReadOnly = true;
 			this.txtOtherHotKeyLORSwitching.Size = new System.Drawing.Size(88, 25);
@@ -546,11 +549,11 @@
 			// 
 			this.label8.AutoSize = true;
 			this.label8.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label8.Location = new System.Drawing.Point(7, 20);
+			this.label8.Location = new System.Drawing.Point(7, 25);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(245, 18);
+			this.label8.Size = new System.Drawing.Size(250, 18);
 			this.label8.TabIndex = 0;
-			this.label8.Text = "Lord Of Rangerの有効/無効切替ホットキー";
+			this.label8.Text = "Lord Of Rangerの有効/無効切替ホットキー:";
 			// 
 			// groupBox3
 			// 
@@ -560,7 +563,7 @@
 			this.groupBox3.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.groupBox3.Location = new System.Drawing.Point(6, 8);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(396, 99);
+			this.groupBox3.Size = new System.Drawing.Size(300, 100);
 			this.groupBox3.TabIndex = 2;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "アクティブウィンドウ監視";
@@ -569,7 +572,7 @@
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.label10.Location = new System.Drawing.Point(328, 18);
+			this.label10.Location = new System.Drawing.Point(174, 21);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(56, 18);
 			this.label10.TabIndex = 12;
@@ -581,7 +584,7 @@
 			this.panelOtherActiveWindowMonitoring.Controls.Add(this.nudOtherActiveWindowMonitoringTimerInterval);
 			this.panelOtherActiveWindowMonitoring.Location = new System.Drawing.Point(6, 60);
 			this.panelOtherActiveWindowMonitoring.Name = "panelOtherActiveWindowMonitoring";
-			this.panelOtherActiveWindowMonitoring.Size = new System.Drawing.Size(384, 33);
+			this.panelOtherActiveWindowMonitoring.Size = new System.Drawing.Size(233, 33);
 			this.panelOtherActiveWindowMonitoring.TabIndex = 11;
 			// 
 			// label7
@@ -597,7 +600,7 @@
 			// nudOtherActiveWindowMonitoringTimerInterval
 			// 
 			this.nudOtherActiveWindowMonitoringTimerInterval.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.nudOtherActiveWindowMonitoringTimerInterval.Location = new System.Drawing.Point(216, 5);
+			this.nudOtherActiveWindowMonitoringTimerInterval.Location = new System.Drawing.Point(151, 5);
 			this.nudOtherActiveWindowMonitoringTimerInterval.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -647,14 +650,14 @@
 			this.splitContainer1.Panel2.Controls.Add(this.btnApply);
 			this.splitContainer1.Panel2.Controls.Add(this.btnCancel);
 			this.splitContainer1.Panel2.Controls.Add(this.btnOk);
-			this.splitContainer1.Size = new System.Drawing.Size(420, 398);
-			this.splitContainer1.SplitterDistance = 369;
+			this.splitContainer1.Size = new System.Drawing.Size(690, 573);
+			this.splitContainer1.SplitterDistance = 544;
 			this.splitContainer1.TabIndex = 1;
 			this.splitContainer1.TabStop = false;
 			// 
 			// btnApply
 			// 
-			this.btnApply.Location = new System.Drawing.Point(339, -1);
+			this.btnApply.Location = new System.Drawing.Point(603, -1);
 			this.btnApply.Name = "btnApply";
 			this.btnApply.Size = new System.Drawing.Size(75, 23);
 			this.btnApply.TabIndex = 2;
@@ -664,7 +667,7 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(258, -1);
+			this.btnCancel.Location = new System.Drawing.Point(522, -1);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
@@ -674,7 +677,7 @@
 			// 
 			// btnOk
 			// 
-			this.btnOk.Location = new System.Drawing.Point(177, -1);
+			this.btnOk.Location = new System.Drawing.Point(441, -1);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(75, 23);
 			this.btnOk.TabIndex = 0;
@@ -686,7 +689,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(420, 398);
+			this.ClientSize = new System.Drawing.Size(690, 573);
 			this.Controls.Add(this.splitContainer1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
@@ -708,6 +711,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalToggleUpDown)).EndInit();
 			this.tabCommand.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandUpDown)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudIntervalCommandKeys)).EndInit();
 			this.tabMouse.ResumeLayout(false);
