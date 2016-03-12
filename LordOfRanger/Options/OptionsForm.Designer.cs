@@ -214,7 +214,7 @@
             0,
             0});
 			this.nudIntervalToggleTimer.Minimum = new decimal(new int[] {
-            5,
+            2,
             0,
             0,
             0});
@@ -238,7 +238,7 @@
             0,
             0});
 			this.nudIntervalToggleUpDown.Minimum = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             0});
