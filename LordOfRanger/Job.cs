@@ -268,12 +268,15 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 連打用ループ
+		/// </summary>
 		private void BarrageLoop() {
 			while( true ) {
 				if( this._barrageTaskCancelToken.Token.IsCancellationRequested ) {
 					throw new TaskCanceledException();
 				}
-				Task.Run( ()=> TimerEvent() );
+				TimerEvent();
 				Thread.Sleep( Properties.Settings.Default.timerInterval);
 			}
 		}
