@@ -264,7 +264,7 @@ namespace LordOfRanger {
 						break;
 				}
 				KeyPush( tmpSendKey, Properties.Settings.Default.commandUpDownInterval );
-				Sleep( Properties.Settings.Default.commandInterval );
+				Thread.Sleep( Properties.Settings.Default.commandInterval );
 			}
 		}
 
@@ -416,18 +416,14 @@ namespace LordOfRanger {
 			Action dlg = IconUpdate;
 			dlg();
 		}
-
-		private static void Sleep( int sleeptime ) {
-			Thread.Sleep( sleeptime );
-		}
-
+		
 		/// <summary>
 		/// キー送信
 		/// </summary>
 		/// <param name="key"> 送信するキー </param>
 		private static void KeyPush( byte key ) {
 			Key.Down( key );
-			Sleep( Properties.Settings.Default.upDownInterval );
+			Thread.Sleep( Properties.Settings.Default.upDownInterval );
 			Key.Up( key );
 		}
 
@@ -439,7 +435,7 @@ namespace LordOfRanger {
 		private static void KeyPush( byte key, int sl ) {
 			try {
 				Key.Down( key );
-				Sleep( sl );
+				Thread.Sleep( sl );
 				Key.Up( key );
 			} catch( ThreadAbortException ) {
 				Key.Up( key );
