@@ -206,7 +206,6 @@ namespace LordOfRanger.Mouse {
 			switch( e.Message ) {
 				case MouseMessage.LUp:
 				case MouseMessage.RUp:
-					Client.Get();
 					if( !Client.IsAlive || !Client.IsActiveWindow ) {
 						return;
 					}

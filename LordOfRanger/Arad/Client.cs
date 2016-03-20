@@ -50,7 +50,7 @@ namespace LordOfRanger.Arad {
 				if( _isAlive ) {
 					_isAlive = !_process.HasExited;
 				} else {
-					Get();
+					Get(true);
 				}
 				return _isAlive;
 			}
@@ -58,6 +58,7 @@ namespace LordOfRanger.Arad {
 
 		internal static bool IsActiveWindow {
 			get {
+				Get();
 				var hWnd = Win32.Window.GetForegroundWindow();
 				int id;
 				Win32.Window.GetWindowThreadProcessId( hWnd, out id );
@@ -100,10 +101,11 @@ namespace LordOfRanger.Arad {
 		/// <summary>
 		/// プロセスを取得し、x,y,w,hをクラスのメンバ変数に格納する
 		/// </summary>
-		/// <returns>アラド戦記プロセス</returns>
-		internal static void Get() {
-
-			_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+		/// <param name="getProcessIdFlag">プロセスIDを検索しなおす場合true</param>
+		internal static void Get(bool getProcessIdFlag = false) {
+			if( getProcessIdFlag || _process == null ) {
+				_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
+			}
 
 			if( _process == null ) {
 				_isAlive = false;
