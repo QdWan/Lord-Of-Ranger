@@ -27,6 +27,5 @@ namespace LordOfRanger.Win32 {
 			internal readonly int bottom;
 		}
 
-
 	}
 }

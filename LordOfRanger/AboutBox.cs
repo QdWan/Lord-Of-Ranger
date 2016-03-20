@@ -7,7 +7,7 @@ namespace LordOfRanger {
 	/// <summary>
 	/// このアプリケーションの情報を表示するフォーム
 	/// </summary>
-	internal partial class AboutBox : Form {
+	internal partial class AboutBox :Form {
 
 		internal AboutBox() {
 			InitializeComponent();
@@ -20,7 +20,7 @@ namespace LordOfRanger {
 
 		}
 
-		private void btnOK_Click(object sender, EventArgs e) {
+		private void btnOK_Click( object sender, EventArgs e ) {
 			Close();
 		}
 

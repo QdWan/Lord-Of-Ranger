@@ -11,7 +11,7 @@ namespace LordOfRanger.Keyboard {
 		/// </summary>
 		/// <param name="key">キー((byte)RamGecTools.KeyboardHook.VKeys.***)</param>
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
-		internal static void Down(byte key, int sl = 0) {
+		internal static void Down( byte key, int sl = 0 ) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
 				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 1, EXTRA_INFO );
@@ -25,7 +25,7 @@ namespace LordOfRanger.Keyboard {
 		/// </summary>
 		/// <param name="key">キー((byte)RamGecTools.KeyboardHook.VKeys.***)</param>
 		/// <param name="sl">実行前のsleep時間(ミリ秒)</param>
-		internal static void Up(byte key, int sl = 0) {
+		internal static void Up( byte key, int sl = 0 ) {
 			System.Threading.Thread.Sleep( sl );
 			if( key == (byte)Keys.Left || key == (byte)Keys.Right || key == (byte)Keys.Up || key == (byte)Keys.Down ) {
 				Win32.Keyboard.keybd_event( key, (byte)Win32.Keyboard.MapVirtualKey( key, 0 ), 3, EXTRA_INFO );

@@ -38,13 +38,13 @@ namespace LordOfRanger {
 		}
 
 		private struct Mode {
+
 			internal const string COMMAND = "コマンド";
 			internal const string BARRAGE = "連打";
 			internal const string TOGGLE = "連打切替";
 			internal const string MOUSE = "マウス操作";
 
-		};
-
+		}
 
 		private struct DgvCol {
 
@@ -66,7 +66,7 @@ namespace LordOfRanger {
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
-			this._logging = new Common.Logging("main.log");
+			this._logging = new Common.Logging( "main.log" );
 			this._hotKeys = new Dictionary<byte, string>();
 
 			this._mass = new Mass();
@@ -114,8 +114,6 @@ namespace LordOfRanger {
 			return false;
 		}
 
-
-
 		#region form event
 
 		private void Arad_ClientSizeChanged( object sender, EventArgs e ) {
@@ -124,8 +122,8 @@ namespace LordOfRanger {
 					Hide();
 					this.notifyIcon1.Visible = true;
 				}
-			} catch( Exception ex) {
-				this._logging.Write(ex);
+			} catch( Exception ex ) {
+				this._logging.Write( ex );
 			}
 		}
 
@@ -284,7 +282,7 @@ namespace LordOfRanger {
 					this._mass = new Mass();
 					CurrentSettingChange( "new" );
 					this._mass.name = this._currentSettingFile;
-					Manager.Save(this._mass);
+					Manager.Save( this._mass );
 					continue;
 				}
 				this.lbSettingList.Items.Clear();
@@ -441,7 +439,7 @@ namespace LordOfRanger {
 				if( this._job.Alive ) {
 					this._job.ActiveWindow = Arad.Client.IsActiveWindow;
 				}
-			} catch( Exception ex) {
+			} catch( Exception ex ) {
 				this._logging.Write( ex );
 			}
 		}
@@ -456,8 +454,6 @@ namespace LordOfRanger {
 		}
 
 		#endregion
-
-
 
 		#region job form
 
@@ -476,96 +472,96 @@ namespace LordOfRanger {
 			// ReSharper disable once SwitchStatementMissingSomeCases
 			switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 				case DgvCol.PUSH: {
-					//textbox
-					var ksf = new KeySetForm();
-					foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
-						ksf.keyType = KeySetForm.KeyType.MULTI;
-						ksf.ShowDialog();
-						if( ksf.result == KeySetForm.Result.OK ) {
-							act.Push = ksf.KeyData;
+						//textbox
+						var ksf = new KeySetForm();
+						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+							ksf.keyType = KeySetForm.KeyType.MULTI;
+							ksf.ShowDialog();
+							if( ksf.result == KeySetForm.Result.OK ) {
+								act.Push = ksf.KeyData;
+							}
+							break;
 						}
+						if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
+							this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData, " + " );
+						}
+
+						ksf.Dispose();
 						break;
 					}
-					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
-						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData, " + " );
-					}
-
-					ksf.Dispose();
-					break;
-				}
 				case DgvCol.SEND: {
-					//textbox
-					var ksf = new KeySetForm();
-					foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
-						switch( act.Type ) {
-							case Act.InstanceType.COMMAND:
-								ksf.keyType = KeySetForm.KeyType.MULTI;
-								ksf.ShowDialog();
-								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Command)( act ) ).sendList = ksf.KeyData;
-								}
-								break;
-							case Act.InstanceType.BARRAGE:
-								ksf.ShowDialog();
-								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Barrage)act ).send = ksf.KeyData[0];
-								}
-								break;
-							case Act.InstanceType.TOGGLE:
-								ksf.ShowDialog();
-								if( ksf.result == KeySetForm.Result.OK ) {
-									( (Toggle)act ).send = ksf.KeyData[0];
-								}
-								break;
-							case Act.InstanceType.MOUSE:
-								ksf.Dispose();
-								var msf = new MouseSetForm(((Behavior.Action.Mouse)act).mouseData);
-
-								msf.ShowDialog();
-								if( msf.result == MouseSetForm.Result.OK ) {
-									if( msf.editedFlag ) {
-										EditedFlag = true;
+						//textbox
+						var ksf = new KeySetForm();
+						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+							switch( act.Type ) {
+								case Act.InstanceType.COMMAND:
+									ksf.keyType = KeySetForm.KeyType.MULTI;
+									ksf.ShowDialog();
+									if( ksf.result == KeySetForm.Result.OK ) {
+										( (Command)( act ) ).sendList = ksf.KeyData;
 									}
-									( (Behavior.Action.Mouse)act ).mouseData = msf.mouseData;
-									this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.mouseData.Value.Count + "]";
-								}
-								this._otherWindowOpen = false;
-								return;
-							default:
-								throw new ArgumentOutOfRangeException();
+									break;
+								case Act.InstanceType.BARRAGE:
+									ksf.ShowDialog();
+									if( ksf.result == KeySetForm.Result.OK ) {
+										( (Barrage)act ).send = ksf.KeyData[0];
+									}
+									break;
+								case Act.InstanceType.TOGGLE:
+									ksf.ShowDialog();
+									if( ksf.result == KeySetForm.Result.OK ) {
+										( (Toggle)act ).send = ksf.KeyData[0];
+									}
+									break;
+								case Act.InstanceType.MOUSE:
+									ksf.Dispose();
+									var msf = new MouseSetForm( ( (Behavior.Action.Mouse)act ).mouseData );
+
+									msf.ShowDialog();
+									if( msf.result == MouseSetForm.Result.OK ) {
+										if( msf.editedFlag ) {
+											EditedFlag = true;
+										}
+										( (Behavior.Action.Mouse)act ).mouseData = msf.mouseData;
+										this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = "マウス操作[" + msf.mouseData.Value.Count + "]";
+									}
+									this._otherWindowOpen = false;
+									return;
+								default:
+									throw new ArgumentOutOfRangeException();
+							}
+							break;
 						}
+						if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
+							this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData );
+						}
+
+						ksf.Dispose();
 						break;
 					}
-					if( ksf.result == KeySetForm.Result.OK && ksf.KeyData.Length != 0 ) {
-						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = KeysToText( ksf.KeyData );
-					}
-
-					ksf.Dispose();
-					break;
-				}
 				case DgvCol.ENABLE_SKILL_ICON:
 				case DgvCol.DISABLE_SKILL_ICON: {
-					var ofd = new OpenFileDialog {
-						Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png",
-						Title = "スキルアイコン画像を選択",
-						InitialDirectory = Application.ExecutablePath,
-						RestoreDirectory = true
-					};
-					if( ofd.ShowDialog() == DialogResult.OK ) {
-						this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
-							switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
-								case DgvCol.ENABLE_SKILL_ICON:
-									act.SkillIcon = new Bitmap( ofd.FileName );
-									break;
-								case DgvCol.DISABLE_SKILL_ICON:
-									act.DisableSkillIcon = new Bitmap( ofd.FileName );
-									break;
+						var ofd = new OpenFileDialog {
+							Filter = "Image File(*.gif;*.jpg;*.bmp;*.wmf;*.png)|*.gif;*.jpg;*.bmp;*.wmf;*.png",
+							Title = "スキルアイコン画像を選択",
+							InitialDirectory = Application.ExecutablePath,
+							RestoreDirectory = true
+						};
+						if( ofd.ShowDialog() == DialogResult.OK ) {
+							this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
+							foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
+									case DgvCol.ENABLE_SKILL_ICON:
+										act.SkillIcon = new Bitmap( ofd.FileName );
+										break;
+									case DgvCol.DISABLE_SKILL_ICON:
+										act.DisableSkillIcon = new Bitmap( ofd.FileName );
+										break;
+								}
 							}
 						}
+						break;
 					}
-					break;
-				}
 			}
 			this._otherWindowOpen = false;
 		}
@@ -590,9 +586,9 @@ namespace LordOfRanger {
 					}
 					break;
 				case DgvCol.KEYBOARD_CANCEL: {
-					this.dgv.RefreshEdit();
-					break;
-				}
+						this.dgv.RefreshEdit();
+						break;
+					}
 				default:
 					return;
 			}
@@ -695,7 +691,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			Manager.Save(this._mass);
+			Manager.Save( this._mass );
 			SettingUpdate();
 		}
 

@@ -11,7 +11,7 @@ namespace LordOfRanger {
 	/// <summary>
 	///     npkファイルからスキルアイコンを取得するフォーム
 	/// </summary>
-	internal partial class SkillIconExtractorForm : Form {
+	internal partial class SkillIconExtractorForm :Form {
 
 		internal SkillIconExtractorForm() {
 			InitializeComponent();
@@ -24,7 +24,7 @@ namespace LordOfRanger {
 			foreach( var filename in Directory.GetFiles( dir ).Where( x => Regex.IsMatch( x, @"\.npk$", RegexOptions.IgnoreCase ) ).Select( x => x ).ToArray() ) {
 				try {
 					if( IsFileLocked( filename ) ) {
-						MessageBox.Show( "ファイルがロックされています。"+filename );
+						MessageBox.Show( "ファイルがロックされています。" + filename );
 						this.lblStatus.Text = "";
 						this.progressBar1.Visible = false;
 						this.btnExtract.Enabled = true;

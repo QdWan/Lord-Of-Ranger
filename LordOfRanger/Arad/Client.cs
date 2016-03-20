@@ -27,7 +27,7 @@ namespace LordOfRanger.Arad {
 		/// 800x600の時のアイコンサイズ
 		/// </summary>
 		private static readonly Point ICON_SIZE = new Point( 29, 29 );
-		private static readonly Point JUDGE_POINT = new Point(8,20);
+		private static readonly Point JUDGE_POINT = new Point( 8, 20 );
 		/// <summary>
 		/// 800x600の時のクイックスロットの左上の座標
 		/// </summary>
@@ -50,7 +50,7 @@ namespace LordOfRanger.Arad {
 				if( _isAlive ) {
 					_isAlive = !_process.HasExited;
 				} else {
-					Get(true);
+					Get( true );
 				}
 				return _isAlive;
 			}
@@ -75,7 +75,7 @@ namespace LordOfRanger.Arad {
 					(int)Math.Round( ICON_SIZE.X * ratioW ),
 					(int)Math.Round( ICON_SIZE.Y * ratioH ) );
 				var color = bmp.GetPixel( (int)Math.Round( JUDGE_POINT.X * ratioW ), (int)Math.Round( JUDGE_POINT.Y * ratioH ) );
-				if( CheckColor(color,SWITCH_A_COLOR_MIN,SWITCH_A_COLOR_MAX )) {
+				if( CheckColor( color, SWITCH_A_COLOR_MIN, SWITCH_A_COLOR_MAX ) ) {
 					return SwitchingStyle.A;
 				}
 				if( CheckColor( color, SWITCH_B_COLOR_MIN, SWITCH_B_COLOR_MAX ) ) {
@@ -102,7 +102,7 @@ namespace LordOfRanger.Arad {
 		/// プロセスを取得し、x,y,w,hをクラスのメンバ変数に格納する
 		/// </summary>
 		/// <param name="getProcessIdFlag">プロセスIDを検索しなおす場合true</param>
-		internal static void Get(bool getProcessIdFlag = false) {
+		internal static void Get( bool getProcessIdFlag = false ) {
 			if( getProcessIdFlag || _process == null ) {
 				_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
 			}
@@ -127,7 +127,7 @@ namespace LordOfRanger.Arad {
 			ratioW = ( (double)w / DEFAULT_W );
 		}
 
-		private static Bitmap GetScreenShot(int targetX = 0,int targetY = 0,int targetW = 0,int targetH = 0) {
+		private static Bitmap GetScreenShot( int targetX = 0, int targetY = 0, int targetW = 0, int targetH = 0 ) {
 			if( targetW == 0 ) {
 				targetW = w;
 			}

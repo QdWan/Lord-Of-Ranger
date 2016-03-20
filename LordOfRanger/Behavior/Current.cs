@@ -11,7 +11,7 @@ using LordOfRanger.Behavior.Action;
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace LordOfRanger.Behavior {
-	internal static class Current  {
+	internal static class Current {
 
 		private const int VERSION = 6;
 
@@ -140,7 +140,7 @@ namespace LordOfRanger.Behavior {
 							tmpOffset += 4;
 							var sleepAfter = BitConverter.ToInt32( array, tmpOffset );
 							tmpOffset += 4;
-							m.mouseData.Value.Add(new Mouse.ActionPattern( op,x,y,sleepBetween,sleepAfter ));
+							m.mouseData.Value.Add( new Mouse.ActionPattern( op, x, y, sleepBetween, sleepAfter ) );
 
 						}
 						offset = tmpOffset;
@@ -155,7 +155,7 @@ namespace LordOfRanger.Behavior {
 			return mass;
 		}
 
-		public static void Save(Mass mass) {
+		public static void Save( Mass mass ) {
 			if( !Directory.Exists( Mass.SETTING_PATH ) ) {
 				Directory.CreateDirectory( Mass.SETTING_PATH );
 				Thread.Sleep( 300 );
@@ -187,7 +187,7 @@ namespace LordOfRanger.Behavior {
 			/*
 				switchPosition 32bit
 			*/
-			var switchPosition = BitConverter.GetBytes(mass.SwitchPosition);
+			var switchPosition = BitConverter.GetBytes( mass.SwitchPosition );
 
 			/*
 				id 32bit

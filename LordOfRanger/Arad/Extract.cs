@@ -322,22 +322,22 @@ namespace LordOfRanger.Arad {
 					}
 					switch( this.dwCompress ) {
 						case COMPRESS_ZLIB: {
-							var ms = new MemoryStream( this.fileData, this.startOffset + 2, (int)compressedSize - 2 );
-							var ds = new DeflateStream( ms, CompressionMode.Decompress );
-							try {
-								ds.Read( tempFileData, 0, tempFileData.Length );
-							} catch( Exception e ) {
-								throw new Exception( "compress " + "error!" + e.Message );
+								var ms = new MemoryStream( this.fileData, this.startOffset + 2, (int)compressedSize - 2 );
+								var ds = new DeflateStream( ms, CompressionMode.Decompress );
+								try {
+									ds.Read( tempFileData, 0, tempFileData.Length );
+								} catch( Exception e ) {
+									throw new Exception( "compress " + "error!" + e.Message );
+								}
+								ms.Close();
+								ds.Close();
 							}
-							ms.Close();
-							ds.Close();
-						}
 							break;
 						case COMPRESS_NONE: {
-							var ms = new MemoryStream( this.fileData, this.startOffset + 2, (int)compressedSize );
-							ms.Read( tempFileData, 0, tempFileData.Length );
-							ms.Close();
-						}
+								var ms = new MemoryStream( this.fileData, this.startOffset + 2, (int)compressedSize );
+								ms.Read( tempFileData, 0, tempFileData.Length );
+								ms.Close();
+							}
 							break;
 						default:
 							throw new Exception( "error unknown compress type: " + this.dwCompress + " in file " );
@@ -417,31 +417,31 @@ namespace LordOfRanger.Arad {
 					for( var j = 0; j < this.width; ++j ) {
 						switch( this.type ) {
 							case ARGB_1555: {
-								var r = ( ( ( this.data[i * this.width * 2 + j * 2 + 1] & 127 ) >> 2 ) << 3 ) % 256; // red
-								var g = ( ( ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0x0003 ) << 3 ) | ( ( this.data[i * this.width * 2 + j * 2] >> 5 ) & 0x0007 ) ) << 3 ) % 256; // green
-								var b = ( ( this.data[i * this.width * 2 + j * 2] & 0x003f ) << 3 ) % 256; // blue
-								var a = ( ( this.data[i * this.width * 2 + j * 2 + 1] >> 7 ) ) % 256 == 0 ? 0 : 255; // alpha
+									var r = ( ( ( this.data[i * this.width * 2 + j * 2 + 1] & 127 ) >> 2 ) << 3 ) % 256; // red
+									var g = ( ( ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0x0003 ) << 3 ) | ( ( this.data[i * this.width * 2 + j * 2] >> 5 ) & 0x0007 ) ) << 3 ) % 256; // green
+									var b = ( ( this.data[i * this.width * 2 + j * 2] & 0x003f ) << 3 ) % 256; // blue
+									var a = ( ( this.data[i * this.width * 2 + j * 2 + 1] >> 7 ) ) % 256 == 0 ? 0 : 255; // alpha
 
-								bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
-							}
+									bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+								}
 								break;
 							case ARGB_4444: {
-								var r = ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0x0f ) << 4 ) % 256; // red
-								var g = ( ( ( this.data[i * this.width * 2 + j * 2 + 0] & 0xf0 ) >> 4 ) << 4 ) % 256; // green
-								var b = ( ( this.data[i * this.width * 2 + j * 2 + 0] & 0x0f ) << 4 ) % 256; // blue
-								var a = ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0xf0 ) >> 4 ) << 4; // alpha
+									var r = ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0x0f ) << 4 ) % 256; // red
+									var g = ( ( ( this.data[i * this.width * 2 + j * 2 + 0] & 0xf0 ) >> 4 ) << 4 ) % 256; // green
+									var b = ( ( this.data[i * this.width * 2 + j * 2 + 0] & 0x0f ) << 4 ) % 256; // blue
+									var a = ( ( this.data[i * this.width * 2 + j * 2 + 1] & 0xf0 ) >> 4 ) << 4; // alpha
 
-								bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
-							}
+									bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+								}
 								break;
 							case ARGB_8888: {
-								int r = this.data[i * this.width * 4 + j * 4 + 2]; // red
-								int g = this.data[i * this.width * 4 + j * 4 + 1]; // green
-								int b = this.data[i * this.width * 4 + j * 4 + 0]; // blue
-								int a = this.data[i * this.width * 4 + j * 4 + 3]; // alpha
+									int r = this.data[i * this.width * 4 + j * 4 + 2]; // red
+									int g = this.data[i * this.width * 4 + j * 4 + 1]; // green
+									int b = this.data[i * this.width * 4 + j * 4 + 0]; // blue
+									int a = this.data[i * this.width * 4 + j * 4 + 3]; // alpha
 
-								bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
-							}
+									bmp.SetPixel( j, i, Color.FromArgb( a, r, g, b ) );
+								}
 								break;
 							case ARGB_NONE:
 								break;

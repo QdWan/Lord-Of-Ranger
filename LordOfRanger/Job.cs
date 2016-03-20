@@ -17,7 +17,7 @@ namespace LordOfRanger {
 	/// <summary>
 	/// Setting.Massを読み込み、それを実行するクラス
 	/// </summary>
-	class Job : IDisposable {
+	class Job :IDisposable {
 
 		private readonly Common.Logging _logging;
 		private static Dictionary<byte, bool> _enablekeyF;
@@ -71,7 +71,7 @@ namespace LordOfRanger {
 		/// <param name="mass"></param>
 		internal Job( Mass mass ) {
 			this._mass = mass;
-			this._logging = new Common.Logging("job.log");
+			this._logging = new Common.Logging( "job.log" );
 			_enablekeyF = new Dictionary<byte, bool>();
 			_enablekeyE = new Dictionary<byte, bool>();
 			for( byte key = 0x00; key <= 0xff; key++ ) {
@@ -90,7 +90,7 @@ namespace LordOfRanger {
 				_skillLayer.Show();
 			}
 			this._barrageTaskCancelToken = new CancellationTokenSource();
-			Task.Run( () => BarrageLoop(), this._barrageTaskCancelToken.Token);
+			Task.Run( () => BarrageLoop(), this._barrageTaskCancelToken.Token );
 			IconUpdate();
 		}
 
@@ -125,7 +125,7 @@ namespace LordOfRanger {
 			if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 				_enablekeyF[(byte)e.KeyCode] = false;
 				_enablekeyE[(byte)e.KeyCode] = false;
-				foreach( var m in this._mass.Mice.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode) ) ) {
+				foreach( var m in this._mass.Mice.Where( m => !m.Push.Any( k => !_enablekeyE[k] && k != (byte)e.KeyCode ) ) ) {
 					if( this._mouseTask?.Status == TaskStatus.Running ) {
 						if( Properties.Settings.Default.mouseReClick == 0 ) {
 							return;
@@ -277,7 +277,7 @@ namespace LordOfRanger {
 					throw new TaskCanceledException();
 				}
 				TimerEvent();
-				Thread.Sleep( Properties.Settings.Default.timerInterval);
+				Thread.Sleep( Properties.Settings.Default.timerInterval );
 			}
 		}
 
@@ -416,7 +416,7 @@ namespace LordOfRanger {
 			Action dlg = IconUpdate;
 			dlg();
 		}
-		
+
 		/// <summary>
 		/// キー送信
 		/// </summary>

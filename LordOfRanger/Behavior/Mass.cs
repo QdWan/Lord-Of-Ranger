@@ -55,7 +55,7 @@ namespace LordOfRanger.Behavior {
 				return this._mouseList.Value;
 			}
 		}
-		private byte[] _cancelList = {};
+		private byte[] _cancelList = { };
 		internal IEnumerable<byte> CancelList {
 			get {
 				return this._cancelList;

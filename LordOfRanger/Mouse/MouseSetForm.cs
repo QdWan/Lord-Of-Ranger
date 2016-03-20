@@ -18,9 +18,10 @@ namespace LordOfRanger.Mouse {
 		private int _autoInputRowIndex;
 		internal bool editedFlag;
 
-		internal MouseSetForm() : this(new MouseData()) {}
+		internal MouseSetForm() : this( new MouseData() ) {
+		}
 
-		internal MouseSetForm(MouseData mouseData) {
+		internal MouseSetForm( MouseData mouseData ) {
 			this.mouseData = mouseData;
 			this.result = Result.CANCEL;
 			KeyPreview = true;
@@ -98,7 +99,7 @@ namespace LordOfRanger.Mouse {
 
 			foreach( DataGridViewRow row in this.dgv.Rows ) {
 				uint i;
-				if( !uint.TryParse(row.Cells[DgvCol.X].Value.ToString(),out i) ||
+				if( !uint.TryParse( row.Cells[DgvCol.X].Value.ToString(), out i ) ||
 					!uint.TryParse( row.Cells[DgvCol.Y].Value.ToString(), out i ) ||
 					!uint.TryParse( row.Cells[DgvCol.SLEEP_BETWEEN].Value.ToString(), out i ) ||
 					!uint.TryParse( row.Cells[DgvCol.SLEEP_AFTER].Value.ToString(), out i ) ||
@@ -146,7 +147,7 @@ namespace LordOfRanger.Mouse {
 				SetStyle( ControlStyles.Selectable, false );
 			}
 		}
-		private void dgv_CellEnter( object sender,DataGridViewCellEventArgs e ) {
+		private void dgv_CellEnter( object sender, DataGridViewCellEventArgs e ) {
 			if( this.dgv.SelectedCells.Count == 0 ) {
 				return;
 			}
@@ -209,8 +210,8 @@ namespace LordOfRanger.Mouse {
 					if( !Client.IsAlive || !Client.IsActiveWindow ) {
 						return;
 					}
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = Math.Round(e.Point.X / Client.ratioW) - Client.x;
-					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = Math.Round( e.Point.Y / Client.ratioH) - Client.y;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.X].Value = Math.Round( e.Point.X / Client.ratioW ) - Client.x;
+					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.Y].Value = Math.Round( e.Point.Y / Client.ratioH ) - Client.y;
 					this.dgv.Rows[this._autoInputRowIndex].Cells[DgvCol.OPERATION].Value = e.Message == MouseMessage.LUp ? MouseOperationText.LEFT : MouseOperationText.RIGHT;
 					break;
 				case MouseMessage.Move:
@@ -238,7 +239,7 @@ namespace LordOfRanger.Mouse {
 			}
 		}
 		private static void dgvTextBox_KeyPress( object sender, KeyPressEventArgs e ) {
-			if( (e.KeyChar >= '0' && e.KeyChar <= '9') || e.KeyChar == 13 || e.KeyChar == '\b' ) {
+			if( ( e.KeyChar >= '0' && e.KeyChar <= '9' ) || e.KeyChar == 13 || e.KeyChar == '\b' ) {
 				return;
 			}
 			e.Handled = true;

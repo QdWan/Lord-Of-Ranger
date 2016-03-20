@@ -93,7 +93,7 @@ namespace LordOfRanger.Behavior.Action {
 		}
 
 		internal void Add( TAct instance ) {
-			if( instance.GetType() == typeof(TAct) ) {
+			if( instance.GetType() == typeof( TAct ) ) {
 				this._value.Add( instance );
 			}
 		}

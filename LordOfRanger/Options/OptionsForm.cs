@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using LordOfRanger.Keyboard;
 
 namespace LordOfRanger.Options {
-	internal partial class OptionsForm : Form {
+	internal partial class OptionsForm :Form {
 
 		private byte _tmpHotKey;
 
@@ -12,28 +12,28 @@ namespace LordOfRanger.Options {
 		}
 		#region Event
 
-		private void btnOk_Click(object sender, EventArgs e) {
+		private void btnOk_Click( object sender, EventArgs e ) {
 			SaveOptions();
 			Close();
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e) {
+		private void btnCancel_Click( object sender, EventArgs e ) {
 			Close();
 		}
 
-		private void btnApply_Click(object sender, EventArgs e) {
+		private void btnApply_Click( object sender, EventArgs e ) {
 			SaveOptions();
 		}
 
-		private void chkSkillIconEnable_CheckedChanged(object sender, EventArgs e) {
+		private void chkSkillIconEnable_CheckedChanged( object sender, EventArgs e ) {
 			this.panelSkillIcon.Enabled = this.chkSkillIconEnable.Checked;
 		}
 
-		private void chkOtherActiveWindowMonitoringEnable_CheckedChanged(object sender, EventArgs e) {
+		private void chkOtherActiveWindowMonitoringEnable_CheckedChanged( object sender, EventArgs e ) {
 			this.panelOtherActiveWindowMonitoring.Enabled = this.chkOtherActiveWindowMonitoringEnable.Checked;
 		}
 
-		private void txtOtherHotKeyLORSwitching_KeyUp(object sender, KeyEventArgs e) {
+		private void txtOtherHotKeyLORSwitching_KeyUp( object sender, KeyEventArgs e ) {
 			if( (byte)e.KeyCode == (byte)Keys.Escape ) {
 				this._tmpHotKey = 0x00;
 				this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
@@ -43,7 +43,7 @@ namespace LordOfRanger.Options {
 			this.txtOtherHotKeyLORSwitching.Text = Key.KEY_TEXT[this._tmpHotKey];
 		}
 
-		private void OptionsForm_Load(object sender, EventArgs e) {
+		private void OptionsForm_Load( object sender, EventArgs e ) {
 			LoadOptions();
 		}
 		#endregion

@@ -38,7 +38,7 @@ namespace LordOfRanger {
 					var mass = new Mass {
 						name = this.settingName
 					};
-					Manager.Save(mass);
+					Manager.Save( mass );
 					this.result = Result.OK;
 					Close();
 					break;
@@ -56,7 +56,7 @@ namespace LordOfRanger {
 			var mass = new Mass {
 				name = this.settingName
 			};
-			Manager.Save(mass);
+			Manager.Save( mass );
 			this.result = Result.OK;
 			Close();
 		}

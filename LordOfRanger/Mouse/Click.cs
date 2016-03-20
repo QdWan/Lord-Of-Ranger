@@ -5,7 +5,7 @@ using System.Threading;
 namespace LordOfRanger.Mouse {
 	static class Click {
 
-		[ SuppressMessage( "ReSharper", "UnusedMember.Local" ) ]
+		[SuppressMessage( "ReSharper", "UnusedMember.Local" )]
 		private enum Operation {
 			MOVE = 0x0001,
 			LEFTDOWN = 0x0002,
@@ -26,7 +26,7 @@ namespace LordOfRanger.Mouse {
 		/// <param name="x">X座標</param>
 		/// <param name="y">Y座標</param>
 		/// <param name="sleepBetween">MOUSEDOWNとMOUSEUPの間の時間(ms)</param>
-		public static void Left( int x,int y,int sleepBetween) {
+		public static void Left( int x, int y, int sleepBetween ) {
 			Win32.Mouse.mouse_event( (int)Operation.LEFTDOWN, x, y, 0, UIntPtr.Zero );
 			Thread.Sleep( sleepBetween );
 			Win32.Mouse.mouse_event( (int)Operation.LEFTUP, x, y, 0, UIntPtr.Zero );

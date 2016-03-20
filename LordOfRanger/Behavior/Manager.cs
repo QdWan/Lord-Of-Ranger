@@ -53,8 +53,8 @@ namespace LordOfRanger.Behavior {
 		/// <summary>
 		/// 最新バージョンで保存する
 		/// </summary>
-		internal static void Save(Mass mass) {
-			Current.Save(mass);
+		internal static void Save( Mass mass ) {
+			Current.Save( mass );
 		}
 
 		/// <summary>

@@ -104,7 +104,7 @@ namespace LordOfRanger.Keyboard {
 			Close();
 		}
 
-		private class NotForcusButton : Button {
+		private class NotForcusButton :Button {
 
 			public NotForcusButton() {
 				SetStyle( ControlStyles.Selectable, false );

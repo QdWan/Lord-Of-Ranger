@@ -1,5 +1,5 @@
 ﻿namespace LordOfRanger.Behavior.Action {
-	internal class Mouse : Act {
+	internal class Mouse :Act {
 
 		internal LordOfRanger.Mouse.MouseData mouseData;
 		internal Mouse() {
