@@ -40,10 +40,10 @@ namespace LordOfRanger.Arad {
 			new Point(235,558)
 		};
 
-		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 88, 255, 100 );
-		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 87, 254, 99 );
-		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 237, 88 );
-		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 254, 235, 87 );
+		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 88, 255, 102 );
+		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 81, 254, 98 );
+		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 238, 88 );
+		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 254, 233, 85 );
 
 		internal static bool IsAlive {
 			get {
