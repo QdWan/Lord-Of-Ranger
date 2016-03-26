@@ -23,6 +23,15 @@ namespace LordOfRanger {
 		private Mass _mass;
 		private Job _job;
 		private string _currentSettingFile;
+		private string CurrentSettingFile {
+			get {
+				return this._currentSettingFile;
+			}
+			set {
+				this._currentSettingFile = value;
+				Properties.Settings.Default.currentSettingName = value;
+			}
+		}
 		private readonly Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen;
 		private bool _editedFlag;
@@ -71,7 +80,7 @@ namespace LordOfRanger {
 
 			this._mass = new Mass();
 			LoadSettingList();
-			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
+			CurrentSettingFile = this.lbSettingList.SelectedItem.ToString();
 			SettingUpdate( true );
 
 			this._job?.Dispose();
@@ -192,7 +201,7 @@ namespace LordOfRanger {
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
-				CurrentSettingChange( asf.settingName );
+				CurrentSettingFile = asf.settingName;
 				SettingUpdate();
 			}
 			this._otherWindowOpen = false;
@@ -222,7 +231,7 @@ namespace LordOfRanger {
 			if( ConfirmSettingChange() ) {
 				return;
 			}
-			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
+			CurrentSettingFile = this.lbSettingList.SelectedItem.ToString();
 			SettingUpdate();
 		}
 
@@ -280,8 +289,8 @@ namespace LordOfRanger {
 				var files = Directory.GetFiles( Mass.SETTING_PATH );
 				if( files.Length == 0 ) {
 					this._mass = new Mass();
-					CurrentSettingChange( "new" );
-					this._mass.name = this._currentSettingFile;
+					CurrentSettingFile = "new";
+					this._mass.name = CurrentSettingFile;
 					Manager.Save( this._mass );
 					continue;
 				}
@@ -332,29 +341,20 @@ namespace LordOfRanger {
 		/// <param name="firstFlag"></param>
 		private void SettingUpdate( bool firstFlag = false ) {
 			LoadSettingList();
-			if( this.lbSettingList.FindStringExact( this._currentSettingFile ) == -1 ) {
-				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
+			if( this.lbSettingList.FindStringExact( CurrentSettingFile ) == -1 ) {
+				CurrentSettingFile = this.lbSettingList.Items[0].ToString();
 			}
 			LoadHotKeys( firstFlag );
-			this._mass = Manager.Load( this._currentSettingFile );
+			this._mass = Manager.Load( CurrentSettingFile );
 			SettingView();
 			this._job?.Dispose();
 			this._job = new Job( this._mass );
 
-			this.lblSettingName.Text = this._currentSettingFile;
-			this.lbSettingList.SelectedItem = this._currentSettingFile;
+			this.lblSettingName.Text = CurrentSettingFile;
+			this.lbSettingList.SelectedItem = CurrentSettingFile;
 			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
 			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
 			EditedFlag = false;
-		}
-
-		/// <summary>
-		/// 設定ファイルの切り替え
-		/// </summary>
-		/// <param name="name">設定ファイルの名前</param>
-		private void CurrentSettingChange( string name ) {
-			this._currentSettingFile = name;
-			Properties.Settings.Default.currentSettingName = name;
 		}
 
 		#endregion
@@ -403,7 +403,7 @@ namespace LordOfRanger {
 							if( ConfirmSettingChange() ) {
 								e.Cancel = true;
 							}
-							CurrentSettingChange( this._hotKeys[(byte)e.KeyCode] );
+							CurrentSettingFile = this._hotKeys[(byte)e.KeyCode];
 							SettingUpdate();
 #if DEBUG
 						goto echo;
