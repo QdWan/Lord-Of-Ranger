@@ -30,6 +30,7 @@ namespace LordOfRanger {
 			set {
 				this._currentSettingFile = value;
 				Properties.Settings.Default.currentSettingName = value;
+				SettingUpdate();
 			}
 		}
 		private readonly Dictionary<byte, string> _hotKeys;
@@ -80,8 +81,6 @@ namespace LordOfRanger {
 
 			this._mass = new Mass();
 			LoadSettingList();
-			CurrentSettingFile = this.lbSettingList.SelectedItem.ToString();
-			SettingUpdate( true );
 
 			this._job?.Dispose();
 			this._job = new Job( this._mass );
@@ -201,8 +200,8 @@ namespace LordOfRanger {
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
+				LoadSettingList();
 				CurrentSettingFile = asf.settingName;
-				SettingUpdate();
 			}
 			this._otherWindowOpen = false;
 		}
@@ -211,7 +210,7 @@ namespace LordOfRanger {
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
-				SettingUpdate();
+				LoadSettingList();
 			}
 		}
 
@@ -232,7 +231,6 @@ namespace LordOfRanger {
 				return;
 			}
 			CurrentSettingFile = this.lbSettingList.SelectedItem.ToString();
-			SettingUpdate();
 		}
 
 		/// <summary>
@@ -274,6 +272,12 @@ namespace LordOfRanger {
 				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
 				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
 			}
+
+			this.lblSettingName.Text = CurrentSettingFile;
+			this.lbSettingList.SelectedItem = CurrentSettingFile;
+			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
+			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
+			EditedFlag = false;
 		}
 
 		/// <summary>
@@ -299,22 +303,19 @@ namespace LordOfRanger {
 					this.lbSettingList.Items.Add( filename );
 				}
 				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
-					this.lbSettingList.SelectedItem = Properties.Settings.Default.currentSettingName;
+					CurrentSettingFile = Properties.Settings.Default.currentSettingName;
 				} else {
-					if( this.lbSettingList.Items.Count > 0 ) {
-						this.lbSettingList.SelectedIndex = 0;
-					}
+					CurrentSettingFile = this.lbSettingList.Items[0].ToString();
 				}
 				break;
 			}
+			LoadHotKeys();
 		}
 
 		/// <summary>
 		/// 全設定ファイルのホットキーの読み込みを行う。
-		/// コンストラクタから呼ばれた場合のみ、同一ホットキーが存在する旨の警告を出す。
 		/// </summary>
-		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
-		private void LoadHotKeys( bool firstFlag = false ) {
+		private void LoadHotKeys() {
 			this._hotKeys.Clear();
 			var files = Directory.GetFiles( Mass.SETTING_PATH );
 			foreach( var file in files ) {
@@ -326,9 +327,7 @@ namespace LordOfRanger {
 						if( !this._hotKeys.TryGetValue( hotkey, out file2 ) ) {
 							this._hotKeys.Add( hotkey, filename );
 						} else {
-							if( firstFlag ) {
-								MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
-							}
+							MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
 						}
 					}
 				}
@@ -336,25 +335,13 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 設定リストの再読み込みを行う。
+		/// 設定ファイルの再読み込みを行う。
 		/// </summary>
-		/// <param name="firstFlag"></param>
-		private void SettingUpdate( bool firstFlag = false ) {
-			LoadSettingList();
-			if( this.lbSettingList.FindStringExact( CurrentSettingFile ) == -1 ) {
-				CurrentSettingFile = this.lbSettingList.Items[0].ToString();
-			}
-			LoadHotKeys( firstFlag );
+		private void SettingUpdate() {
 			this._mass = Manager.Load( CurrentSettingFile );
 			SettingView();
 			this._job?.Dispose();
 			this._job = new Job( this._mass );
-
-			this.lblSettingName.Text = CurrentSettingFile;
-			this.lbSettingList.SelectedItem = CurrentSettingFile;
-			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
-			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
-			EditedFlag = false;
 		}
 
 		#endregion
@@ -404,7 +391,6 @@ namespace LordOfRanger {
 								e.Cancel = true;
 							}
 							CurrentSettingFile = this._hotKeys[(byte)e.KeyCode];
-							SettingUpdate();
 #if DEBUG
 						goto echo;
 #else
