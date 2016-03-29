@@ -20,19 +20,26 @@ namespace LordOfRanger {
 #endif
 
 		private readonly Common.Logging _logging;
-		private Mass _mass;
+		private Dictionary<string, Mass> _massList;
 		private Job _job;
-		private string _currentSettingFile;
-		private string CurrentSettingFile {
+		private Mass CurrentSettingFile {
 			get {
-				return this._currentSettingFile;
+				return this._massList[CurrentSettingName];
+			}
+		}
+		private string _currentSettingName;
+		private string CurrentSettingName {
+			get {
+				return this._currentSettingName;
 			}
 			set {
-				this._currentSettingFile = value;
+				this._currentSettingName = value;
 				Properties.Settings.Default.currentSettingName = value;
 				SettingUpdate();
 			}
 		}
+
+
 		private readonly Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen;
 		private bool _editedFlag;
@@ -79,11 +86,7 @@ namespace LordOfRanger {
 			this._logging = new Common.Logging( "main.log" );
 			this._hotKeys = new Dictionary<byte, string>();
 
-			this._mass = new Mass();
 			LoadSettingList();
-
-			this._job?.Dispose();
-			this._job = new Job( this._mass );
 
 			if( Properties.Settings.Default.activeWindowMonitoring ) {
 				this.timerActiveWindowCheck.Interval = Properties.Settings.Default.activeWindowMonitoringinterval;
@@ -108,7 +111,7 @@ namespace LordOfRanger {
 				switch( result ) {
 					case DialogResult.Yes:
 						EditedFlag = false;
-						Manager.Save( this._mass );
+						Manager.Save( CurrentSettingFile );
 						break;
 					case DialogResult.No:
 						EditedFlag = false;
@@ -166,7 +169,6 @@ namespace LordOfRanger {
 			Properties.Settings.Default.Save();
 			var of = new Options.OptionsForm();
 			of.ShowDialog();
-			this._mass = Manager.Load( this._mass.name );
 			this._otherWindowOpen = false;
 		}
 
@@ -201,7 +203,7 @@ namespace LordOfRanger {
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
 				LoadSettingList();
-				CurrentSettingFile = asf.settingName;
+				CurrentSettingName = asf.settingName;
 			}
 			this._otherWindowOpen = false;
 		}
@@ -220,7 +222,7 @@ namespace LordOfRanger {
 			ksf.ShowDialog();
 			ksf.keyType = KeySetForm.KeyType.SINGLE;
 			if( ksf.result == KeySetForm.Result.OK ) {
-				this._mass.hotKey = ksf.KeyData[0];
+				CurrentSettingFile.hotKey = ksf.KeyData[0];
 				this.txtHotKey.Text = KeysToText( ksf.KeyData );
 			}
 			this._otherWindowOpen = false;
@@ -230,7 +232,7 @@ namespace LordOfRanger {
 			if( ConfirmSettingChange() ) {
 				return;
 			}
-			CurrentSettingFile = this.lbSettingList.SelectedItem.ToString();
+			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
 
 		/// <summary>
@@ -238,7 +240,7 @@ namespace LordOfRanger {
 		/// </summary>
 		private void SettingView() {
 			this.dgv.Rows.Clear();
-			foreach( var da in this._mass.Value ) {
+			foreach( var da in CurrentSettingFile.Value ) {
 				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
@@ -273,10 +275,10 @@ namespace LordOfRanger {
 				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
 			}
 
-			this.lblSettingName.Text = CurrentSettingFile;
-			this.lbSettingList.SelectedItem = CurrentSettingFile;
-			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
-			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
+			this.lblSettingName.Text = CurrentSettingName;
+			this.lbSettingList.SelectedItem = CurrentSettingName;
+			this.txtHotKey.Text = KeysToText( CurrentSettingFile.hotKey );
+			this.cmbSwitchPosition.SelectedIndex = CurrentSettingFile.SwitchPosition;
 			EditedFlag = false;
 		}
 
@@ -292,20 +294,22 @@ namespace LordOfRanger {
 
 				var files = Directory.GetFiles( Mass.SETTING_PATH );
 				if( files.Length == 0 ) {
-					this._mass = new Mass();
-					CurrentSettingFile = "new";
-					this._mass.name = CurrentSettingFile;
-					Manager.Save( this._mass );
+					var mass = new Mass();
+					CurrentSettingName = "new";
+					mass.name = CurrentSettingName;
+					Manager.Save( mass );
 					continue;
 				}
+				this._massList = new Dictionary<string, Mass>();
 				this.lbSettingList.Items.Clear();
 				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
+					this._massList.Add( filename, Manager.Load( filename ) );
 					this.lbSettingList.Items.Add( filename );
 				}
 				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
-					CurrentSettingFile = Properties.Settings.Default.currentSettingName;
+					CurrentSettingName = Properties.Settings.Default.currentSettingName;
 				} else {
-					CurrentSettingFile = this.lbSettingList.Items[0].ToString();
+					CurrentSettingName = this.lbSettingList.Items[0].ToString();
 				}
 				break;
 			}
@@ -338,10 +342,9 @@ namespace LordOfRanger {
 		/// 設定ファイルの再読み込みを行う。
 		/// </summary>
 		private void SettingUpdate() {
-			this._mass = Manager.Load( CurrentSettingFile );
-			SettingView();
 			this._job?.Dispose();
-			this._job = new Job( this._mass );
+			this._job = new Job( CurrentSettingFile );
+			SettingView();
 		}
 
 		#endregion
@@ -368,7 +371,7 @@ namespace LordOfRanger {
 			}
 
 			if( this._job.ActiveWindow && this._job.BarrageEnable && e.ExtraInfo != (int)Key.EXTRA_INFO ) {
-				if( this._mass.CancelList.Contains( (byte)e.KeyCode ) ) {
+				if( CurrentSettingFile.CancelList.Contains( (byte)e.KeyCode ) ) {
 					e.Cancel = true;
 				}
 			}
@@ -390,7 +393,7 @@ namespace LordOfRanger {
 							if( ConfirmSettingChange() ) {
 								e.Cancel = true;
 							}
-							CurrentSettingFile = this._hotKeys[(byte)e.KeyCode];
+							CurrentSettingName = this._hotKeys[(byte)e.KeyCode];
 #if DEBUG
 						goto echo;
 #else
@@ -460,7 +463,7 @@ namespace LordOfRanger {
 				case DgvCol.PUSH: {
 						//textbox
 						var ksf = new KeySetForm();
-						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+						foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 							ksf.keyType = KeySetForm.KeyType.MULTI;
 							ksf.ShowDialog();
 							if( ksf.result == KeySetForm.Result.OK ) {
@@ -478,7 +481,7 @@ namespace LordOfRanger {
 				case DgvCol.SEND: {
 						//textbox
 						var ksf = new KeySetForm();
-						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+						foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 							switch( act.Type ) {
 								case Act.InstanceType.COMMAND:
 									ksf.keyType = KeySetForm.KeyType.MULTI;
@@ -535,7 +538,7 @@ namespace LordOfRanger {
 						};
 						if( ofd.ShowDialog() == DialogResult.OK ) {
 							this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-							foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+							foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:
 										act.SkillIcon = new Bitmap( ofd.FileName );
@@ -566,7 +569,7 @@ namespace LordOfRanger {
 				case DgvCol.DELETE:
 					if( MessageBox.Show( "この行を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						this._mass.RemoveAt( sequence );
+						CurrentSettingFile.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 						EditedFlag = true;
 					}
@@ -595,7 +598,7 @@ namespace LordOfRanger {
 					var dgvcbc = (DataGridViewCheckBoxCell)this.dgv.SelectedCells[0];
 					dgvcbc.Value = dgvcbc.Value == dgvcbc.TrueValue ? dgvcbc.FalseValue : dgvcbc.TrueValue;
 					var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-					this._mass.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
+					CurrentSettingFile.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
 					this.dgv.RefreshEdit();
 					break;
 				default:
@@ -628,7 +631,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void cmbSwitchPosition_SelectedIndexChanged( object sender, EventArgs e ) {
 			EditedFlag = true;
-			this._mass.SwitchPosition = this.cmbSwitchPosition.SelectedIndex;
+			CurrentSettingFile.SwitchPosition = this.cmbSwitchPosition.SelectedIndex;
 		}
 
 		/// <summary>
@@ -645,19 +648,19 @@ namespace LordOfRanger {
 				int sequence;
 				switch( acf.type ) {
 					case AddCommandForm.Type.COMMAND:
-						sequence = this._mass.Add( new Command() );
+						sequence = CurrentSettingFile.Add( new Command() );
 						mode = Mode.COMMAND;
 						break;
 					case AddCommandForm.Type.BARRAGE:
-						sequence = this._mass.Add( new Barrage() );
+						sequence = CurrentSettingFile.Add( new Barrage() );
 						mode = Mode.BARRAGE;
 						break;
 					case AddCommandForm.Type.TOGGLE:
-						sequence = this._mass.Add( new Toggle() );
+						sequence = CurrentSettingFile.Add( new Toggle() );
 						mode = Mode.TOGGLE;
 						break;
 					case AddCommandForm.Type.MOUSE:
-						sequence = this._mass.Add( new Behavior.Action.Mouse() );
+						sequence = CurrentSettingFile.Add( new Behavior.Action.Mouse() );
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -677,7 +680,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			Manager.Save( this._mass );
+			Manager.Save( CurrentSettingFile );
 			SettingUpdate();
 		}
 
@@ -688,7 +691,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
 			EditedFlag = false;
-			this._mass = Manager.Load( this._mass.name );
+			this._massList[CurrentSettingName] = Manager.Load( CurrentSettingFile.name );
 			SettingUpdate();
 		}
 
@@ -722,7 +725,7 @@ namespace LordOfRanger {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex >= 1 ) {
 				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-				this._mass.UpAt( sequence );
+				CurrentSettingFile.UpAt( sequence );
 				var row = this.dgv.Rows[rowIndex];
 				this.dgv.Rows.RemoveAt( rowIndex );
 				this.dgv.Rows.Insert( rowIndex - 1, row );
@@ -736,7 +739,7 @@ namespace LordOfRanger {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex < this.dgv.Rows.Count - 1 ) {
 				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-				this._mass.DownAt( sequence );
+				CurrentSettingFile.DownAt( sequence );
 				var row = this.dgv.Rows[rowIndex];
 				this.dgv.Rows.RemoveAt( rowIndex );
 				this.dgv.Rows.Insert( rowIndex + 1, row );
