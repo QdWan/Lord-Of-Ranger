@@ -325,19 +325,12 @@ namespace LordOfRanger {
 		/// </summary>
 		private void LoadHotKeys() {
 			this._hotKeys.Clear();
-			var files = Directory.GetFiles( Mass.SETTING_PATH );
-			foreach( var file in files ) {
-				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
-					var filename = Path.GetFileNameWithoutExtension( file );
-					var hotkey = Manager.GetHotKey( filename );
-					if( hotkey != 0x00 ) {
-						string file2;
-						if( !this._hotKeys.TryGetValue( hotkey, out file2 ) ) {
-							this._hotKeys.Add( hotkey, filename );
-						} else {
-							MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
-						}
-					}
+			foreach( var mass in this._massList.Values.Where( mass => mass.hotKey != 0x00 ) ) {
+				string filename;
+				if( !this._hotKeys.TryGetValue( mass.hotKey, out filename ) ) {
+					this._hotKeys.Add( mass.hotKey, mass.name );
+				} else {
+					MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + mass.name + "' , '" + filename + "'" );
 				}
 			}
 		}

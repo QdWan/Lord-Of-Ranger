@@ -56,29 +56,5 @@ namespace LordOfRanger.Behavior {
 		internal static void Save( Mass mass ) {
 			Current.Save( mass );
 		}
-
-		/// <summary>
-		/// ファイルのホットキーを取得する
-		/// </summary>
-		/// <param name="filename"> ファイルのホットキーを取得する </param>
-		/// <returns></returns>
-		internal static byte GetHotKey( string filename ) {
-			switch( GetVersion( filename ) ) {
-				case 1:
-					return V1.GetHotKey( filename );
-				case 2:
-					return V2.GetHotKey( filename );
-				case 3:
-					return V3.GetHotKey( filename );
-				case 4:
-					return V4.GetHotKey( filename );
-				case 5:
-					return V5.GetHotKey( filename );
-				case 6:
-					return Current.GetHotKey( filename );
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
 	}
 }
