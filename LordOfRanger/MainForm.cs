@@ -18,7 +18,7 @@ namespace LordOfRanger {
 #if DEBUG
 		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
-
+		private readonly bool _formLoaded;
 		private readonly Common.Logging _logging;
 		private Dictionary<string, Mass> _massList;
 		private Job _job;
@@ -33,24 +33,30 @@ namespace LordOfRanger {
 				return this._currentSettingName;
 			}
 			set {
+				this._massLoaded = false;
 				this._currentSettingName = value;
 				Properties.Settings.Default.currentSettingName = value;
 				SettingUpdate();
+				this._massLoaded = true;
 			}
 		}
 
-
 		private readonly Dictionary<byte, string> _hotKeys;
 		private bool _otherWindowOpen;
-		private bool _editedFlag;
+
+		private bool _massLoaded;
 		private bool EditedFlag {
-			get {
-				return this._editedFlag;
-			}
 			set {
-				this._editedFlag = value;
-				this.btnSave.Enabled = value;
-				this.btnCancel.Enabled = value;
+				if( this._formLoaded ) {
+					if( this._massLoaded ) {
+						CurrentSettingFile.EditedFlag = value;
+						this.btnSave.Enabled = value;
+						this.btnCancel.Enabled = value;
+					} else {
+						this.btnSave.Enabled = CurrentSettingFile.EditedFlag;
+						this.btnCancel.Enabled = CurrentSettingFile.EditedFlag;
+					}
+				}
 			}
 		}
 
@@ -97,6 +103,8 @@ namespace LordOfRanger {
 			keyboardHook.KeyboardHooked += KeyHookEvent;
 
 			Application.ApplicationExit += Application_ApplicationExit;
+			this._massLoaded = true;
+			this._formLoaded = true;
 		}
 
 		/// <summary>
@@ -105,13 +113,13 @@ namespace LordOfRanger {
 		/// </summary>
 		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
 		private bool ConfirmSettingChange() {
-			if( EditedFlag ) {
-				var result = MessageBox.Show( "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
+			foreach( var mass in this._massList.Values.Where( x => x.EditedFlag ) ) {
+				var result = MessageBox.Show( mass.name + "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
 				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( result ) {
 					case DialogResult.Yes:
 						EditedFlag = false;
-						Manager.Save( CurrentSettingFile );
+						Manager.Save( mass );
 						break;
 					case DialogResult.No:
 						EditedFlag = false;
@@ -195,14 +203,12 @@ namespace LordOfRanger {
 		#region setting form
 
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
-			if( ConfirmSettingChange() ) {
-				return;
-			}
 			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
 			asf.ShowDialog();
 			if( asf.result == AddSettingForm.Result.OK ) {
-				LoadSettingList();
+				this._massList.Add( asf.addedMassInstance.name, asf.addedMassInstance );
+				this.lbSettingList.Items.Add( asf.addedMassInstance.name );
 				CurrentSettingName = asf.settingName;
 			}
 			this._otherWindowOpen = false;
@@ -212,7 +218,8 @@ namespace LordOfRanger {
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
-				LoadSettingList();
+				this._massList.Remove( deleteFile );
+				this.lbSettingList.Items.Remove( deleteFile );
 			}
 		}
 
@@ -229,9 +236,6 @@ namespace LordOfRanger {
 		}
 
 		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
-			if( ConfirmSettingChange() ) {
-				return;
-			}
 			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
 
@@ -239,6 +243,7 @@ namespace LordOfRanger {
 		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
 		/// </summary>
 		private void SettingView() {
+			this._massLoaded = false;
 			this.dgv.Rows.Clear();
 			foreach( var da in CurrentSettingFile.Value ) {
 				var row = this.dgv.Rows.Add();
@@ -279,7 +284,7 @@ namespace LordOfRanger {
 			this.lbSettingList.SelectedItem = CurrentSettingName;
 			this.txtHotKey.Text = KeysToText( CurrentSettingFile.hotKey );
 			this.cmbSwitchPosition.SelectedIndex = CurrentSettingFile.SwitchPosition;
-			EditedFlag = false;
+			this._massLoaded = true;
 		}
 
 		/// <summary>
@@ -295,8 +300,7 @@ namespace LordOfRanger {
 				var files = Directory.GetFiles( Mass.SETTING_PATH );
 				if( files.Length == 0 ) {
 					var mass = new Mass();
-					CurrentSettingName = "new";
-					mass.name = CurrentSettingName;
+					mass.name = "new";
 					Manager.Save( mass );
 					continue;
 				}
@@ -390,9 +394,6 @@ namespace LordOfRanger {
 					if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 						//setting change hot key
 						if( this._hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
-							if( ConfirmSettingChange() ) {
-								e.Cancel = true;
-							}
 							CurrentSettingName = this._hotKeys[(byte)e.KeyCode];
 #if DEBUG
 						goto echo;
@@ -679,7 +680,6 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
-			EditedFlag = false;
 			Manager.Save( CurrentSettingFile );
 			SettingUpdate();
 		}
@@ -690,7 +690,6 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
-			EditedFlag = false;
 			this._massList[CurrentSettingName] = Manager.Load( CurrentSettingFile.name );
 			SettingUpdate();
 		}

@@ -368,6 +368,7 @@
 			// 
 			// btnCancel
 			// 
+			this.btnCancel.Enabled = false;
 			this.btnCancel.Location = new System.Drawing.Point(614, 2);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -378,6 +379,7 @@
 			// 
 			// btnSave
 			// 
+			this.btnSave.Enabled = false;
 			this.btnSave.Location = new System.Drawing.Point(533, 2);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);

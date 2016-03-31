@@ -22,6 +22,8 @@ namespace LordOfRanger {
 
 		internal Result result;
 
+		internal Mass addedMassInstance;
+
 		internal string settingName;
 
 		private void AddSettingForm_KeyDown( object sender, KeyEventArgs e ) {
@@ -57,6 +59,7 @@ namespace LordOfRanger {
 				name = this.settingName
 			};
 			Manager.Save( mass );
+			this.addedMassInstance = mass;
 			this.result = Result.OK;
 		}
 	}
