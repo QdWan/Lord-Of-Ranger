@@ -118,11 +118,9 @@ namespace LordOfRanger {
 				// ReSharper disable once SwitchStatementMissingSomeCases
 				switch( result ) {
 					case DialogResult.Yes:
-						EditedFlag = false;
 						Manager.Save( mass );
 						break;
 					case DialogResult.No:
-						EditedFlag = false;
 						break;
 					case DialogResult.Cancel:
 						return true;
