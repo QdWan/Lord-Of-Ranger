@@ -55,6 +55,7 @@ namespace LordOfRanger.Behavior {
 		/// </summary>
 		internal static void Save( Mass mass ) {
 			Current.Save( mass );
+			mass.EditedFlag = false;
 		}
 	}
 }
