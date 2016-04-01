@@ -721,12 +721,13 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// ホットキーの変更を検知し、変更フラグをたてる。
+		/// ホットキーの変更を検知し、ホットキーリストの更新を行い、変更フラグをたてる。
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void txtHotKey_TextChanged( object sender, EventArgs e ) {
 			EditedFlag = true;
+			LoadHotKeys();
 		}
 
 		/// <summary>
