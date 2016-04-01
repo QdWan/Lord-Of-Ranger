@@ -88,12 +88,10 @@ namespace LordOfRanger {
 				if( this._formLoaded ) {
 					if( this._massLoaded ) {
 						CurrentSettingFile.EditedFlag = value;
-						this.btnSave.Enabled = value;
-						this.btnCancel.Enabled = value;
-					} else {
-						this.btnSave.Enabled = CurrentSettingFile.EditedFlag;
-						this.btnCancel.Enabled = CurrentSettingFile.EditedFlag;
 					}
+					this.btnSave.Enabled = CurrentSettingFile.EditedFlag;
+					this.btnCancel.Enabled = CurrentSettingFile.EditedFlag;
+					this.splitContainer5.Panel1.BackColor = CurrentSettingFile.EditedFlag ? SystemColors.Info : SystemColors.ControlLight;
 				}
 			}
 		}
