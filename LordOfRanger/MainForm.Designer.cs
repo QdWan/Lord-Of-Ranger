@@ -440,7 +440,7 @@
 			this.lbSettingList.Name = "lbSettingList";
 			this.lbSettingList.Size = new System.Drawing.Size(150, 577);
 			this.lbSettingList.TabIndex = 0;
-			this.lbSettingList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbSettingList_MouseDoubleClick);
+			this.lbSettingList.SelectedIndexChanged += new System.EventHandler(this.lbSettingList_SelectedIndexChanged);
 			// 
 			// btnDeleteSetting
 			// 

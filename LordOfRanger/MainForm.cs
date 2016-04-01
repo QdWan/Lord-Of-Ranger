@@ -447,12 +447,12 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 設定ファイルリストボックスのダブルクリックイベント
+		/// 設定ファイルリストボックスの選択変更イベント
 		/// 選択されたファイルをカレント設定にする。
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
+		private void lbSettingList_SelectedIndexChanged( object sender, EventArgs e ) {
 			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
 
