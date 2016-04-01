@@ -107,6 +107,113 @@ namespace LordOfRanger {
 			this._formLoaded = true;
 		}
 
+		#region 設定管理
+
+		/// <summary>
+		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
+		/// </summary>
+		private void LoadSettingList() {
+			while( true ) {
+				if( !Directory.Exists( Mass.SETTING_PATH ) ) {
+					Directory.CreateDirectory( Mass.SETTING_PATH );
+					Thread.Sleep( 300 );
+				}
+
+				var files = Directory.GetFiles( Mass.SETTING_PATH );
+				if( files.Length == 0 ) {
+					var mass = new Mass();
+					mass.name = "new";
+					Manager.Save( mass );
+					continue;
+				}
+				this._massList = new Dictionary<string, Mass>();
+				this.lbSettingList.Items.Clear();
+				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
+					this._massList.Add( filename, Manager.Load( filename ) );
+					this.lbSettingList.Items.Add( filename );
+				}
+				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
+					CurrentSettingName = Properties.Settings.Default.currentSettingName;
+				} else {
+					CurrentSettingName = this.lbSettingList.Items[0].ToString();
+				}
+				break;
+			}
+			LoadHotKeys();
+		}
+
+		/// <summary>
+		/// 全設定ファイルのホットキーの読み込みを行う。
+		/// </summary>
+		private void LoadHotKeys() {
+			this._hotKeys.Clear();
+			foreach( var mass in this._massList.Values.Where( mass => mass.hotKey != 0x00 ) ) {
+				string filename;
+				if( !this._hotKeys.TryGetValue( mass.hotKey, out filename ) ) {
+					this._hotKeys.Add( mass.hotKey, mass.name );
+				} else {
+					MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + mass.name + "' , '" + filename + "'" );
+				}
+			}
+		}
+
+		/// <summary>
+		/// 設定ファイルの再読み込みを行う。
+		/// </summary>
+		private void SettingUpdate() {
+			this._job?.Dispose();
+			this._job = new Job( CurrentSettingFile );
+			SettingView();
+		}
+
+		/// <summary>
+		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
+		/// </summary>
+		private void SettingView() {
+			this._massLoaded = false;
+			this.dgv.Rows.Clear();
+			foreach( var da in CurrentSettingFile.Value ) {
+				var row = this.dgv.Rows.Add();
+				string mode;
+				switch( da.Type ) {
+					case Act.InstanceType.COMMAND:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
+						mode = Mode.COMMAND;
+						break;
+					case Act.InstanceType.BARRAGE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
+						mode = Mode.BARRAGE;
+						break;
+					case Act.InstanceType.TOGGLE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
+						mode = Mode.TOGGLE;
+						break;
+					case Act.InstanceType.MOUSE:
+						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Behavior.Action.Mouse)da ).Push, " + " );
+						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Behavior.Action.Mouse)da ).mouseData.Value.Count + "]";
+						mode = Mode.MOUSE;
+						break;
+					default:
+						return;
+				}
+				this.dgv.Rows[row].Cells[DgvCol.SEQUENCE].Value = da.Id.ToString();
+				this.dgv.Rows[row].Cells[DgvCol.MODE].Value = mode;
+				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = da.Priority.ToString();
+				this.dgv.Rows[row].Cells[DgvCol.ENABLE_SKILL_ICON].Value = da.SkillIcon;
+				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
+				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
+			}
+
+			this.lblSettingName.Text = CurrentSettingName;
+			this.lbSettingList.SelectedItem = CurrentSettingName;
+			this.txtHotKey.Text = KeysToText( CurrentSettingFile.hotKey );
+			this.cmbSwitchPosition.SelectedIndex = CurrentSettingFile.SwitchPosition;
+			this._massLoaded = true;
+		}
+
 		/// <summary>
 		/// 変更されていた場合、変更を保存するかどうかの確認をする。
 		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
@@ -130,6 +237,8 @@ namespace LordOfRanger {
 			}
 			return false;
 		}
+
+		#endregion
 
 		#region form event
 
@@ -194,12 +303,6 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
-		#endregion
-
-
-
-		#region setting form
-
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
@@ -237,114 +340,7 @@ namespace LordOfRanger {
 			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
 
-		/// <summary>
-		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
-		/// </summary>
-		private void SettingView() {
-			this._massLoaded = false;
-			this.dgv.Rows.Clear();
-			foreach( var da in CurrentSettingFile.Value ) {
-				var row = this.dgv.Rows.Add();
-				string mode;
-				switch( da.Type ) {
-					case Act.InstanceType.COMMAND:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Command)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Command)da ).sendList );
-						mode = Mode.COMMAND;
-						break;
-					case Act.InstanceType.BARRAGE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Barrage)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Barrage)da ).send );
-						mode = Mode.BARRAGE;
-						break;
-					case Act.InstanceType.TOGGLE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Toggle)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = KeysToText( ( (Toggle)da ).send );
-						mode = Mode.TOGGLE;
-						break;
-					case Act.InstanceType.MOUSE:
-						this.dgv.Rows[row].Cells[DgvCol.PUSH].Value = KeysToText( ( (Behavior.Action.Mouse)da ).Push, " + " );
-						this.dgv.Rows[row].Cells[DgvCol.SEND].Value = "マウス操作[" + ( (Behavior.Action.Mouse)da ).mouseData.Value.Count + "]";
-						mode = Mode.MOUSE;
-						break;
-					default:
-						return;
-				}
-				this.dgv.Rows[row].Cells[DgvCol.SEQUENCE].Value = da.Id.ToString();
-				this.dgv.Rows[row].Cells[DgvCol.MODE].Value = mode;
-				this.dgv.Rows[row].Cells[DgvCol.PRIORITY].Value = da.Priority.ToString();
-				this.dgv.Rows[row].Cells[DgvCol.ENABLE_SKILL_ICON].Value = da.SkillIcon;
-				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
-				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
-			}
-
-			this.lblSettingName.Text = CurrentSettingName;
-			this.lbSettingList.SelectedItem = CurrentSettingName;
-			this.txtHotKey.Text = KeysToText( CurrentSettingFile.hotKey );
-			this.cmbSwitchPosition.SelectedIndex = CurrentSettingFile.SwitchPosition;
-			this._massLoaded = true;
-		}
-
-		/// <summary>
-		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
-		/// </summary>
-		private void LoadSettingList() {
-			while( true ) {
-				if( !Directory.Exists( Mass.SETTING_PATH ) ) {
-					Directory.CreateDirectory( Mass.SETTING_PATH );
-					Thread.Sleep( 300 );
-				}
-
-				var files = Directory.GetFiles( Mass.SETTING_PATH );
-				if( files.Length == 0 ) {
-					var mass = new Mass();
-					mass.name = "new";
-					Manager.Save( mass );
-					continue;
-				}
-				this._massList = new Dictionary<string, Mass>();
-				this.lbSettingList.Items.Clear();
-				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
-					this._massList.Add( filename, Manager.Load( filename ) );
-					this.lbSettingList.Items.Add( filename );
-				}
-				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
-					CurrentSettingName = Properties.Settings.Default.currentSettingName;
-				} else {
-					CurrentSettingName = this.lbSettingList.Items[0].ToString();
-				}
-				break;
-			}
-			LoadHotKeys();
-		}
-
-		/// <summary>
-		/// 全設定ファイルのホットキーの読み込みを行う。
-		/// </summary>
-		private void LoadHotKeys() {
-			this._hotKeys.Clear();
-			foreach( var mass in this._massList.Values.Where( mass => mass.hotKey != 0x00 ) ) {
-				string filename;
-				if( !this._hotKeys.TryGetValue( mass.hotKey, out filename ) ) {
-					this._hotKeys.Add( mass.hotKey, mass.name );
-				} else {
-					MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + mass.name + "' , '" + filename + "'" );
-				}
-			}
-		}
-
-		/// <summary>
-		/// 設定ファイルの再読み込みを行う。
-		/// </summary>
-		private void SettingUpdate() {
-			this._job?.Dispose();
-			this._job = new Job( CurrentSettingFile );
-			SettingView();
-		}
-
 		#endregion
-
-
 
 		#region job
 
@@ -685,32 +681,6 @@ namespace LordOfRanger {
 			SettingUpdate();
 		}
 
-		/// <summary>
-		/// byteで表されるキーをテキストに変換
-		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
-		private static string KeysToText( byte key ) {
-			return Key.KEY_TEXT[key];
-		}
-
-		/// <summary>
-		/// byte[]で表されるキーの配列をテキストに変換
-		/// </summary>
-		/// <param name="keys"></param>
-		/// <param name="separator">仕切り文字</param>
-		/// <returns></returns>
-		private static string KeysToText( IReadOnlyList<byte> keys, string separator = "" ) {
-			var s = "";
-			for( var i = 0; i < keys.Count; i++ ) {
-				if( i != 0 ) {
-					s += separator;
-				}
-				s += Key.KEY_TEXT[keys[i]];
-			}
-			return s;
-		}
-
 		private void btnUpRow_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex >= 1 ) {
@@ -737,6 +707,36 @@ namespace LordOfRanger {
 				this.dgv.Rows[rowIndex + 1].Selected = true;
 				EditedFlag = true;
 			}
+		}
+
+		#endregion
+
+		#region テキスト変換
+
+		/// <summary>
+		/// byteで表されるキーをテキストに変換
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		private static string KeysToText( byte key ) {
+			return Key.KEY_TEXT[key];
+		}
+
+		/// <summary>
+		/// byte[]で表されるキーの配列をテキストに変換
+		/// </summary>
+		/// <param name="keys"></param>
+		/// <param name="separator">仕切り文字</param>
+		/// <returns></returns>
+		private static string KeysToText( IReadOnlyList<byte> keys, string separator = "" ) {
+			var s = "";
+			for( var i = 0; i < keys.Count; i++ ) {
+				if( i != 0 ) {
+					s += separator;
+				}
+				s += Key.KEY_TEXT[keys[i]];
+			}
+			return s;
 		}
 
 		#endregion
