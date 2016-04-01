@@ -16,7 +16,7 @@ namespace LordOfRanger {
 	internal partial class MainForm :Form {
 
 #if DEBUG
-		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
+		private readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
 		/// <summary>
 		/// フォームロードが完了しているかどうかのフラグ

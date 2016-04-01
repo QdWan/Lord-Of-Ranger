@@ -9,7 +9,7 @@ namespace LordOfRanger {
 		/// アプリケーションのメイン エントリ ポイントです。
 		/// </summary>
 		[STAThread]
-		static void Main() {
+		private static void Main() {
 			if( Properties.Settings.Default.newFileFlag ) {
 				Properties.Settings.Default.Upgrade();
 				Properties.Settings.Default.newFileFlag = true;
