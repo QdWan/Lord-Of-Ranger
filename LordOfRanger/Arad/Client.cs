@@ -10,16 +10,59 @@ namespace LordOfRanger.Arad {
 	/// </summary>
 	static class Client {
 
+		/// <summary>
+		/// アラド戦記クライアントの横幅デフォルト値
+		/// </summary>
 		private const int DEFAULT_W = 800;
+
+		/// <summary>
+		/// アラド戦記クライアントの高さデフォルト値
+		/// </summary>
 		private const int DEFAULT_H = 600;
+
+		/// <summary>
+		/// アラド戦記のクライアントの実際の高さとデフォルト値との比率
+		/// </summary>
 		internal static double ratioH;
+
+		/// <summary>
+		/// アラド戦記のクライアントの実際の横幅とデフォルト値との比率
+		/// </summary>
 		internal static double ratioW;
+
+		/// <summary>
+		/// アラド戦記のプロセス
+		/// </summary>
 		private static Process _process;
+
+		/// <summary>
+		/// アラド戦記のクライアントの左上X座標
+		/// </summary>
 		internal static int x;
+
+		/// <summary>
+		/// アラド戦記のクライアントの左上Y座標
+		/// </summary>
 		internal static int y;
+
+		/// <summary>
+		/// アラド戦記のクライアントの横幅
+		/// </summary>
 		internal static int w = DEFAULT_W;
+
+		/// <summary>
+		/// アラド戦記のクライアントの高さ
+		/// </summary>
 		internal static int h = DEFAULT_H;
+
+		/// <summary>
+		/// アラド戦記のクライアントが立ち上がっているかどうかのフラグ
+		/// </summary>
 		private static bool _isAlive;
+
+		/// <summary>
+		/// スイッチングシステムがクイックスロットの何番目に配置されているか(0~5)
+		/// </summary>
 		internal static int switchPosition = 0;
 
 
@@ -27,7 +70,12 @@ namespace LordOfRanger.Arad {
 		/// 800x600の時のアイコンサイズ
 		/// </summary>
 		private static readonly Point ICON_SIZE = new Point( 29, 29 );
+
+		/// <summary>
+		/// 800x600の時のアイコンの左上から、判定ポイントへの相対位置
+		/// </summary>
 		private static readonly Point JUDGE_POINT = new Point( 8, 20 );
+
 		/// <summary>
 		/// 800x600の時のクイックスロットの左上の座標
 		/// </summary>
@@ -40,11 +88,29 @@ namespace LordOfRanger.Arad {
 			new Point(235,558)
 		};
 
+		/// <summary>
+		/// スイッチアイコン判定時の判定ポイントの色閾値 A面 最大値
+		/// </summary>
 		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 88, 255, 102 );
+
+		/// <summary>
+		/// スイッチアイコン判定時の判定ポイントの色閾値 A面 最小値
+		/// </summary>
 		private static readonly Color SWITCH_A_COLOR_MIN = Color.FromArgb( 81, 254, 98 );
+
+		/// <summary>
+		/// スイッチアイコン判定時の判定ポイントの色閾値 B面 最大値
+		/// </summary>
 		private static readonly Color SWITCH_B_COLOR_MAX = Color.FromArgb( 255, 238, 88 );
+
+		/// <summary>
+		/// スイッチアイコン判定時の判定ポイントの色閾値 B面 最小値
+		/// </summary>
 		private static readonly Color SWITCH_B_COLOR_MIN = Color.FromArgb( 254, 233, 85 );
 
+		/// <summary>
+		/// アラド戦記のクライアントが立ち上がっているかどうかのフラグを取得する
+		/// </summary>
 		internal static bool IsAlive {
 			get {
 				if( _isAlive ) {
@@ -56,6 +122,9 @@ namespace LordOfRanger.Arad {
 			}
 		}
 
+		/// <summary>
+		/// アラド戦記のクライアントが最前面にきているかどうかのフラグを取得する
+		/// </summary>
 		internal static bool IsActiveWindow {
 			get {
 				Get();
@@ -67,6 +136,12 @@ namespace LordOfRanger.Arad {
 			}
 		}
 
+		/// <summary>
+		/// スイッチがA面、B面どちらの状態にあるかを判定する。
+		/// A : SwitchingStyle.A
+		/// B : SwitchingStyle.B
+		/// 判定不可 : SwitchingStyle.UNKNOWN
+		/// </summary>
 		internal static SwitchingStyle SwitchState {
 			get {
 				var bmp = GetScreenShot(
@@ -85,6 +160,13 @@ namespace LordOfRanger.Arad {
 			}
 		}
 
+		/// <summary>
+		/// 色閾値の検証値が最小値と最大値の間に収まっているかを判定する
+		/// </summary>
+		/// <param name="check">検証値</param>
+		/// <param name="min">最小値</param>
+		/// <param name="max">最大値</param>
+		/// <returns>結果</returns>
 		private static bool CheckColor( Color check, Color min, Color max ) {
 			if( check.R >= min.R && check.R <= max.R && check.G >= min.G && check.G <= max.G && check.B >= min.B && check.B <= max.B ) {
 				return true;
@@ -93,13 +175,31 @@ namespace LordOfRanger.Arad {
 
 		}
 
+		/// <summary>
+		/// Windowのマージン 左
+		/// </summary>
 		private const int MARGIN_LEFT = 0;
+
+		/// <summary>
+		/// Windowのマージン 上
+		/// </summary>
 		private const int MARGIN_TOP = 0;
+
+		/// <summary>
+		/// Windowのマージン 右
+		/// </summary>
 		private const int MARGIN_RIGHT = 0;
+
+
+		/// <summary>
+		/// Windowのマージン 下
+		/// </summary>
 		private const int MARGIN_BOTTOM = 0;
 
 		/// <summary>
-		/// プロセスを取得し、x,y,w,hをクラスのメンバ変数に格納する
+		/// プロセスを取得し、
+		/// アラド戦記のクライアント生存状況,X,Y,W,Hの値を取得し
+		/// さらにW,Hを元にデフォルト値からの比率を計算する。
 		/// </summary>
 		/// <param name="getProcessIdFlag">プロセスIDを検索しなおす場合true</param>
 		internal static void Get( bool getProcessIdFlag = false ) {
@@ -127,6 +227,16 @@ namespace LordOfRanger.Arad {
 			ratioW = ( (double)w / DEFAULT_W );
 		}
 
+		/// <summary>
+		/// アラド戦記のクライアントのスクリーンショットを取得する。
+		/// 引数情報により、スクリーンショットの範囲を変更できる。
+		/// 何も渡さなければアラド戦記のクライアント全体が取得できる。
+		/// </summary>
+		/// <param name="targetX">左上X座標</param>
+		/// <param name="targetY">左上Y座標</param>
+		/// <param name="targetW">横幅</param>
+		/// <param name="targetH">高さ</param>
+		/// <returns></returns>
 		private static Bitmap GetScreenShot( int targetX = 0, int targetY = 0, int targetW = 0, int targetH = 0 ) {
 			if( targetW == 0 ) {
 				targetW = w;

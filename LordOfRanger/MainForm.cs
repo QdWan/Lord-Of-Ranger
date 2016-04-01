@@ -18,15 +18,39 @@ namespace LordOfRanger {
 #if DEBUG
 		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
+		/// <summary>
+		/// フォームロードが完了しているかどうかのフラグ
+		/// </summary>
 		private readonly bool _formLoaded;
+
+		/// <summary>
+		/// ログ採取用インスタンス
+		/// </summary>
 		private readonly Common.Logging _logging;
+
+		/// <summary>
+		/// 設定ファイルリスト
+		/// </summary>
 		private Dictionary<string, Mass> _massList;
+
+		/// <summary>
+		/// Jobインスタンス
+		/// </summary>
 		private Job _job;
+
+		/// <summary>
+		/// カレント設定インスタンスを取得する。
+		/// </summary>
 		private Mass CurrentSettingFile {
 			get {
 				return this._massList[CurrentSettingName];
 			}
 		}
+
+		/// <summary>
+		/// カレント設定ファイル名を取得または設定する。
+		/// このプロパティに設定ファイル名を設定することで、カレント設定の切り替えができる。
+		/// </summary>
 		private string _currentSettingName;
 		private string CurrentSettingName {
 			get {
@@ -41,10 +65,24 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 設定ファイル切り替えホットキーのリスト
+		/// </summary>
 		private readonly Dictionary<byte, string> _hotKeys;
+
+		/// <summary>
+		/// 他のウィンドウが開いているかどうかのフラグ
+		/// </summary>
 		private bool _otherWindowOpen;
 
+		/// <summary>
+		/// 設定ファイルのロードが完了しているかどうかのフラグ
+		/// </summary>
 		private bool _massLoaded;
+
+		/// <summary>
+		/// カレント設定が編集されたかどうかを設定する
+		/// </summary>
 		private bool EditedFlag {
 			set {
 				if( this._formLoaded ) {
@@ -60,6 +98,9 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// モードの日本語名
+		/// </summary>
 		private struct Mode {
 
 			internal const string COMMAND = "コマンド";
@@ -69,6 +110,9 @@ namespace LordOfRanger {
 
 		}
 
+		/// <summary>
+		/// データグリッドビューのカラム名
+		/// </summary>
 		private struct DgvCol {
 
 			internal const string ENABLE_SKILL_ICON = "dgvColSkillIcon";
@@ -85,7 +129,7 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// コンストラクタ
-		/// コンポーネント初期化のほかに、変数の初期化、設定の読み込み、タイマーのスタート、キーフックのスタートを行う
+		/// コンポーネント初期化のほかに、変数の初期化、設定リストの読み込み、タイマーのスタート、キーフックのスタートを行う
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
@@ -158,7 +202,7 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 設定ファイルの再読み込みを行う。
+		/// カレント設定をJobと画面に適用する。
 		/// </summary>
 		private void SettingUpdate() {
 			this._job?.Dispose();
@@ -167,7 +211,7 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
+		/// カレント設定の内容にそって、データグリッドビューの更新を行う
 		/// </summary>
 		private void SettingView() {
 			this._massLoaded = false;
@@ -215,7 +259,7 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// 変更されていた場合、変更を保存するかどうかの確認をする。
+		/// 設定の変更がされていた場合、変更を保存するかどうかの確認をする。
 		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
 		/// </summary>
 		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
@@ -242,6 +286,11 @@ namespace LordOfRanger {
 
 		#region form event
 
+		/// <summary>
+		/// LORのクライアントの大きさ変更を検知し、WindowStateが最小化状態だった場合、通知領域にアイコンを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Arad_ClientSizeChanged( object sender, EventArgs e ) {
 			try {
 				if( WindowState == FormWindowState.Minimized ) {
@@ -253,6 +302,11 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// WindowStateが最小化状態の時に通知領域アイコンをダブルクリックされた場合、ウィンドウを通常サイズに戻す
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void notifyIcon1_DoubleClick( object sender, EventArgs e ) {
 			Visible = true;
 			if( WindowState == FormWindowState.Minimized ) {
@@ -261,24 +315,51 @@ namespace LordOfRanger {
 			Activate();
 		}
 
+		/// <summary>
+		/// 通知領域アイコンのコンテキストメニューから終了を選択された場合、アプリケーションを終了する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
 			Application.Exit();
 		}
 
+		/// <summary>
+		/// フォームが閉じられるとき、設定ファイルが変更されていれば変更内容の保存確認をし、必要があればフォームクローズをキャンセルする。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
 			if( ConfirmSettingChange() ) {
 				e.Cancel = true;
 			}
 		}
 
+		/// <summary>
+		/// フォームが閉じられた場合、アプリケーションを終了する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
 			Application.Exit();
 		}
 
+		/// <summary>
+		/// アプリケーション終了時、設定を保存する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private static void Application_ApplicationExit( object sender, EventArgs e ) {
 			Properties.Settings.Default.Save();
 		}
 
+		/// <summary>
+		/// メニューバー
+		/// ツール > オプションのクリックイベント
+		/// オプションフォームを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			Properties.Settings.Default.Save();
@@ -287,6 +368,13 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
+		/// <summary>
+		/// メニューバー
+		/// ツール > スキルアイコン抽出のクリックイベント
+		/// スキルアイコン抽出フォームを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var sief = new SkillIconExtractorForm();
@@ -296,6 +384,13 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
+		/// <summary>
+		/// メニューバー
+		/// ヘルプ > Lord Of Rangerについてのクリックイベント
+		/// Aboutフォームを表示する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var ab = new AboutBox();
@@ -303,6 +398,12 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
+		/// <summary>
+		/// 設定ファイルの追加ボタンのクリックイベント
+		/// 設定追加フォームを表示し、設定が追加された場合その設定を設定ファイルリストに追加する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnAddSetting_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var asf = new AddSettingForm();
@@ -315,6 +416,12 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
+		/// <summary>
+		/// 設定ファイルの削除ボタンのクリックイベント
+		/// 確認ダイアログを表示し、削除された場合、設定ファイルリストからも設定を削除する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
@@ -324,6 +431,11 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// ホットキー変更時のイベント
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
 			this._otherWindowOpen = true;
 			var ksf = new KeySetForm();
@@ -336,6 +448,12 @@ namespace LordOfRanger {
 			this._otherWindowOpen = false;
 		}
 
+		/// <summary>
+		/// 設定ファイルリストボックスのダブルクリックイベント
+		/// 選択されたファイルをカレント設定にする。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
 			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
@@ -346,6 +464,7 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// キーフックイベント
+		/// フックしたキーをjobの各メソッドに振り分ける
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -681,6 +800,12 @@ namespace LordOfRanger {
 			SettingUpdate();
 		}
 
+		/// <summary>
+		/// 上へボタンクリックイベント
+		/// 選択されている設定行を1行上に移動する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnUpRow_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex >= 1 ) {
@@ -695,6 +820,12 @@ namespace LordOfRanger {
 			}
 		}
 
+		/// <summary>
+		/// 下へボタンクリックイベント
+		/// 選択されている設定行を1行下に移動する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btnDownRow_Click( object sender, EventArgs e ) {
 			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
 			if( rowIndex < this.dgv.Rows.Count - 1 ) {
