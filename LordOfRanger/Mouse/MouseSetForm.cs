@@ -32,7 +32,7 @@ namespace LordOfRanger.Mouse {
 		internal enum Result {
 			OK,
 			CANCEL
-		};
+		}
 		private struct DgvCol {
 
 			internal const string OPERATION = "dgvColOp";

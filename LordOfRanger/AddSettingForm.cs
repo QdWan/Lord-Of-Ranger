@@ -18,7 +18,7 @@ namespace LordOfRanger {
 		internal enum Result {
 			OK,
 			CANCEL
-		};
+		}
 
 		internal Result result;
 
