@@ -421,11 +421,13 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
+			var index = this.lbSettingList.SelectedIndex;
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
 				this._massList.Remove( deleteFile );
 				this.lbSettingList.Items.Remove( deleteFile );
+				this.lbSettingList.SelectedIndex = index >= this.lbSettingList.Items.Count ? this.lbSettingList.Items.Count - 1 : index;
 			}
 		}
 
@@ -453,6 +455,9 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void lbSettingList_SelectedIndexChanged( object sender, EventArgs e ) {
+			if( this.lbSettingList.SelectedIndex == -1 ) {
+				return;
+			}
 			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
 		}
 
