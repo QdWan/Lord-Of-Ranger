@@ -421,6 +421,10 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
+			if( this.lbSettingList.Items.Count <= 1 ) {
+				MessageBox.Show( "最低1つの設定ファイルを残す必要があります。" );
+				return;
+			}
 			var index = this.lbSettingList.SelectedIndex;
 			var deleteFile = this.lbSettingList.SelectedItem.ToString();
 			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
