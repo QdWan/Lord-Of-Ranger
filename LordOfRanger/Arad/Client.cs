@@ -116,7 +116,7 @@ namespace LordOfRanger.Arad {
 				if( _isAlive ) {
 					_isAlive = !_process.HasExited;
 				} else {
-					Get( true );
+					Get();
 				}
 				return _isAlive;
 			}
@@ -201,11 +201,8 @@ namespace LordOfRanger.Arad {
 		/// アラド戦記のクライアント生存状況,X,Y,W,Hの値を取得し
 		/// さらにW,Hを元にデフォルト値からの比率を計算する。
 		/// </summary>
-		/// <param name="getProcessIdFlag">プロセスIDを検索しなおす場合true</param>
-		internal static void Get( bool getProcessIdFlag = false ) {
-			if( getProcessIdFlag || _process == null ) {
-				_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
-			}
+		internal static void Get( ) {
+			_process = Process.GetProcessesByName( Properties.Settings.Default.processName ).FirstOrDefault( hProcess => !hProcess.HasExited && hProcess.MainWindowHandle != IntPtr.Zero );
 
 			if( _process == null ) {
 				_isAlive = false;
