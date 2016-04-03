@@ -370,7 +370,7 @@ namespace LordOfRanger {
 					bmp = new Bitmap( 1, 1 );
 					goto gotoLabelDraw;
 				}
-				Client.Get( true );
+				Client.Get();
 				bmp = new Bitmap( Math.Min( iconList.Length, Properties.Settings.Default.oneRowIcons ) * ICON_SIZE, (int)Math.Ceiling( (double)iconList.Length / Properties.Settings.Default.oneRowIcons ) * ICON_SIZE );
 				var g = Graphics.FromImage( bmp );
 				for( var i = 0; i < iconList.Length; i++ ) {
