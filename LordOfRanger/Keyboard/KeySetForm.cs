@@ -29,7 +29,7 @@ namespace LordOfRanger.Keyboard {
 		internal enum Result {
 			OK,
 			CANCEL
-		};
+		}
 
 		internal enum KeyType {
 			SINGLE,

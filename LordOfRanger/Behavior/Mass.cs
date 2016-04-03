@@ -14,6 +14,11 @@ namespace LordOfRanger.Behavior {
 		internal string name;
 		internal byte hotKey = 0x00;
 		internal const string EXTENSION = ".ard";
+		internal bool EditedFlag {
+			get;
+			set;
+		}
+
 		private int _switchPosition;
 		internal int SwitchPosition {
 			get {

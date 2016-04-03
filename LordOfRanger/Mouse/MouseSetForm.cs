@@ -32,7 +32,7 @@ namespace LordOfRanger.Mouse {
 		internal enum Result {
 			OK,
 			CANCEL
-		};
+		}
 		private struct DgvCol {
 
 			internal const string OPERATION = "dgvColOp";
@@ -142,7 +142,7 @@ namespace LordOfRanger.Mouse {
 			Close();
 		}
 
-		class NotForcusButton :Button {
+		private class NotForcusButton :Button {
 			public NotForcusButton() {
 				SetStyle( ControlStyles.Selectable, false );
 			}

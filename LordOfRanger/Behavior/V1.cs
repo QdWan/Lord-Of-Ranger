@@ -126,33 +126,6 @@ namespace LordOfRanger.Behavior {
 			return mass;
 		}
 
-		internal static byte GetHotKey( string filename ) {
-			try {
-				var fs = new FileStream( Mass.SETTING_PATH + filename + Mass.EXTENSION, FileMode.Open, FileAccess.Read );
-				var array = new byte[fs.Length];
-
-				fs.Read( array, 0, (int)fs.Length );
-				fs.Close();
-
-				var offset = 0;
-				//	var version = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				var titleSize = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				var hotKeySize = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				//	var headerSize = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				//	sequence = BitConverter.ToInt32( array, offset );
-				offset += 4;
-				//	string title = Encoding.UTF8.GetString( array, offset, titleSize );
-				offset += titleSize;
-				return array.Skip( offset ).Take( hotKeySize ).ToArray()[0];
-
-			} catch( Exception ) {
-				return 0x00;
-			}
-		}
 		private static Bitmap BinaryToBitmap( IReadOnlyCollection<byte> binary ) {
 			if( binary.Count == 0 ) {
 				return null;

@@ -18,9 +18,11 @@ namespace LordOfRanger {
 		internal enum Result {
 			OK,
 			CANCEL
-		};
+		}
 
 		internal Result result;
+
+		internal Mass addedMassInstance;
 
 		internal string settingName;
 
@@ -30,16 +32,7 @@ namespace LordOfRanger {
 					Close();
 					break;
 				case (byte)Keys.Return:
-					this.settingName = this.txtSettingName.Text;
-					if( System.IO.File.Exists( Mass.SETTING_PATH + this.settingName + Mass.EXTENSION ) ) {
-						MessageBox.Show( "同じ設定名が存在します。" );
-						return;
-					}
-					var mass = new Mass {
-						name = this.settingName
-					};
-					Manager.Save( mass );
-					this.result = Result.OK;
+					AddMass();
 					Close();
 					break;
 				default:
@@ -48,6 +41,15 @@ namespace LordOfRanger {
 		}
 
 		private void btnOk_Click( object sender, EventArgs e ) {
+			AddMass();
+			Close();
+		}
+
+		private void btnCancel_Click( object sender, EventArgs e ) {
+			Close();
+		}
+
+		private void AddMass() {
 			this.settingName = this.txtSettingName.Text;
 			if( System.IO.File.Exists( Mass.SETTING_PATH + this.settingName + Mass.EXTENSION ) ) {
 				MessageBox.Show( "同じ設定名が存在します。" );
@@ -57,12 +59,8 @@ namespace LordOfRanger {
 				name = this.settingName
 			};
 			Manager.Save( mass );
+			this.addedMassInstance = mass;
 			this.result = Result.OK;
-			Close();
-		}
-
-		private void btnCancel_Click( object sender, EventArgs e ) {
-			Close();
 		}
 	}
 }

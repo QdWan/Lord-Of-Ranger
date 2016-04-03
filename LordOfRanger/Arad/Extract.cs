@@ -71,7 +71,7 @@ namespace LordOfRanger.Arad {
 			/// </summary>
 			internal uint count;
 
-		};
+		}
 
 		internal struct NpkIndex {
 
@@ -126,7 +126,7 @@ namespace LordOfRanger.Arad {
 				}
 			}
 
-		};
+		}
 
 		internal struct NImgHeader {
 
@@ -223,7 +223,7 @@ namespace LordOfRanger.Arad {
 				}
 			}
 
-		};
+		}
 
 		internal struct NImgIndex {
 
@@ -367,7 +367,7 @@ namespace LordOfRanger.Arad {
 				return "{ " + this.index + ": key=>(" + this.keyX + "," + this.keyY + "), wh=>(" + this.width + ", " + this.height + "), max=>(" + this.maxWidth + ", " + this.maxHeight + "), type=>" + argbType + " offset=>" + this.startOffset + "}";
 			}
 
-		};
+		}
 
 		internal struct NImg {
 

@@ -16,27 +16,89 @@ namespace LordOfRanger {
 	internal partial class MainForm :Form {
 
 #if DEBUG
-		readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
+		private readonly System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
 #endif
+		/// <summary>
+		/// フォームロードが完了しているかどうかのフラグ
+		/// </summary>
+		private readonly bool _formLoaded;
 
+		/// <summary>
+		/// ログ採取用インスタンス
+		/// </summary>
 		private readonly Common.Logging _logging;
-		private Mass _mass;
+
+		/// <summary>
+		/// 設定ファイルリスト
+		/// </summary>
+		private Dictionary<string, Mass> _massList;
+
+		/// <summary>
+		/// Jobインスタンス
+		/// </summary>
 		private Job _job;
-		private string _currentSettingFile;
-		private readonly Dictionary<byte, string> _hotKeys;
-		private bool _otherWindowOpen;
-		private bool _editedFlag;
-		private bool EditedFlag {
+
+		/// <summary>
+		/// カレント設定インスタンスを取得する。
+		/// </summary>
+		private Mass CurrentSettingFile {
 			get {
-				return this._editedFlag;
-			}
-			set {
-				this._editedFlag = value;
-				this.btnSave.Enabled = value;
-				this.btnCancel.Enabled = value;
+				return this._massList[CurrentSettingName];
 			}
 		}
 
+		/// <summary>
+		/// カレント設定ファイル名を取得または設定する。
+		/// このプロパティに設定ファイル名を設定することで、カレント設定の切り替えができる。
+		/// </summary>
+		private string _currentSettingName;
+		private string CurrentSettingName {
+			get {
+				return this._currentSettingName;
+			}
+			set {
+				this._massLoaded = false;
+				this._currentSettingName = value;
+				Properties.Settings.Default.currentSettingName = value;
+				SettingUpdate();
+				this._massLoaded = true;
+			}
+		}
+
+		/// <summary>
+		/// 設定ファイル切り替えホットキーのリスト
+		/// </summary>
+		private readonly Dictionary<byte, string> _hotKeys;
+
+		/// <summary>
+		/// 他のウィンドウが開いているかどうかのフラグ
+		/// </summary>
+		private bool _otherWindowOpen;
+
+		/// <summary>
+		/// 設定ファイルのロードが完了しているかどうかのフラグ
+		/// </summary>
+		private bool _massLoaded;
+
+		/// <summary>
+		/// カレント設定が編集されたかどうかを設定する
+		/// </summary>
+		private bool EditedFlag {
+			set {
+				if( this._formLoaded ) {
+					if( this._massLoaded ) {
+						CurrentSettingFile.EditedFlag = value;
+					}
+					this.btnSave.Enabled = CurrentSettingFile.EditedFlag;
+					this.btnCancel.Enabled = CurrentSettingFile.EditedFlag;
+					this.splitContainer5.Panel1.BackColor = CurrentSettingFile.EditedFlag ? SystemColors.Info : SystemColors.ControlLight;
+				}
+			}
+		}
+
+		/// <summary>
+		/// モードの日本語名
+		/// </summary>
 		private struct Mode {
 
 			internal const string COMMAND = "コマンド";
@@ -46,6 +108,9 @@ namespace LordOfRanger {
 
 		}
 
+		/// <summary>
+		/// データグリッドビューのカラム名
+		/// </summary>
 		private struct DgvCol {
 
 			internal const string ENABLE_SKILL_ICON = "dgvColSkillIcon";
@@ -62,20 +127,14 @@ namespace LordOfRanger {
 
 		/// <summary>
 		/// コンストラクタ
-		/// コンポーネント初期化のほかに、変数の初期化、設定の読み込み、タイマーのスタート、キーフックのスタートを行う
+		/// コンポーネント初期化のほかに、変数の初期化、設定リストの読み込み、タイマーのスタート、キーフックのスタートを行う
 		/// </summary>
 		internal MainForm() {
 			InitializeComponent();
 			this._logging = new Common.Logging( "main.log" );
 			this._hotKeys = new Dictionary<byte, string>();
 
-			this._mass = new Mass();
 			LoadSettingList();
-			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
-			SettingUpdate( true );
-
-			this._job?.Dispose();
-			this._job = new Job( this._mass );
 
 			if( Properties.Settings.Default.activeWindowMonitoring ) {
 				this.timerActiveWindowCheck.Interval = Properties.Settings.Default.activeWindowMonitoringinterval;
@@ -86,152 +145,76 @@ namespace LordOfRanger {
 			keyboardHook.KeyboardHooked += KeyHookEvent;
 
 			Application.ApplicationExit += Application_ApplicationExit;
+			this._massLoaded = true;
+			this._formLoaded = true;
 		}
 
+		#region 設定管理
+
 		/// <summary>
-		/// 変更されていた場合、変更を保存するかどうかの確認をする。
-		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
+		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
 		/// </summary>
-		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
-		private bool ConfirmSettingChange() {
-			if( EditedFlag ) {
-				var result = MessageBox.Show( "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
-				// ReSharper disable once SwitchStatementMissingSomeCases
-				switch( result ) {
-					case DialogResult.Yes:
-						EditedFlag = false;
-						Manager.Save( this._mass );
-						break;
-					case DialogResult.No:
-						EditedFlag = false;
-						break;
-					case DialogResult.Cancel:
-						return true;
-					default:
-						throw new ArgumentOutOfRangeException();
+		private void LoadSettingList() {
+			while( true ) {
+				if( !Directory.Exists( Mass.SETTING_PATH ) ) {
+					Directory.CreateDirectory( Mass.SETTING_PATH );
+					Thread.Sleep( 300 );
 				}
-			}
-			return false;
-		}
 
-		#region form event
-
-		private void Arad_ClientSizeChanged( object sender, EventArgs e ) {
-			try {
-				if( WindowState == FormWindowState.Minimized ) {
-					Hide();
-					this.notifyIcon1.Visible = true;
+				var files = Directory.GetFiles( Mass.SETTING_PATH );
+				if( files.Length == 0 ) {
+					var mass = new Mass();
+					mass.name = "new";
+					Manager.Save( mass );
+					continue;
 				}
-			} catch( Exception ex ) {
-				this._logging.Write( ex );
+				this._massList = new Dictionary<string, Mass>();
+				this.lbSettingList.Items.Clear();
+				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
+					this._massList.Add( filename, Manager.Load( filename ) );
+					this.lbSettingList.Items.Add( filename );
+				}
+				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
+					CurrentSettingName = Properties.Settings.Default.currentSettingName;
+				} else {
+					CurrentSettingName = this.lbSettingList.Items[0].ToString();
+				}
+				break;
 			}
-		}
-
-		private void notifyIcon1_DoubleClick( object sender, EventArgs e ) {
-			Visible = true;
-			if( WindowState == FormWindowState.Minimized ) {
-				WindowState = FormWindowState.Normal;
-			}
-			Activate();
-		}
-
-		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
-			Application.Exit();
-		}
-
-		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
-			if( ConfirmSettingChange() ) {
-				e.Cancel = true;
-			}
-		}
-
-		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
-			Application.Exit();
-		}
-
-		private static void Application_ApplicationExit( object sender, EventArgs e ) {
-			Properties.Settings.Default.Save();
-		}
-
-		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
-			this._otherWindowOpen = true;
-			Properties.Settings.Default.Save();
-			var of = new Options.OptionsForm();
-			of.ShowDialog();
-			this._mass = Manager.Load( this._mass.name );
-			this._otherWindowOpen = false;
-		}
-
-		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
-			this._otherWindowOpen = true;
-			var sief = new SkillIconExtractorForm();
-			sief.Left = Left + ( Width - sief.Width ) / 2;
-			sief.Top = Top + ( Height - sief.Height ) / 2;
-			sief.ShowDialog();
-			this._otherWindowOpen = false;
-		}
-
-		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
-			this._otherWindowOpen = true;
-			var ab = new AboutBox();
-			ab.ShowDialog();
-			this._otherWindowOpen = false;
-		}
-
-		#endregion
-
-
-
-		#region setting form
-
-		private void btnAddSetting_Click( object sender, EventArgs e ) {
-			if( ConfirmSettingChange() ) {
-				return;
-			}
-			this._otherWindowOpen = true;
-			var asf = new AddSettingForm();
-			asf.ShowDialog();
-			if( asf.result == AddSettingForm.Result.OK ) {
-				CurrentSettingChange( asf.settingName );
-				SettingUpdate();
-			}
-			this._otherWindowOpen = false;
-		}
-
-		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
-			var deleteFile = this.lbSettingList.SelectedItem.ToString();
-			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
-				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
-				SettingUpdate();
-			}
-		}
-
-		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
-			this._otherWindowOpen = true;
-			var ksf = new KeySetForm();
-			ksf.ShowDialog();
-			ksf.keyType = KeySetForm.KeyType.SINGLE;
-			if( ksf.result == KeySetForm.Result.OK ) {
-				this._mass.hotKey = ksf.KeyData[0];
-				this.txtHotKey.Text = KeysToText( ksf.KeyData );
-			}
-			this._otherWindowOpen = false;
-		}
-
-		private void lbSettingList_MouseDoubleClick( object sender, MouseEventArgs e ) {
-			if( ConfirmSettingChange() ) {
-				return;
-			}
-			CurrentSettingChange( this.lbSettingList.SelectedItem.ToString() );
-			SettingUpdate();
+			LoadHotKeys();
 		}
 
 		/// <summary>
-		/// 現在読み込まれている設定にそって、データグリッドビューの更新を行う
+		/// 全設定ファイルのホットキーの読み込みを行う。
+		/// </summary>
+		private void LoadHotKeys() {
+			this._hotKeys.Clear();
+			foreach( var mass in this._massList.Values.Where( mass => mass.hotKey != 0x00 ) ) {
+				string filename;
+				if( !this._hotKeys.TryGetValue( mass.hotKey, out filename ) ) {
+					this._hotKeys.Add( mass.hotKey, mass.name );
+				} else {
+					MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + mass.name + "' , '" + filename + "'" );
+				}
+			}
+		}
+
+		/// <summary>
+		/// カレント設定をJobと画面に適用する。
+		/// </summary>
+		private void SettingUpdate() {
+			this._job?.Dispose();
+			this._job = new Job( CurrentSettingFile );
+			SettingView();
+		}
+
+		/// <summary>
+		/// カレント設定の内容にそって、データグリッドビューの更新を行う
 		/// </summary>
 		private void SettingView() {
+			this._massLoaded = false;
 			this.dgv.Rows.Clear();
-			foreach( var da in this._mass.Value ) {
+			foreach( var da in CurrentSettingFile.Value ) {
 				var row = this.dgv.Rows.Add();
 				string mode;
 				switch( da.Type ) {
@@ -265,106 +248,230 @@ namespace LordOfRanger {
 				this.dgv.Rows[row].Cells[DgvCol.DISABLE_SKILL_ICON].Value = da.DisableSkillIcon;
 				this.dgv.Rows[row].Cells[DgvCol.KEYBOARD_CANCEL].Value = da.KeyboardCancel;
 			}
+
+			this.lblSettingName.Text = CurrentSettingName;
+			this.lbSettingList.SelectedItem = CurrentSettingName;
+			this.txtHotKey.Text = KeysToText( CurrentSettingFile.hotKey );
+			this.cmbSwitchPosition.SelectedIndex = CurrentSettingFile.SwitchPosition;
+			this._massLoaded = true;
 		}
 
 		/// <summary>
-		/// 設定のリストの読み込みを行い、1つもなかった場合はnewという設定ファイルを作成する
+		/// 設定の変更がされていた場合、変更を保存するかどうかの確認をする。
+		/// trueが帰ってきた場合、呼び出し元のイベントをキャンセルする必要がある。
 		/// </summary>
-		private void LoadSettingList() {
-			while( true ) {
-				if( !Directory.Exists( Mass.SETTING_PATH ) ) {
-					Directory.CreateDirectory( Mass.SETTING_PATH );
-					Thread.Sleep( 300 );
-				}
-
-				var files = Directory.GetFiles( Mass.SETTING_PATH );
-				if( files.Length == 0 ) {
-					this._mass = new Mass();
-					CurrentSettingChange( "new" );
-					this._mass.name = this._currentSettingFile;
-					Manager.Save( this._mass );
-					continue;
-				}
-				this.lbSettingList.Items.Clear();
-				foreach( var filename in files.Where( file => Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ).Select( Path.GetFileNameWithoutExtension ).Where( filename => filename != null ) ) {
-					this.lbSettingList.Items.Add( filename );
-				}
-				if( this.lbSettingList.FindStringExact( Properties.Settings.Default.currentSettingName ) != ListBox.NoMatches ) {
-					this.lbSettingList.SelectedItem = Properties.Settings.Default.currentSettingName;
-				} else {
-					if( this.lbSettingList.Items.Count > 0 ) {
-						this.lbSettingList.SelectedIndex = 0;
-					}
-				}
-				break;
-			}
-		}
-
-		/// <summary>
-		/// 全設定ファイルのホットキーの読み込みを行う。
-		/// コンストラクタから呼ばれた場合のみ、同一ホットキーが存在する旨の警告を出す。
-		/// </summary>
-		/// <param name="firstFlag">コンストラクタから呼ばれた場合はtrue</param>
-		private void LoadHotKeys( bool firstFlag = false ) {
-			this._hotKeys.Clear();
-			var files = Directory.GetFiles( Mass.SETTING_PATH );
-			foreach( var file in files ) {
-				if( Regex.IsMatch( file, @"\" + Mass.EXTENSION + "$" ) ) {
-					var filename = Path.GetFileNameWithoutExtension( file );
-					var hotkey = Manager.GetHotKey( filename );
-					if( hotkey != 0x00 ) {
-						string file2;
-						if( !this._hotKeys.TryGetValue( hotkey, out file2 ) ) {
-							this._hotKeys.Add( hotkey, filename );
-						} else {
-							if( firstFlag ) {
-								MessageBox.Show( "切替ホットキーが同じファイルが複数存在します。 \n\n'" + filename + "' , '" + file2 + "'" );
-							}
-						}
-					}
+		/// <returns>呼び出し元のイベントをキャンセルする必要があるかどうか</returns>
+		private bool ConfirmSettingChange() {
+			foreach( var mass in this._massList.Values.Where( x => x.EditedFlag ) ) {
+				var result = MessageBox.Show( mass.name + "設定ファイルが変更されています。変更を保存しますか。", "変更が保存されていません。", MessageBoxButtons.YesNoCancel );
+				// ReSharper disable once SwitchStatementMissingSomeCases
+				switch( result ) {
+					case DialogResult.Yes:
+						Manager.Save( mass );
+						break;
+					case DialogResult.No:
+						break;
+					case DialogResult.Cancel:
+						return true;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			}
-		}
-
-		/// <summary>
-		/// 設定リストの再読み込みを行う。
-		/// </summary>
-		/// <param name="firstFlag"></param>
-		private void SettingUpdate( bool firstFlag = false ) {
-			LoadSettingList();
-			if( this.lbSettingList.FindStringExact( this._currentSettingFile ) == -1 ) {
-				CurrentSettingChange( this.lbSettingList.Items[0].ToString() );
-			}
-			LoadHotKeys( firstFlag );
-			this._mass = Manager.Load( this._currentSettingFile );
-			SettingView();
-			this._job?.Dispose();
-			this._job = new Job( this._mass );
-
-			this.lblSettingName.Text = this._currentSettingFile;
-			this.lbSettingList.SelectedItem = this._currentSettingFile;
-			this.txtHotKey.Text = KeysToText( this._mass.hotKey );
-			this.cmbSwitchPosition.SelectedIndex = this._mass.SwitchPosition;
-			EditedFlag = false;
-		}
-
-		/// <summary>
-		/// 設定ファイルの切り替え
-		/// </summary>
-		/// <param name="name">設定ファイルの名前</param>
-		private void CurrentSettingChange( string name ) {
-			this._currentSettingFile = name;
-			Properties.Settings.Default.currentSettingName = name;
+			return false;
 		}
 
 		#endregion
 
+		#region form event
 
+		/// <summary>
+		/// LORのクライアントの大きさ変更を検知し、WindowStateが最小化状態だった場合、通知領域にアイコンを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Arad_ClientSizeChanged( object sender, EventArgs e ) {
+			try {
+				if( WindowState == FormWindowState.Minimized ) {
+					Hide();
+					this.notifyIcon1.Visible = true;
+				}
+			} catch( Exception ex ) {
+				this._logging.Write( ex );
+			}
+		}
+
+		/// <summary>
+		/// WindowStateが最小化状態の時に通知領域アイコンをダブルクリックされた場合、ウィンドウを通常サイズに戻す
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void notifyIcon1_DoubleClick( object sender, EventArgs e ) {
+			Visible = true;
+			if( WindowState == FormWindowState.Minimized ) {
+				WindowState = FormWindowState.Normal;
+			}
+			Activate();
+		}
+
+		/// <summary>
+		/// 通知領域アイコンのコンテキストメニューから終了を選択された場合、アプリケーションを終了する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void ExitToolStripMenuItem_Click( object sender, EventArgs e ) {
+			Application.Exit();
+		}
+
+		/// <summary>
+		/// フォームが閉じられるとき、設定ファイルが変更されていれば変更内容の保存確認をし、必要があればフォームクローズをキャンセルする。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MainForm_FormClosing( object sender, FormClosingEventArgs e ) {
+			if( ConfirmSettingChange() ) {
+				e.Cancel = true;
+			}
+		}
+
+		/// <summary>
+		/// フォームが閉じられた場合、アプリケーションを終了する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Main_FormClosed( object sender, FormClosedEventArgs e ) {
+			Application.Exit();
+		}
+
+		/// <summary>
+		/// アプリケーション終了時、設定を保存する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private static void Application_ApplicationExit( object sender, EventArgs e ) {
+			Properties.Settings.Default.Save();
+		}
+
+		/// <summary>
+		/// メニューバー
+		/// ツール > オプションのクリックイベント
+		/// オプションフォームを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void optionToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
+			Properties.Settings.Default.Save();
+			var of = new Options.OptionsForm();
+			of.ShowDialog();
+			this._otherWindowOpen = false;
+		}
+
+		/// <summary>
+		/// メニューバー
+		/// ツール > スキルアイコン抽出のクリックイベント
+		/// スキルアイコン抽出フォームを表示する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void skillIconExtractorToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
+			var sief = new SkillIconExtractorForm();
+			sief.Left = Left + ( Width - sief.Width ) / 2;
+			sief.Top = Top + ( Height - sief.Height ) / 2;
+			sief.ShowDialog();
+			this._otherWindowOpen = false;
+		}
+
+		/// <summary>
+		/// メニューバー
+		/// ヘルプ > Lord Of Rangerについてのクリックイベント
+		/// Aboutフォームを表示する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void aboutToolStripMenuItem_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
+			var ab = new AboutBox();
+			ab.ShowDialog();
+			this._otherWindowOpen = false;
+		}
+
+		/// <summary>
+		/// 設定ファイルの追加ボタンのクリックイベント
+		/// 設定追加フォームを表示し、設定が追加された場合その設定を設定ファイルリストに追加する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnAddSetting_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
+			var asf = new AddSettingForm();
+			asf.ShowDialog();
+			if( asf.result == AddSettingForm.Result.OK ) {
+				this._massList.Add( asf.addedMassInstance.name, asf.addedMassInstance );
+				this.lbSettingList.Items.Add( asf.addedMassInstance.name );
+				CurrentSettingName = asf.settingName;
+			}
+			this._otherWindowOpen = false;
+		}
+
+		/// <summary>
+		/// 設定ファイルの削除ボタンのクリックイベント
+		/// 確認ダイアログを表示し、削除された場合、設定ファイルリストからも設定を削除する。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnDeleteSetting_Click( object sender, EventArgs e ) {
+			if( this.lbSettingList.Items.Count <= 1 ) {
+				MessageBox.Show( "最低1つの設定ファイルを残す必要があります。" );
+				return;
+			}
+			var index = this.lbSettingList.SelectedIndex;
+			var deleteFile = this.lbSettingList.SelectedItem.ToString();
+			if( MessageBox.Show( "'" + deleteFile + "'を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
+				File.Delete( Mass.SETTING_PATH + deleteFile + Mass.EXTENSION );
+				this._massList.Remove( deleteFile );
+				this.lbSettingList.Items.Remove( deleteFile );
+				this.lbSettingList.SelectedIndex = index >= this.lbSettingList.Items.Count ? this.lbSettingList.Items.Count - 1 : index;
+			}
+		}
+
+		/// <summary>
+		/// ホットキー変更時のイベント
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnHotKeyChange_Click( object sender, EventArgs e ) {
+			this._otherWindowOpen = true;
+			var ksf = new KeySetForm();
+			ksf.ShowDialog();
+			ksf.keyType = KeySetForm.KeyType.SINGLE;
+			if( ksf.result == KeySetForm.Result.OK ) {
+				CurrentSettingFile.hotKey = ksf.KeyData[0];
+				this.txtHotKey.Text = KeysToText( ksf.KeyData );
+			}
+			this._otherWindowOpen = false;
+		}
+
+		/// <summary>
+		/// 設定ファイルリストボックスの選択変更イベント
+		/// 選択されたファイルをカレント設定にする。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void lbSettingList_SelectedIndexChanged( object sender, EventArgs e ) {
+			if( this.lbSettingList.SelectedIndex == -1 ) {
+				return;
+			}
+			CurrentSettingName = this.lbSettingList.SelectedItem.ToString();
+		}
+
+		#endregion
 
 		#region job
 
 		/// <summary>
 		/// キーフックイベント
+		/// フックしたキーをjobの各メソッドに振り分ける
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -381,7 +488,7 @@ namespace LordOfRanger {
 			}
 
 			if( this._job.ActiveWindow && this._job.BarrageEnable && e.ExtraInfo != (int)Key.EXTRA_INFO ) {
-				if( this._mass.CancelList.Contains( (byte)e.KeyCode ) ) {
+				if( CurrentSettingFile.CancelList.Contains( (byte)e.KeyCode ) ) {
 					e.Cancel = true;
 				}
 			}
@@ -400,11 +507,7 @@ namespace LordOfRanger {
 					if( e.ExtraInfo != (int)Key.EXTRA_INFO ) {
 						//setting change hot key
 						if( this._hotKeys.ContainsKey( (byte)e.KeyCode ) ) {
-							if( ConfirmSettingChange() ) {
-								e.Cancel = true;
-							}
-							CurrentSettingChange( this._hotKeys[(byte)e.KeyCode] );
-							SettingUpdate();
+							CurrentSettingName = this._hotKeys[(byte)e.KeyCode];
 #if DEBUG
 						goto echo;
 #else
@@ -474,7 +577,7 @@ namespace LordOfRanger {
 				case DgvCol.PUSH: {
 						//textbox
 						var ksf = new KeySetForm();
-						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+						foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 							ksf.keyType = KeySetForm.KeyType.MULTI;
 							ksf.ShowDialog();
 							if( ksf.result == KeySetForm.Result.OK ) {
@@ -492,7 +595,7 @@ namespace LordOfRanger {
 				case DgvCol.SEND: {
 						//textbox
 						var ksf = new KeySetForm();
-						foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+						foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 							switch( act.Type ) {
 								case Act.InstanceType.COMMAND:
 									ksf.keyType = KeySetForm.KeyType.MULTI;
@@ -549,7 +652,7 @@ namespace LordOfRanger {
 						};
 						if( ofd.ShowDialog() == DialogResult.OK ) {
 							this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[this.dgv.SelectedCells[0].OwningColumn.Name].Value = new Bitmap( ofd.FileName );
-							foreach( var act in this._mass.Value.Where( act => act.Id == sequence ) ) {
+							foreach( var act in CurrentSettingFile.Value.Where( act => act.Id == sequence ) ) {
 								switch( this.dgv.SelectedCells[0].OwningColumn.Name ) {
 									case DgvCol.ENABLE_SKILL_ICON:
 										act.SkillIcon = new Bitmap( ofd.FileName );
@@ -580,7 +683,7 @@ namespace LordOfRanger {
 				case DgvCol.DELETE:
 					if( MessageBox.Show( "この行を削除しますか？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes ) {
 						var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-						this._mass.RemoveAt( sequence );
+						CurrentSettingFile.RemoveAt( sequence );
 						this.dgv.Rows.RemoveAt( this.dgv.SelectedCells[0].OwningRow.Index );
 						EditedFlag = true;
 					}
@@ -609,7 +712,7 @@ namespace LordOfRanger {
 					var dgvcbc = (DataGridViewCheckBoxCell)this.dgv.SelectedCells[0];
 					dgvcbc.Value = dgvcbc.Value == dgvcbc.TrueValue ? dgvcbc.FalseValue : dgvcbc.TrueValue;
 					var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-					this._mass.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
+					CurrentSettingFile.ChangeKeyboardCancel( sequence, (bool)dgvcbc.Value );
 					this.dgv.RefreshEdit();
 					break;
 				default:
@@ -627,12 +730,13 @@ namespace LordOfRanger {
 		}
 
 		/// <summary>
-		/// ホットキーの変更を検知し、変更フラグをたてる。
+		/// ホットキーの変更を検知し、ホットキーリストの更新を行い、変更フラグをたてる。
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void txtHotKey_TextChanged( object sender, EventArgs e ) {
 			EditedFlag = true;
+			LoadHotKeys();
 		}
 
 		/// <summary>
@@ -642,7 +746,7 @@ namespace LordOfRanger {
 		/// <param name="e"></param>
 		private void cmbSwitchPosition_SelectedIndexChanged( object sender, EventArgs e ) {
 			EditedFlag = true;
-			this._mass.SwitchPosition = this.cmbSwitchPosition.SelectedIndex;
+			CurrentSettingFile.SwitchPosition = this.cmbSwitchPosition.SelectedIndex;
 		}
 
 		/// <summary>
@@ -659,19 +763,19 @@ namespace LordOfRanger {
 				int sequence;
 				switch( acf.type ) {
 					case AddCommandForm.Type.COMMAND:
-						sequence = this._mass.Add( new Command() );
+						sequence = CurrentSettingFile.Add( new Command() );
 						mode = Mode.COMMAND;
 						break;
 					case AddCommandForm.Type.BARRAGE:
-						sequence = this._mass.Add( new Barrage() );
+						sequence = CurrentSettingFile.Add( new Barrage() );
 						mode = Mode.BARRAGE;
 						break;
 					case AddCommandForm.Type.TOGGLE:
-						sequence = this._mass.Add( new Toggle() );
+						sequence = CurrentSettingFile.Add( new Toggle() );
 						mode = Mode.TOGGLE;
 						break;
 					case AddCommandForm.Type.MOUSE:
-						sequence = this._mass.Add( new Behavior.Action.Mouse() );
+						sequence = CurrentSettingFile.Add( new Behavior.Action.Mouse() );
 						mode = Mode.MOUSE;
 						break;
 					default:
@@ -690,8 +794,7 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnSave_Click( object sender, EventArgs e ) {
-			EditedFlag = false;
-			Manager.Save( this._mass );
+			Manager.Save( CurrentSettingFile );
 			SettingUpdate();
 		}
 
@@ -701,10 +804,53 @@ namespace LordOfRanger {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btnCancel_Click( object sender, EventArgs e ) {
-			EditedFlag = false;
-			this._mass = Manager.Load( this._mass.name );
+			this._massList[CurrentSettingName] = Manager.Load( CurrentSettingFile.name );
 			SettingUpdate();
 		}
+
+		/// <summary>
+		/// 上へボタンクリックイベント
+		/// 選択されている設定行を1行上に移動する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnUpRow_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex >= 1 ) {
+				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+				CurrentSettingFile.UpAt( sequence );
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex - 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex - 1].Selected = true;
+				EditedFlag = true;
+			}
+		}
+
+		/// <summary>
+		/// 下へボタンクリックイベント
+		/// 選択されている設定行を1行下に移動する
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnDownRow_Click( object sender, EventArgs e ) {
+			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
+			if( rowIndex < this.dgv.Rows.Count - 1 ) {
+				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
+				CurrentSettingFile.DownAt( sequence );
+				var row = this.dgv.Rows[rowIndex];
+				this.dgv.Rows.RemoveAt( rowIndex );
+				this.dgv.Rows.Insert( rowIndex + 1, row );
+				this.dgv.ClearSelection();
+				this.dgv.Rows[rowIndex + 1].Selected = true;
+				EditedFlag = true;
+			}
+		}
+
+		#endregion
+
+		#region テキスト変換
 
 		/// <summary>
 		/// byteで表されるキーをテキストに変換
@@ -730,34 +876,6 @@ namespace LordOfRanger {
 				s += Key.KEY_TEXT[keys[i]];
 			}
 			return s;
-		}
-
-		private void btnUpRow_Click( object sender, EventArgs e ) {
-			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-			if( rowIndex >= 1 ) {
-				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-				this._mass.UpAt( sequence );
-				var row = this.dgv.Rows[rowIndex];
-				this.dgv.Rows.RemoveAt( rowIndex );
-				this.dgv.Rows.Insert( rowIndex - 1, row );
-				this.dgv.ClearSelection();
-				this.dgv.Rows[rowIndex - 1].Selected = true;
-				EditedFlag = true;
-			}
-		}
-
-		private void btnDownRow_Click( object sender, EventArgs e ) {
-			var rowIndex = this.dgv.SelectedCells[0].OwningRow.Index;
-			if( rowIndex < this.dgv.Rows.Count - 1 ) {
-				var sequence = int.Parse( (string)this.dgv.Rows[this.dgv.SelectedCells[0].OwningRow.Index].Cells[DgvCol.SEQUENCE].Value );
-				this._mass.DownAt( sequence );
-				var row = this.dgv.Rows[rowIndex];
-				this.dgv.Rows.RemoveAt( rowIndex );
-				this.dgv.Rows.Insert( rowIndex + 1, row );
-				this.dgv.ClearSelection();
-				this.dgv.Rows[rowIndex + 1].Selected = true;
-				EditedFlag = true;
-			}
 		}
 
 		#endregion
