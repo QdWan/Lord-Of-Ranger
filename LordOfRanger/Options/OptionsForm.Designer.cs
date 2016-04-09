@@ -209,7 +209,7 @@
 			this.nudIntervalToggleTimer.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.nudIntervalToggleTimer.Location = new System.Drawing.Point(214, 25);
 			this.nudIntervalToggleTimer.Maximum = new decimal(new int[] {
-            300,
+            600000,
             0,
             0,
             0});
@@ -233,7 +233,7 @@
 			this.nudIntervalToggleUpDown.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.nudIntervalToggleUpDown.Location = new System.Drawing.Point(214, 60);
 			this.nudIntervalToggleUpDown.Maximum = new decimal(new int[] {
-            300,
+            100000,
             0,
             0,
             0});
