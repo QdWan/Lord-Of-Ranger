@@ -80,12 +80,12 @@ namespace LordOfRanger.Arad {
 		/// 800x600の時のクイックスロットの左上の座標
 		/// </summary>
 		private static readonly Point[] QUICK_SLOT_POINTS = {
-			new Point(85,558),
-			new Point(115,558),
-			new Point(145,558),
-			new Point(175,558),
-			new Point(205,558),
-			new Point(235,558)
+			new Point(92,562),
+			new Point(122,562),
+			new Point(152,562),
+			new Point(182,562),
+			new Point(212,562),
+			new Point(242,562)
 		};
 
 		/// <summary>
