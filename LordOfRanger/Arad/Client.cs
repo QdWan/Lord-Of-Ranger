@@ -11,10 +11,15 @@ namespace LordOfRanger.Arad {
 	static class Client {
 
 		/// <summary>
-		/// アラド戦記クライアントの横幅デフォルト値
+		/// アラド戦記クライアントの横幅デフォルト値(4:3)
 		/// </summary>
 		private const int DEFAULT_W = 800;
 
+		/// <summary>
+		/// アラド戦記クライアントの横幅デフォルト値(16:9)
+		/// </summary>
+		private const int DEFAULT_16_W = 1067;
+		
 		/// <summary>
 		/// アラド戦記クライアントの高さデフォルト値
 		/// </summary>
@@ -89,6 +94,10 @@ namespace LordOfRanger.Arad {
 		};
 
 		/// <summary>
+		/// 4:3の時と16:9の時の差クイックスロットの位置の差異
+		/// </summary>
+		internal const int QUICK_SLKOT_POINTS_X_DIFF = 134;
+		/// <summary>
 		/// スイッチアイコン判定時の判定ポイントの色閾値 A面 最大値
 		/// </summary>
 		private static readonly Color SWITCH_A_COLOR_MAX = Color.FromArgb( 88, 255, 102 );
@@ -145,7 +154,8 @@ namespace LordOfRanger.Arad {
 		internal static SwitchingStyle SwitchState {
 			get {
 				var bmp = GetScreenShot(
-					(int)Math.Round( QUICK_SLOT_POINTS[switchPosition].X * ratioW ),
+					//16:9の場合、スロット位置の調整を行う
+					(int)Math.Round( (QUICK_SLOT_POINTS[switchPosition].X + (AspectRatio16 ? QUICK_SLKOT_POINTS_X_DIFF : 0)  ) * ratioW ),
 					(int)Math.Round( QUICK_SLOT_POINTS[switchPosition].Y * ratioH ),
 					(int)Math.Round( ICON_SIZE.X * ratioW ),
 					(int)Math.Round( ICON_SIZE.Y * ratioH ) );
@@ -196,6 +206,11 @@ namespace LordOfRanger.Arad {
 		/// </summary>
 		private const int MARGIN_BOTTOM = 0;
 
+		internal static bool AspectRatio16 {
+			get;
+			private set;
+		}
+
 		/// <summary>
 		/// プロセスを取得し、
 		/// アラド戦記のクライアント生存状況,X,Y,W,Hの値を取得し
@@ -220,8 +235,19 @@ namespace LordOfRanger.Arad {
 			w = rect.right - rect.left - MARGIN_LEFT - MARGIN_RIGHT;
 			h = rect.bottom - rect.top - MARGIN_BOTTOM - MARGIN_TOP;
 
+			//アスペクト比が16:9かどうかのフラグ
+			//おおまかに1.4を超えていれば16:9と判定する
+			//
+			AspectRatio16 = (((double)w / h) > 1.4);
+
 			ratioH = ( (double)h / DEFAULT_H );
-			ratioW = ( (double)w / DEFAULT_W );
+			if( AspectRatio16 ) {
+				ratioW = ( (double)w / DEFAULT_16_W );
+			} else {
+				ratioW = ( (double)w / DEFAULT_W );
+			}
+			
+			
 		}
 
 		/// <summary>
